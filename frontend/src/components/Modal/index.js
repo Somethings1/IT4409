@@ -24,7 +24,7 @@ const Modal = () => {
     document.addEventListener('mousedown', handleClickOutside);
 
   }, [isOpen]);
-
+  if (!user) return null;
 
   return (
     <div className="modal-wrapper">
