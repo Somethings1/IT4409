@@ -1,0 +1,9 @@
+http://localhost:8080
+
+Login: 
+http://localhost:8080/api/v1/auth/login
+{
+    "username": "admin@gmail.com",
+    "password": "123456"
+}
+
