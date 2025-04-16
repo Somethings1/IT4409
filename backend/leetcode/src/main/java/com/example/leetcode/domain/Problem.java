@@ -16,7 +16,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -43,7 +42,7 @@ public class Problem {
 	private Instant updatedAt;
 	private String createdBy;
 	private String updatedBy;
-	private DifficultyEnum dIfficulty;
+	private DifficultyEnum difficulty;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonIgnoreProperties(value = { "problems" })
@@ -57,4 +56,8 @@ public class Problem {
 	@OneToMany(mappedBy = "problem", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Submission> submissions;
+
+	@OneToMany(mappedBy = "problem", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<Comment> comments;
 }

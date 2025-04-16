@@ -1,5 +1,5 @@
 package com.example.leetcode.util.constant;
 
 public enum SubmissionStatusEnum {
-	FAILED, PARTIAL, ACCEPTED
+	PENDING, ACCEPTED, PARTIAL, FAILED
 }

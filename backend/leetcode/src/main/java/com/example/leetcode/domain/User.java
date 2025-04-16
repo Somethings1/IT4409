@@ -34,9 +34,6 @@ public class User {
 
 	@NotBlank(message = "Password isn't blank'")
 	private String password;
-	private int age;
-
-	private String address;
 
 	@Column(columnDefinition = "MEDIUMTEXT")
 	private String refreshToken;
@@ -52,6 +49,10 @@ public class User {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Submission> submissions;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<Comment> comments;
 
 	// @PrePersist
 	// public void handleBeforeCreate() {
