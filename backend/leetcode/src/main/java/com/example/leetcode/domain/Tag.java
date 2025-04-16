@@ -10,17 +10,17 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "tags")
 @Getter
 @Setter
-public class Role {
+public class Tag {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -33,7 +33,7 @@ public class Role {
 	private String createdBy;
 	private String updatedBy;
 
-	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<User> users;
+	private List<Problem> problems;
 }

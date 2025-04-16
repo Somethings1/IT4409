@@ -17,10 +17,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "difficulties")
 @Getter
 @Setter
-public class Role {
+public class Difficulty {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -33,7 +33,7 @@ public class Role {
 	private String createdBy;
 	private String updatedBy;
 
-	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "difficulty", fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<User> users;
+	private List<Problem> problems;
 }
