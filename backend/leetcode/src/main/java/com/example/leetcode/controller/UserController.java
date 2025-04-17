@@ -1,19 +1,19 @@
 package com.example.leetcode.controller;
 
-import org.springframework.http.ResponseEntity;
+import java.util.List;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.leetcode.domain.User;
-import com.example.leetcode.domain.response.ResCreateUserDTO;
 import com.example.leetcode.service.UserService;
-import com.example.leetcode.util.annotation.ApiMessage;
-import com.example.leetcode.util.error.IdInvalidException;
 
-import jakarta.validation.Valid;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -31,18 +31,35 @@ public class UserController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	@PostMapping("/users")
-	@ApiMessage("Create a new user")
-	public ResponseEntity<ResCreateUserDTO> createNewUser(@Valid @RequestBody User postManUser)
-			throws IdInvalidException {
-		boolean isEmailExist = this.userService.isEmailExist(postManUser.getEmail());
-		if (isEmailExist) {
-			throw new IdInvalidException("Email " + postManUser.getEmail() + " existed!!!");
-		}
+	@PostMapping("/user")
+	public User createNewUser(@RequestBody User postManUser) {
 
-		String hashPassword = this.passwordEncoder.encode(postManUser.getPassword());
-		postManUser.setPassword(hashPassword);
-		postManUser.setRole();
+		User newUser = this.userService.handleCreateUser(postManUser);
+		return newUser;
+	}
+
+	@DeleteMapping("/user/{id}")
+	public String deleteUser(@PathVariable("id") long id) {
+		this.userService.handleDeleteUserByID(id);
+		return "Delete user";
+	}
+
+	@GetMapping("/user/{id}")
+	public User getUserByID(@PathVariable("id") long id) {
+		User user = this.userService.fetchUserByID(id);
+		return user;
+	}
+
+	@GetMapping("/user")
+	public List<User> getAllUsers() {
+		List<User> users = this.userService.fetchAllUsers();
+		return users;
+	}
+
+	@PutMapping("/user")
+	public User updateUser(@RequestBody User postManUser) {
+
+		return this.userService.handleUpdateUser(postManUser);
 	}
 
 }
