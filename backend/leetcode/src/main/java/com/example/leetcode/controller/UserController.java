@@ -9,6 +9,7 @@ import com.example.leetcode.domain.User;
 import com.example.leetcode.domain.response.ResCreateUserDTO;
 import com.example.leetcode.service.UserService;
 import com.example.leetcode.util.annotation.ApiMessage;
+import com.example.leetcode.util.error.IdInvalidException;
 
 import jakarta.validation.Valid;
 
@@ -32,10 +33,16 @@ public class UserController {
 
 	@PostMapping("/users")
 	@ApiMessage("Create a new user")
-	public ResponseEntity<ResCreateUserDTO> createNewUser(@Valid @RequestBody User postManUser) {
-		// TODO: process POST request
+	public ResponseEntity<ResCreateUserDTO> createNewUser(@Valid @RequestBody User postManUser)
+			throws IdInvalidException {
+		boolean isEmailExist = this.userService.isEmailExist(postManUser.getEmail());
+		if (isEmailExist) {
+			throw new IdInvalidException("Email " + postManUser.getEmail() + " existed!!!");
+		}
 
-		return entity;
+		String hashPassword = this.passwordEncoder.encode(postManUser.getPassword());
+		postManUser.setPassword(hashPassword);
+		postManUser.setRole();
 	}
 
 }

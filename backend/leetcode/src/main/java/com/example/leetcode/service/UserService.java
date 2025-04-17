@@ -10,4 +10,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserService {
 	private final UserRepository userRepository;
+
+	public boolean isEmailExist(String email) {
+		return this.userRepository.existsByEmail(email);
+	}
 }
