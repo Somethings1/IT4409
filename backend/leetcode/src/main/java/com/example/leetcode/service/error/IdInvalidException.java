@@ -1,4 +1,4 @@
-package com.example.leetcode.util.error;
+package com.example.leetcode.service.error;
 
 public class IdInvalidException extends Exception {
 	public IdInvalidException(String message) {
