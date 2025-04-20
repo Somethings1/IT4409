@@ -1,4 +1,4 @@
-package com.example.leetcode.service.error;
+package com.example.leetcode.util.error;
 
 import java.util.List;
 import java.util.stream.Collectors;

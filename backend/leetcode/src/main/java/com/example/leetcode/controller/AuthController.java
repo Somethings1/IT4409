@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.leetcode.domain.LoginDTO;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -20,7 +21,7 @@ public class AuthController {
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
 	@PostMapping("/login")
-	public ResponseEntity<LoginDTO> login(@RequestBody LoginDTO loginDTO) {
+	public ResponseEntity<LoginDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				loginDTO.getUsername(), loginDTO.getPassword());

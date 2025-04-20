@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.leetcode.domain.User;
 import com.example.leetcode.service.UserService;
-import com.example.leetcode.service.error.IdInvalidException;
+import com.example.leetcode.util.error.IdInvalidException;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
