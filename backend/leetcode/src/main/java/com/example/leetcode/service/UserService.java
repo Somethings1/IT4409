@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import com.example.leetcode.domain.User;
 import com.example.leetcode.repository.UserRepository;
 
-import lombok.AllArgsConstructor;
-
 @Service
 public class UserService {
 
