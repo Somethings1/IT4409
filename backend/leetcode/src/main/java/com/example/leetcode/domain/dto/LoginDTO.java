@@ -1,4 +1,4 @@
-package com.example.leetcode.domain;
+package com.example.leetcode.domain.dto;
 
 public class LoginDTO {
 	private String username;

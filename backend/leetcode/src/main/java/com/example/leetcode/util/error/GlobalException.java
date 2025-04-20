@@ -16,11 +16,11 @@ import com.example.leetcode.domain.response.RestResponse;
 @RestControllerAdvice
 public class GlobalException {
 	@ExceptionHandler(value = IdInvalidException.class)
-	public ResponseEntity<RestResponse<Object>> handleIdException(IdInvalidException idException) {
+	public ResponseEntity<RestResponse<Object>> handleIdException(Exception e) {
 		RestResponse<Object> res = new RestResponse<>();
 		res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-		res.setError(idException.getMessage());
-		res.setMessage("IdInvalidException");
+		res.setError(e.getMessage());
+		res.setMessage("Exception occurs ...");
 		return ResponseEntity.badRequest().body(res);
 	}
 

@@ -19,7 +19,10 @@ public class UserDetailCustom implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		com.example.leetcode.domain.User user = this.userService.handleGetUserByEmail(username);
+		com.example.leetcode.domain.User user = this.userService.handleGetUserByUsername(username);
+		if (user == null) {
+			throw new UsernameNotFoundException("Username/password is not valid");
+		}
 		return new User(
 				user.getEmail(),
 				user.getPassword(),
