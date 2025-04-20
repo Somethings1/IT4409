@@ -423,8 +423,7 @@ const [act,setAct]=useState([])
             <div className="card">
             
             
-            </div>
-          </div>
+         
           <div className="col-md-4" style={{maxHeight:"645px",overflowY:"auto",marginBottom:"15px"}}>
             <div className="card">
               <div className="card-header">
@@ -490,6 +489,8 @@ const [act,setAct]=useState([])
                 </div>
               </div>
             </div>
+          </div>
+          </div>
           </div>
         </div>
         <div className="row" style={{marginTop:"10px"}}>
