@@ -44,6 +44,16 @@ public class AuthController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		ResLoginDTO res = new ResLoginDTO();
+		User currentUserDB = this.userService.handleGetUserByUsername(loginDTO.getUsername());
+		if (currentUserDB != null) {
+
+			ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
+					currentUserDB.getId(),
+					currentUserDB.getEmail(),
+					currentUserDB.getName());
+
+			res.setUser(userLogin);
+		}
 		res.setAccessToken(access_token);
 		return ResponseEntity.ok().body(res);
 
