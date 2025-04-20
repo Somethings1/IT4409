@@ -2,9 +2,9 @@ import { RiSettings4Line } from "react-icons/ri";
 import { FaRegBell } from "react-icons/fa";
 import { FaRegUser,FaSearch } from "react-icons/fa";
 import '../Header/Header.css'
-import Modal from "../Modal/index.js";
+import Modal from "../Modal/index.jsx";
 
-import Notification from "./noti.js"
+import Notification from "./noti.jsx"
 function Header({size}) {
   return(<>
   

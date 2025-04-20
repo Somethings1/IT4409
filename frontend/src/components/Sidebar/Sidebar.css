@@ -5,7 +5,7 @@
     position: fixed;
     height: 100vh; 
     overflow-y: auto;
-    background-color: #0e0f28;
+    background-color:rgb(245, 245, 249);
     scroll-behavior: smooth;
     overflow: hidden; 
 }

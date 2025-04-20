@@ -6,9 +6,9 @@ import { FacebookProvider, LoginButton } from 'react-facebook';
 import facebook from '../introduce/facebook.png';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './useAuth.js';
+import { useAuth } from './useAuth.jsx';
 
-import { useLoading } from "./Loading.js";
+import { useLoading } from "./Loading.jsx";
 
 function LoginModal({ off, isSignup }) {
   const { startLoading, stopLoading } = useLoading();

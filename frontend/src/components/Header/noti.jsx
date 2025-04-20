@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../introduce/useAuth.js";
-import { useLoading } from "../introduce/Loading.js";
+import { useAuth } from "../introduce/useAuth.jsx";
+import { useLoading } from "../introduce/Loading.jsx";
 import { FaRegBell } from "react-icons/fa"; // Import đúng biểu tượng
 import "./noti.css";
 
@@ -20,7 +20,7 @@ const Notification = () => {
     startLoading();
 
     try {
-      const response = await fetch("http://localhost:5000/products/show", {
+      const response = await fetch("http://localhost:8080/problem/show", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user }),

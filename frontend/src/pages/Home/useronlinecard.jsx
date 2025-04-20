@@ -2,7 +2,7 @@ import React ,{useEffect,useState}from 'react';
 import { Box, Typography } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
-import { useAuth } from "../../components/introduce/useAuth.js";
+import { useAuth } from "../../components/introduce/useAuth.jsx";
 function UsersOnlineCard() {
     const { user, loading } = useAuth();
     const [dt,Setdt]=useState({labels:[0,0,0,0,0,0,0,0],data:[0,0,0,0,0,0,0,0]})
@@ -30,7 +30,7 @@ function UsersOnlineCard() {
         const fetchData = async () => {
 if(loading) return ;
 try {
-    const response = await fetch('http://localhost:5000/home/generatedailyCustomer', {
+    const response = await fetch('http://localhost:8080/home/generatedailyCustomer', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

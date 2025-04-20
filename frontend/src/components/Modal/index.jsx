@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './Modal.css'; 
 import { FaRegUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import {useAuth} from "../introduce/useAuth.js"
-import Avatar from '../Avatar/index.js';
+import {useAuth} from "../introduce/useAuth.jsx"
+import Avatar from '../Avatar/index.jsx';
 const Modal = () => {
   const {user,logout} =useAuth();
   const [isOpen, setIsOpen] = useState(false);

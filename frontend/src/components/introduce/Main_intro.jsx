@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from "react-router-dom";
-import LoginModal from './intro.js'
+import LoginModal from './intro.jsx'
 import './main.css'
 import { Navigate } from "react-router-dom";
 import Cookies from 'js-cookie';

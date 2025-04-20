@@ -2,12 +2,9 @@ import { Link, useLocation } from "react-router-dom";
 import './Sidebar.css';
 import { MdOutlineHome } from "react-icons/md";
 import { LuClipboardCheck } from "react-icons/lu";
-import { TbPackageImport, TbPackageExport } from "react-icons/tb";
-import { IoAddCircleOutline } from "react-icons/io5";
-import { GrGroup } from "react-icons/gr";
-import { FaKeycdn, FaRegCalendarAlt ,FaAngellist } from "react-icons/fa";
+
 import { useState, useEffect } from "react";
-import { MdManageAccounts } from "react-icons/md";
+
 
 
 function Sidebar({ change }) {
@@ -29,24 +26,7 @@ function Sidebar({ change }) {
       case '/home/manage-product':
         setSelected(2);
         break;
-      case '/home/import':
-        setSelected(3);
-        break;
-      case '/home/export':
-        setSelected(4);
-        break;
-      case '/home/user-role':
-      case '/home/manage-account':
-      case '/home/permissions':
-      case '/home/roles-group':
-        setSelected(5);
-        break;
-      case '/home/calendar':
-        setSelected(6);
-        break;
-      case '/home/surprised':
-        setSelected(7);
-        break;
+
       default:
         setSelected(1); // Nếu không khớp với bất kỳ trường hợp nào, thiết lập mặc định là 1
     }
@@ -68,7 +48,7 @@ function Sidebar({ change }) {
         <div className={`sidebar__icon ${!isExpanded ? "add_jus" : ""}`} style={!isExpanded?{marginRight:"0px",cursor:"pointer"}:{cursor:"pointer"}} onClick={toggleSidebar}>
           <svg
             stroke="currentColor"
-            fill="white"
+            fill="black"
             strokeWidth="0"
             viewBox="0 0 24 24"
             height="1em"

@@ -1,7 +1,7 @@
 import React,{useEffect,useState} from "react";
-import { useAuth } from "../../components/introduce/useAuth.js";
-import Sales_daily from "./user_daily.js"
-import Useronline from "./useronlinecard.js"
+import { useAuth } from "../../components/introduce/useAuth.jsx";
+import User_daily from "./user_daily.jsx"
+import Useronline from "./useronlinecard.jsx"
 // src/index.js hoặc src/App.js'
 // import CalendarComponent from "../Calendar/index.js"
 // import React from 'react';
@@ -59,7 +59,7 @@ const [act,setAct]=useState([])
       if (loading) return;
       const get_revenue = async () => {
         try {
-          const response = await fetch('http://localhost:5000/home/total_revenue', {
+          const response = await fetch('http://localhost:8080/home/total_revenue', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const [act,setAct]=useState([])
   
       const get_income = async () => {
         try {
-          const response = await fetch('http://localhost:5000/home/today_income', {
+          const response = await fetch('http://localhost:8080/home/today_income', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ const [act,setAct]=useState([])
       };
       const get_customer = async () => {
         try {
-          const response = await fetch('http://localhost:5000/home/new_customer', {
+          const response = await fetch('http://localhost:8080/home/new_customer', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const [act,setAct]=useState([])
       };
       const get_report_customer=async()=>{
         try {
-          const response = await fetch('http://localhost:5000/home/generateCustomerReport', {
+          const response = await fetch('http://localhost:8080/home/generateCustomerReport', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ const [act,setAct]=useState([])
       }
       const get_top_product=async()=>{
         try {
-          const response = await fetch('http://localhost:5000/home/generate_top_product', {
+          const response = await fetch('http://localhost:8080/home/generate_top_problem', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -175,7 +175,7 @@ const [act,setAct]=useState([])
       }
       const get_pending=async()=>{
         try {
-          const response = await fetch('http://localhost:5000/home/total_pending', {
+          const response = await fetch('http://localhost:8080/home/total_pending', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -197,7 +197,7 @@ const [act,setAct]=useState([])
       }
       const get_activity=async () => {
       try{
-        const activity = await fetch('http://localhost:5000/home/recent_activity',{
+        const activity = await fetch('http://localhost:8080/home/recent_activity',{
           method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -344,7 +344,7 @@ const [act,setAct]=useState([])
         </div>
         <div className="row row-card-no-pd" > 
           <div className="col-md-8">
-            <div className="card" style={{ width: "100%" }}>
+            <div className="card" style={{ width: "100%" ,height: "100%" }}>
               <div className="card-header">
                 <div className="card-head-row">
                   <div className="card-title">Thống kê người dùng</div>
@@ -407,12 +407,12 @@ const [act,setAct]=useState([])
           <div className="col-md-4">
             <div className="card card-primary">
               <div className="card card-primary">
-<Sales_daily />
+<User_daily />
 
               </div>
             
             </div>
-            <div className="card">
+            <div className="card card-principal">
 
               <Useronline />
             </div>

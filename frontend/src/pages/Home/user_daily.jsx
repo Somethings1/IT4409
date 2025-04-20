@@ -2,7 +2,7 @@ import React ,{useEffect,useState}from 'react';
 import { Box, Typography, Button, Menu, MenuItem } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto'; // Tự động đăng ký các thành phần biểu đồ
-import { useAuth } from "../../components/introduce/useAuth.js"    ;
+import { useAuth } from "../../components/introduce/useAuth.jsx";
 function Sales_daily() {
     const { user, loading } = useAuth();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -33,7 +33,7 @@ function Sales_daily() {
         const fetchData = async () => {
 if(loading) return ;
 try {
-    const response = await fetch('http://localhost:5000/home/generatedailySale', {
+    const response = await fetch('http://localhost:8080/home', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ try {
                 position: 'relative',
             }}
         >
-            <Typography variant="h6">Daily Resolve</Typography>
+            <Typography variant="h6">Resolve</Typography>
             <Typography variant="body2">{`${dt.date[0]}   ---   ${dt.date[7]}`}</Typography>
             <Typography variant="h4" sx={{ fontWeight: 'bold', marginTop: 1 }}>{`${Math.max(...dt.report).toLocaleString("vn-Vi")} đ`}</Typography>
 
