@@ -5,8 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 // Hàm để tạo nội dung tùy chỉnh cho thông báo
 const ToastContent = ({ title, message, color }) => (
   <div>
-    <h4 style={{ margin: 0, color }}>{title}</h4>
-    <p style={{ margin: '5px 0 0', color: '#333',lineHeight:1.5 }}>{message}</p>
+    <h4 style={{ margin: 0, color,textAlign: 'left',  }}>{title}</h4>
+    <p style={{ margin: '5px 0 0', color: '#333',lineHeight:1.5,textAlign: 'left' }}>{message}</p>
   </div>
 );
 

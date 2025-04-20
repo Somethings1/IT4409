@@ -23,7 +23,7 @@ function Sidebar({ change }) {
       case '/home':
         setSelected(1);
         break;
-      case '/home/manage-product':
+      case '/home/manage-problem':
         setSelected(2);
         break;
 
@@ -66,7 +66,7 @@ function Sidebar({ change }) {
         </Link>
       </li>
       <li className="sidebar__product">
-        <Link className={`sidebar__link ${selected === 2 ? 'active' : ''} ${!isExpanded ? "add_jus" : ""}`} style={!isExpanded?{padding:"15px 0px"}:{}} to='/home/manage-product'>
+        <Link className={`sidebar__link ${selected === 2 ? 'active' : ''} ${!isExpanded ? "add_jus" : ""}`} style={!isExpanded?{padding:"15px 0px"}:{}} to='/home/manage-problem'>
           <div className="sidebar__icon" style={!isExpanded?{marginRight:"0px"}:{}}><LuClipboardCheck /></div>
           {isExpanded && "Quản lí bài tập"}
         </Link>

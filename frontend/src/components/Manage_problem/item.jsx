@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+
 import "../Manage_problem/item.css";
 import { useAuth } from "../introduce/useAuth.jsx";
 import ProblemDetail from "./ProblemDetail.jsx";
@@ -13,44 +15,107 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [problemToDelete, setProblemToDelete] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
-
+  const navigate = useNavigate(); 
   // Danh sách bài toán mẫu
   const sampleProblems = [
     {
       id: 1,
-      title: "Circle Area",
-      description: "Calculate the area of a circle given its radius",
+      title: "Next Character",
+      description: "Find the next character in the English alphabet, wrapping from z to a",
       difficulty: "Medium",
-      category: "Math",
-      tags: ["Geometry"],
-      solution: "Use the formula A = πr²"
+      category: "String",
+      tags: ["Alphabet", "ASCII"],
+      solution: "Use character codes with wrap-around logic:\n1. Get ASCII code of input\n2. If 'z', return 'a'\n3. Else return next character",
+      example: {
+        input: "'d'",
+        output: "'e'",
+        explanation: "Next after 'd' is 'e'"
+      },
+      edgeCases: [
+        { input: "'z'", output: "'a'", explanation: "Wraps around alphabet" },
+        { input: "'a'", output: "'b'" }
+      ],
+      constraints: "Input is a lowercase English letter (a-z)",
+      implementations: {
+        javascript: `function nextChar(c) {\n  return c === 'z' ? 'a' : String.fromCharCode(c.charCodeAt(0) + 1);\n}`,
+        python: `c = input().strip()\nprint('a' if c == 'z' else chr(ord(c) + 1))`
+      }
     },
     {
       id: 2,
-      title: "Next Character",
-      description: "Given a character, return the next character in the alphabet",
-      difficulty: "Easy",
-      category: "String",
-      tags: ["Alphabet"],
-      solution: "Convert to ASCII code, increment, convert back"
+      title: "Circle Calculations",
+      description: "Calculate circumference and area of a circle given its radius",
+      difficulty: "Medium",
+      category: "Math",
+      tags: ["Geometry", "Formulas"],
+      solution: "Circumference = 2πr\nArea = πr²\nUse π=3.14 and round to 2 decimal places",
+      example: {
+        input: "5",
+        output: "31.40 78.50",
+        explanation: "Circumference: 2×3.14×5=31.40\nArea: 3.14×5²=78.50"
+      },
+      constraints: "1 ≤ r ≤ 1000",
+      implementations: {
+        javascript: `function circleCalculations(r) {\n  const pi = 3.14;\n  const circumference = (2 * pi * r).toFixed(2);\n  const area = (pi * r * r).toFixed(2);\n  return [circumference, area].join(' ');\n}`,
+        python: `import math\nr = int(input())\npi = 3.14\nprint(f"{2*pi*r:.2f} {pi*r*r:.2f}")`
+      }
     },
     {
       id: 3,
-      title: "Quadratic Equation",
-      description: "Solve a quadratic equation of form ax² + bx + c = 0",
-      difficulty: "Medium",
+      title: "Rectangle Calculation",
+      description: "Calculate perimeter and area of a rectangle for office partition design",
+      difficulty: "Easy",
       category: "Math",
-      tags: ["Algebra"],
-      solution: "Use the quadratic formula"
+      tags: ["Geometry", "Formulas"],
+      solution: "Perimeter = 2*(length + width)\nArea = length * width",
+      example: {
+        input: "5 3",
+        output: "16 15",
+        explanation: "Perimeter: 2*(5+3)=16\nArea: 5×3=15"
+      },
+      constraints: "1 ≤ width ≤ length ≤ 100",
+      implementations: {
+        javascript: `function calculateRectangle(l, w) {\n  return [2*(l+w), l*w].join(' ');\n}`,
+        python: `length, width = map(int, input().split())\nprint(2*(length+width), length*width)`
+      }
     },
     {
       id: 4,
-      title: "Two Sum",
-      description: "Find two numbers in an array that add up to a target",
+      title: "Basic Arithmetic Operations",
+      description: "Compute sum, difference, product, and integer quotient of two numbers",
       difficulty: "Easy",
-      category: "Array",
-      tags: ["Hash Table"],
-      solution: "Use a hash map to store complements"
+      category: "Math",
+      tags: ["Arithmetic"],
+      solution: "Use +, -, *, and // operators",
+      example: {
+        input: "7 3",
+        output: "10\n4\n21\n2",
+        explanation: "Sum: 7+3=10\nDifference: 7-3=4\nProduct: 7×3=21\nQuotient: 7÷3≈2 (floor division)"
+      },
+      constraints: "0 ≤ a, b ≤ 10⁹",
+      implementations: {
+        javascript: `function basicOperations(a, b) {\n  console.log(a+b);\n  console.log(a-b);\n  console.log(a*b);\n  console.log(Math.floor(a/b));\n}`,
+        python: `a, b = map(int, input().split())\nprint(a+b, a-b, a*b, a//b, sep='\\n')`
+      }
+    },
+    {
+      id: 5,
+      title: "Linear Equation Solver",
+      description: "Find the solution to a linear equation ax + b = c",
+      difficulty: "Medium",
+      category: "Math",
+      tags: ["Algebra", "Equations"],
+      solution: "x = (c - b) / a",
+      example: {
+        input: "2 -4 8",
+        output: "6.0",
+        explanation: "2x -4 = 8 → 2x=12 → x=6"
+      },
+      constraints: "-20 ≤ a,b,c ≤ 20\na ≠ 0",
+      implementations: {
+        javascript: `function solveLinearEquation(a, b, c) {\n  return (c - b) / a;\n}`,
+        python: `a, b, c = map(int, input().split())\nprint((c - b) / a)`
+      }
     }
   ];
 
@@ -81,6 +146,17 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
     fetchProblems();
   }, [user, refreshTrigger]);
 
+  const showCodeEditor = (problem) =>{
+    navigate('/home/code-editor', { 
+      state: { 
+        problem,
+        initialCode: {
+          javascript: problem.implementations?.javascript || '',
+          python: problem.implementations?.python || ''
+        }
+      }
+    });
+  }
   const showProblemDetail = (problem) => {
     setSelectedProblem(problem);
   };
@@ -165,14 +241,14 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
 
   return (
     <>
-      {selectedProblem && (
+      {/* {selectedProblem && (
         <ProblemDetail 
           problem={selectedProblem} 
           onClose={closeDetail} 
           onUpdate={handleUpdate}
         />
       )}
-      
+       */}
       {problemToDelete && (
         <DeleteProblemModal 
           problem={problemToDelete} 
@@ -206,7 +282,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
             <div className="problem-actions">
               <button 
                 className="action-button view-button"
-                onClick={() => showProblemDetail(problem)}
+                onClick={() => showCodeEditor(problem)}
               >
                 View
               </button>
