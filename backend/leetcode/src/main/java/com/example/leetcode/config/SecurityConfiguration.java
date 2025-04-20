@@ -32,18 +32,16 @@ public class SecurityConfiguration {
 	// return http.build();
 	// }
 
-	// @Bean
-	// public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	// http
-	// .authorizeHttpRequests(
-	// authz -> authz
-	// // .requestMatchers("/")
-	// // .permitAll()
-	// .anyRequest()
-	// // .authenticated()
-	// .permitAll())
-	// .sessionManagement(session ->
-	// session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-	// return http.build();
-	// }
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http
+				.csrf(c -> c.disable())
+				.authorizeHttpRequests(
+						authz -> authz
+								.requestMatchers("/").permitAll()
+								.anyRequest().permitAll())
+				.formLogin(f -> f.disable())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		return http.build();
+	}
 }
