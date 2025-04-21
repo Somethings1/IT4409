@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "../Manage_problem/index.css";
 import ProductGrid from "./item.jsx";
-import ProductForm from './ProductForm.jsx';
+import ProductForm from './ProblemForm.jsx';
 
 import { useLoading } from "../introduce/Loading.jsx"
 
