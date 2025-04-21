@@ -21,14 +21,7 @@ function Profile() {
   const { startLoading, stopLoading } = useLoading();
   const [newData, setNewData] = useState(null);
   const [refresh, setRefresh] = useState(false);
-  const [showBankForm, setShowBankForm] = useState(false);
-  const [bankAccounts, setBankAccounts] = useState([]);
-  const [newBankAccount, setNewBankAccount] = useState({
-    accountNumber: '',
-    bankName: '',
-    name: '',
-    image: '',
-  });
+ 
 const [image,SetImage]=useState(null)
 const [x,SetX]=useState(false);
   useEffect(() => {
@@ -49,7 +42,7 @@ const [x,SetX]=useState(false);
       stopLoading();
       setData(profileData);
       setNewData(profileData);
-      setBankAccounts(acc);
+    
     };
 
     fetchProfile();

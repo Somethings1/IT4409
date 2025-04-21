@@ -305,7 +305,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
               >
                 View
               </button>
-              <button 
+              {/* <button 
                 className="action-button edit-button"
                 onClick={() => showProblemDetail(problem)}
               >
@@ -316,7 +316,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
                 onClick={() => setProblemToDelete(problem)}
               >
                 Delete
-              </button>
+              </button> */}
             </div>
           </div>
         ))}

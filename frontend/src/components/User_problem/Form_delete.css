@@ -1,0 +1,127 @@
+.delete-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.delete-modal-content {
+  background-color: #fff;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.delete-modal-content h2 {
+  margin-top: 0;
+  color: #d32f2f;
+  text-align: center;
+}
+
+.problem-info {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.problem-info p {
+  margin: 5px 0;
+}
+
+.difficulty-badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 8px;
+  color: white;
+}
+
+.difficulty-badge.easy {
+  background-color: #00b8a3;
+}
+
+.difficulty-badge.medium {
+  background-color: #ffc01e;
+}
+
+.difficulty-badge.hard {
+  background-color: #ff375f;
+}
+
+.warning-message {
+  color: #d32f2f;
+  font-weight: 500;
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #ffebee;
+  border-radius: 4px;
+}
+
+.delete-input-group {
+  margin: 20px 0;
+}
+
+.delete-input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.delete-input-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.delete-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.delete-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.delete-btn-confirm {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.delete-btn-confirm:hover:not(:disabled) {
+  background-color: #b71c1c;
+}
+
+.delete-btn-cancel {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.delete-btn-cancel:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

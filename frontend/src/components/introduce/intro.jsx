@@ -55,6 +55,11 @@ function LoginModal({ off, isSignup }) {
             Cookies.set('user', JSON.stringify(user), { expires: 7, secure: true, sameSite: 'Strict' });
             login(user);  // Gọi hàm login sau khi đăng ký thành công
             navigate('/home');
+            // if (data.user.role_id === "Admin") {
+            //   navigate('/home');
+            // } else {
+            //   navigate('/code');
+            // }
           } else {
             setConfirm(true);
           }
@@ -75,10 +80,15 @@ function LoginModal({ off, isSignup }) {
         
         // Giả lập xử lý login
         localStorage.setItem("token", "fakeToken");
-        const user = { email: formData.email, role_id: 2 };  // role_id có thể lấy từ API thực tế
+        const user = { email: formData.email, role_id: res.data.user.role_id};  // role_id có thể lấy từ API thực tế
         Cookies.set("user", JSON.stringify(user), { expires: 7, secure: true, sameSite: 'Strict' });
         login(user);
         navigate('/home');
+        // if (data.user.role_id === "Admin") {
+        //   navigate('/home');
+        // } else {
+        //   navigate('/code');
+        // }
       }, 2000); // Giả lập thời gian chờ 2s
     }
   };
@@ -106,6 +116,11 @@ function LoginModal({ off, isSignup }) {
       Cookies.set("user", JSON.stringify({ email: body.email, role_id: 2 }), { expires: 7, secure: true, sameSite: 'Strict' });
       login({ email: body.email, role_id: 2 });
       navigate('/home');
+      // if (data.user.role_id === "Admin") {
+      //   navigate('/home');
+      // } else {
+      //   navigate('/code');
+      // }
     }, 2000); // Giả lập thời gian chờ 2s
   };
 
