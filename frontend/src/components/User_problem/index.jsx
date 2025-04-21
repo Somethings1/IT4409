@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "../Manage_problem/index.css";
+import "../User_problem/index.css";
 import ProductGrid from "./item.jsx";
 import ProductForm from './ProblemForm.jsx';
 
@@ -103,7 +103,7 @@ const ProductManager = () => {
               <h1 style={{ textAlign: "center", fontSize: "16px" }}>đây là nơi chia bài toán theo dạng</h1>
             )}
           </div>
-          <button className="create-button" onClick={turnonA}>Add</button>
+          
         </div>
         
         <div className="extended-filter-bar">

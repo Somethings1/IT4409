@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLoading } from "../introduce/Loading.jsx";
 import { useAuth } from "../introduce/useAuth.jsx";
 import { notify } from '../Notification/notification.jsx';
-import "../Manage_problem/ProblemDetail.css";
+import "./ProblemDetail.css";
 
 const ProblemDetail = ({ problem, onClose, onUpdate }) => {
   const { startLoading, stopLoading } = useLoading();

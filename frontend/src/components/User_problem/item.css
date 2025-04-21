@@ -1,110 +1,111 @@
- /* Problem Grid Styles */
-.problem-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  padding: 20px;
+/* Problem Table Styles */
+.problem-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
 }
 
-.problem-card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  transition: transform 0.2s;
-}
-
-.problem-card:hover {
-  transform: translateY(-5px);
-}
-
-.problem-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.difficulty-badge {
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: bold;
-  margin-right: 10px;
-  color: white;
-}
-
-.difficulty-badge.easy {
-  background-color: #00b8a3;
-}
-
-.difficulty-badge.medium {
-  background-color: #ffc01e;
-}
-
-.difficulty-badge.hard {
-  background-color: #ff375f;
-}
-
-.problem-title {
-  margin: 0;
-  font-size: 18px;
-  color: #2d2d2d;
-}
-
-.problem-category {
+.problem-table {
+  width: 100%;
+  border-collapse: collapse;
   font-size: 14px;
-  color: #666;
-  margin-bottom: 10px;
 }
 
-.problem-tags {
-  color: #888;
+.problem-table th {
+  background-color: #f5f5f5;
+  padding: 12px 15px;
+  text-align: central;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
 }
 
-.problem-description {
-  font-size: 14px;
-  color: #444;
-  margin-bottom: 15px;
-  line-height: 1.4;
+.problem-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: middle;
 }
 
-.problem-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.action-button {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
+.problem-row {
   cursor: pointer;
-  font-size: 14px;
   transition: background-color 0.2s;
 }
 
-.view-button {
+.problem-row:hover {
+  background-color: #f9f9f9;
+}
+
+.problem-title-cell {
+  min-width: 250px;
+}
+
+.problem-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+  text-align: left;
+
+}
+
+.problem-description {
+  color: #666;
+  font-size: 13px;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-submitted {
+  background-color: #e6f7ee;
+  color: #00a854;
+}
+
+.status-pending {
+  background-color: #fff7e6;
+  color: #fa8c16;
+}
+
+.status-partial {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+/* Tags */
+.problem-tag {
+  display: inline-block;
   background-color: #f0f0f0;
-  color: #333;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: #555;
+  text-align: left;
+
 }
 
-.view-button:hover {
-  background-color: #e0e0e0;
+/* Difficulty Badges */
+.difficulty-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.edit-button {
-  background-color: #4a9ff5;
-  color: white;
+.difficulty-badge.easy {
+  background-color: #e6f7ee;
+  color: #00a854;
 }
 
-.edit-button:hover {
-  background-color: #3a8ee5;
+.difficulty-badge.medium {
+  background-color: #fff7e6;
+  color: #fa8c16;
 }
 
-.delete-button {
-  background-color: #ff5c5c;
-  color: white;
-}
-
-.delete-button:hover {
-  background-color: #e54b4b;
+.difficulty-badge.hard {
+  background-color: #ffe6e6;
+  color: #f5222d;
 }

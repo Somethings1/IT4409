@@ -39,7 +39,7 @@ function App() {
         </Route>
             {/* User */}
         <Route
-          path="/shop"
+          path="/code"
           element={
             <ProtectedRoute role="User">
               <LayoutUser/>
@@ -48,7 +48,7 @@ function App() {
         >
               <Route index element={<Home />} />
               <Route path='profile' element={<Profile/>}/>
-              <Route path="user-problem" element={<UserProblem />} />
+              <Route path="manage-problem" element={<UserProblem />} />
               <Route path="code-editor" element={<CodeEditor />} />
           {/* <Route path="try-on" element={<TryOn />} /> */}
           
