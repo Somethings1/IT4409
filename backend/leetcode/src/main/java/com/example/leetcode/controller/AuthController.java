@@ -56,6 +56,23 @@ public class AuthController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
+	@PostMapping("/register")
+	@ApiMessage("Register a new user")
+	public ResponseEntity<ResCreateUserDTO> register(@Valid @RequestBody User postmanUser) throws IdInvalidException {
+
+		boolean isEmailExist = this.userService.isEmailExist(postmanUser.getEmail());
+		if (isEmailExist) {
+			throw new IdInvalidException("Email " + postmanUser.getEmail() + " existed!!!");
+		}
+
+		String hashPassword = this.passwordEncoder.encode(postmanUser.getPassword());
+		postmanUser.setPassword(hashPassword);
+
+		User newUser = this.userService.handleCreateUser(postmanUser);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(newUser));
+	}
+
 	@PostMapping("/login")
 	public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
 
