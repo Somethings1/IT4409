@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-
-import "../Manage_problem/item.css";
+import "./item.css";
 import { useAuth } from "../introduce/useAuth.jsx";
 import ProblemDetail from "./ProblemDetail.jsx";
 import DeleteProblemModal from "./DeleteProblemModal.jsx";
@@ -15,7 +14,8 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [problemToDelete, setProblemToDelete] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
   // Danh sách bài toán mẫu
   const sampleProblems = [
     {
@@ -25,6 +25,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       difficulty: "Medium",
       category: "String",
       tags: ["Alphabet", "ASCII"],
+      status: "Submitted", // Thêm trạng thái
       solution: "Use character codes with wrap-around logic:\n1. Get ASCII code of input\n2. If 'z', return 'a'\n3. Else return next character",
       example: {
         input: "'d'",
@@ -48,6 +49,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       difficulty: "Medium",
       category: "Math",
       tags: ["Geometry", "Formulas"],
+      status: "Pending", // Thêm trạng thái
       solution: "Circumference = 2πr\nArea = πr²\nUse π=3.14 and round to 2 decimal places",
       example: {
         input: "5",
@@ -67,6 +69,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       difficulty: "Easy",
       category: "Math",
       tags: ["Geometry", "Formulas"],
+      status: "Partial", // Thêm trạng thái
       solution: "Perimeter = 2*(length + width)\nArea = length * width",
       example: {
         input: "5 3",
@@ -86,6 +89,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       difficulty: "Easy",
       category: "Math",
       tags: ["Arithmetic"],
+      status: "Submitted", // Thêm trạng thái
       solution: "Use +, -, *, and // operators",
       example: {
         input: "7 3",
@@ -105,6 +109,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       difficulty: "Medium",
       category: "Math",
       tags: ["Algebra", "Equations"],
+      status: "Pending", // Thêm trạng thái
       solution: "x = (c - b) / a",
       example: {
         input: "2 -4 8",
@@ -146,8 +151,8 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
     fetchProblems();
   }, [user, refreshTrigger]);
 
-  const showCodeEditor = (problem) =>{
-    navigate('/home/code-editor', { 
+  const showCodeEditor = (problem) => {
+    navigate('/code/code-editor', { 
       state: { 
         problem,
         initialCode: {
@@ -156,60 +161,15 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
         }
       }
     });
-  }
-  const showProblemDetail = (problem) => {
-    setSelectedProblem(problem);
-    // ProblemDetail(problem);
   };
 
-  const handleDelete = async (problem) => {
-    try {
-      startLoading();
-      // Trong thực tế, bạn sẽ gọi API xóa ở đây
-      // await fetch(`http://localhost:8080/problems/${problem.id}`, { method: 'DELETE' });
-      
-      // Giả lập xóa thành công
-      setTimeout(() => {
-        notify(1, `Problem "${problem.title}" deleted successfully`, "Success");
-        setRefreshTrigger(prev => !prev);
-        setProblemToDelete(null);
-        stopLoading();
-      }, 500);
-    } catch (error) {
-      notify(2, `Failed to delete problem "${problem.title}"`, "Error");
-      stopLoading();
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "Submitted": return "status-submitted";
+      case "Pending": return "status-pending";
+      case "Partial": return "status-partial";
+      default: return "";
     }
-  };
-
-  const handleUpdate = async (updatedProblem) => {
-    try {
-      startLoading();
-      // Trong thực tế, bạn sẽ gọi API cập nhật ở đây
-      // const response = await fetch(`http://localhost:8080/problems/${updatedProblem.id}`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(updatedProblem)
-      // });
-      
-      // Giả lập cập nhật thành công
-      setTimeout(() => {
-        notify(1, `Problem "${updatedProblem.title}" updated successfully`, "Success");
-        setSelectedProblem(null);
-        setRefreshTrigger(prev => !prev);
-        stopLoading();
-      }, 500);
-    } catch (error) {
-      notify(2, `Failed to update problem "${updatedProblem.title}"`, "Error");
-      stopLoading();
-    }
-  };
-
-  const closeDetail = () => {
-    setSelectedProblem(null);
-  };
-
-  const closeDeleteModal = () => {
-    setProblemToDelete(null);
   };
 
   // Lọc bài toán theo các tiêu chí
@@ -242,32 +202,6 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
 
   return (
     <>
-      {/* {selectedProblem && (
-        <ProblemDetail 
-          problem={selectedProblem} 
-          onClose={closeDetail} 
-          onUpdate={handleUpdate}
-        />
-      )} */}
-      
-         <div>
-   
-
-    {/* Hiển thị ProblemDetail khi có bài toán được chọn */}
-    {/* {selectedProblem && (
-      <ProblemDetail 
-        problem={selectedProblem} 
-        onClose={() => setSelectedProblem(null)}
-        onUpdate={(updatedProblem) => {
-          // Cập nhật danh sách bài toán
-          setProblems(prev => 
-            prev.map(p => p.id === updatedProblem.id ? updatedProblem : p)
-          );
-          setSelectedProblem(null);
-        }}
-      />
-    )} */}
-  </div>
       {problemToDelete && (
         <DeleteProblemModal 
           problem={problemToDelete} 
@@ -276,50 +210,52 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
         />
       )}
       
-      <div className="problem-grid">
-        {filteredProblems.map((problem) => (
-          <div className="problem-card" key={problem.id}>
-            <div className="problem-header">
-              <span className={`difficulty-badge ${problem.difficulty.toLowerCase()}`}>
-                {problem.difficulty}
-              </span>
-              <h3 className="problem-title">{problem.title}</h3>
-            </div>
-            
-            <div className="problem-category">
-              {problem.category} {problem.tags && problem.tags.length > 0 && (
-                <span className="problem-tags">• {problem.tags.join(", ")}</span>
-              )}
-            </div>
-            
-            <p className="problem-description">
-              {problem.description.length > 100 
-                ? `${problem.description.substring(0, 100)}...` 
-                : problem.description}
-            </p>
-            
-            <div className="problem-actions">
-              <button 
-                className="action-button view-button"
+      <div className="problem-table-container">
+        <table className="problem-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Title</th>
+              <th >Tags</th>
+              <th>Category</th>
+              <th>Difficulty</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredProblems.map((problem) => (
+              <tr 
+                key={problem.id} 
+                className="problem-row"
                 onClick={() => showCodeEditor(problem)}
               >
-                View
-              </button>
-              <button 
-                className="action-button edit-button"
-                onClick={() => showProblemDetail(problem)}
-              >
-                Edit
-              </button>
-              <button 
-                className="action-button delete-button"
-                onClick={() => setProblemToDelete(problem)}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+                <td>
+                  <span className={`status-badge ${getStatusClass(problem.status)}`}>
+                    {problem.status}
+                  </span>
+                </td>
+                <td className="problem-title-cell">
+                  <div className="problem-title">{problem.title}</div>
+                  <div className="problem-description">
+                    {problem.description.length > 100 
+                      ? `${problem.description.substring(0, 100)}...` 
+                      : problem.description}
+                  </div>
+                </td>
+                <td>
+                  {problem.tags && problem.tags.map(tag => (
+                    <span key={tag} className="problem-tag">{tag}</span>
+                  ))}
+                </td>
+                <td>{problem.category}</td>
+                <td>
+                  <span className={`difficulty-badge ${problem.difficulty.toLowerCase()}`}>
+                    {problem.difficulty}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </>
   );

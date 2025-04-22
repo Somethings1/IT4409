@@ -1,0 +1,111 @@
+/* Problem Table Styles */
+.problem-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.problem-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.problem-table th {
+  background-color: #f5f5f5;
+  padding: 12px 15px;
+  text-align: central;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.problem-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: middle;
+}
+
+.problem-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.problem-row:hover {
+  background-color: #f9f9f9;
+}
+
+.problem-title-cell {
+  min-width: 250px;
+}
+
+.problem-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+  text-align: left;
+
+}
+
+.problem-description {
+  color: #666;
+  font-size: 13px;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-submitted {
+  background-color: #e6f7ee;
+  color: #00a854;
+}
+
+.status-pending {
+  background-color: #fff7e6;
+  color: #fa8c16;
+}
+
+.status-partial {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+/* Tags */
+.problem-tag {
+  display: inline-block;
+  background-color: #f0f0f0;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: #555;
+  text-align: left;
+
+}
+
+/* Difficulty Badges */
+.difficulty-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.difficulty-badge.easy {
+  background-color: #e6f7ee;
+  color: #00a854;
+}
+
+.difficulty-badge.medium {
+  background-color: #fff7e6;
+  color: #fa8c16;
+}
+
+.difficulty-badge.hard {
+  background-color: #ffe6e6;
+  color: #f5222d;
+}

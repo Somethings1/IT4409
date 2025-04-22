@@ -13,7 +13,12 @@ function Main(){
    const location = useLocation();
    const storedUser = Cookies.get("user");
    let user = null;
- 
+   useEffect(()=>{
+    if(location.state){
+    notify(2,"bạn phải đăng nhập","Thất bại")
+  }
+  },[])
+  
    
    if (storedUser) {
      try {
