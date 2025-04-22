@@ -17,5 +17,15 @@ public class ResUserDTO {
 	private String email;
 	private Instant createdAt;
 	private Instant updatedAt;
+	private RoleUser role;
+
+	@Getter
+	@Setter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class RoleUser {
+		private long id;
+		private String name;
+	}
 
 }

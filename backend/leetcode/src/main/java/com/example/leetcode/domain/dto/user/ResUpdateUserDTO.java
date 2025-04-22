@@ -11,4 +11,12 @@ public class ResUpdateUserDTO {
 	private long id;
 	private String name;
 	private Instant updatedAt;
+	private RoleUser role;
+
+	@Getter
+	@Setter
+	public static class RoleUser {
+		private long id;
+		private String name;
+	}
 }

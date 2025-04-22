@@ -28,7 +28,6 @@ import com.example.leetcode.util.annotation.ApiMessage;
 import com.example.leetcode.util.error.IdInvalidException;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -89,11 +88,12 @@ public class AuthController {
 			ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
 					currentUserDB.getId(),
 					currentUserDB.getEmail(),
-					currentUserDB.getName());
+					currentUserDB.getName(),
+					currentUserDB.getRole());
 
 			res.setUser(userLogin);
 		}
-		String access_token = this.securityUtil.createAccessToken(authentication.getName(), res.getUser());
+		String access_token = this.securityUtil.createAccessToken(authentication.getName(), res);
 
 		res.setAccessToken(access_token);
 		String refresh_token = this.securityUtil.createRefreshToken(loginDTO.getUsername(), res);
@@ -126,6 +126,7 @@ public class AuthController {
 			userLogin.setId(currentUserDB.getId());
 			userLogin.setEmail(currentUserDB.getEmail());
 			userLogin.setName(currentUserDB.getName());
+			userLogin.setRole(currentUserDB.getRole());
 		}
 		return ResponseEntity.ok().body(userLogin);
 	}
@@ -151,12 +152,13 @@ public class AuthController {
 			ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
 					currentUserDB.getId(),
 					currentUserDB.getEmail(),
-					currentUserDB.getName());
+					currentUserDB.getName(),
+					currentUserDB.getRole());
 
 			res.setUser(userLogin);
 		}
 
-		String access_token = this.securityUtil.createAccessToken(email, res.getUser());
+		String access_token = this.securityUtil.createAccessToken(email, res);
 		res.setAccessToken(access_token);
 		String new_refresh_token = this.securityUtil.createRefreshToken(email, res);
 

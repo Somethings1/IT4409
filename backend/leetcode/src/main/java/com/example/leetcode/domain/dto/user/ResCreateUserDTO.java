@@ -12,4 +12,12 @@ public class ResCreateUserDTO {
 	private String name;
 	private String email;
 	private Instant createdAt;
+	private RoleUser role;
+
+	@Getter
+	@Setter
+	public static class RoleUser {
+		private long id;
+		private String name;
+	}
 }

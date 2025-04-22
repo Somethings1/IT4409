@@ -4,60 +4,69 @@ import java.time.Instant;
 import java.util.List;
 
 import com.example.leetcode.util.SecurityUtil;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users")
+@Table(name = "permissions")
 @Getter
 @Setter
-public class User {
+@NoArgsConstructor
+public class Permission {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+
+	@NotBlank(message = "Name must not blank!")
 	private String name;
 
-	@NotBlank(message = "Email isn't blank'")
-	private String email;
+	@NotBlank(message = "API Path must not blank!")
+	private String apiPath;
 
-	@NotBlank(message = "Password isn't blank'")
-	private String password;
+	@NotBlank(message = "Method must not blank!")
+	private String method;
 
-	@Column(columnDefinition = "MEDIUMTEXT")
-	private String refreshToken;
+	@NotBlank(message = "Module must not blank!")
+	private String module;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
 	private Instant createdAt;
 	private Instant updatedAt;
 	private String createdBy;
 	private String updatedBy;
-	@ManyToOne
-	@JoinColumn(name = "role_id")
-	private Role role;
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<Submission> submissions;
+	private List<Role> roles;
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-	@JsonIgnore
-	private List<Comment> comments;
+	/**
+	 * @param name
+	 * @param apiPath
+	 * @param method
+	 * @param module
+	 */
+	public Permission(@NotBlank(message = "Name must not blank!") String name,
+			@NotBlank(message = "API Path must not blank!") String apiPath,
+			@NotBlank(message = "Method must not blank!") String method,
+			@NotBlank(message = "Module must not blank!") String module) {
+		this.name = name;
+		this.apiPath = apiPath;
+		this.method = method;
+		this.module = module;
+	}
 
 	@PrePersist
 	public void handleBeforeCreate() {

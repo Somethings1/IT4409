@@ -1,4 +1,4 @@
-package com.example.leetcode.util.error;
+package com.example.leetcode.util;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

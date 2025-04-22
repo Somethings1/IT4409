@@ -9,22 +9,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.example.leetcode.domain.Role;
 import com.example.leetcode.domain.User;
-import com.example.leetcode.domain.dto.Meta;
 import com.example.leetcode.domain.dto.ResultPaginationDTO;
 import com.example.leetcode.domain.dto.user.ResCreateUserDTO;
 import com.example.leetcode.domain.dto.user.ResUpdateUserDTO;
 import com.example.leetcode.domain.dto.user.ResUserDTO;
 import com.example.leetcode.repository.UserRepository;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class UserService {
 
 	private final UserRepository userRepository;
-
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+	private final RoleService roleService;
 
 	public User handleCreateUser(User user) {
 		if (!this.userRepository.existsByEmail(user.getEmail()))
@@ -51,6 +51,13 @@ public class UserService {
 
 	public ResCreateUserDTO convertToResCreateUserDTO(User user) {
 		ResCreateUserDTO dto = new ResCreateUserDTO();
+		ResCreateUserDTO.RoleUser role = new ResCreateUserDTO.RoleUser();
+		if (user.getRole() != null) {
+			role.setId(user.getRole().getId());
+			role.setName(user.getRole().getName());
+			dto.setRole(role);
+
+		}
 		dto.setId(user.getId());
 		dto.setName(user.getName());
 		dto.setEmail(user.getEmail());
@@ -60,6 +67,14 @@ public class UserService {
 
 	public ResUserDTO convertToResUserDTO(User user) {
 		ResUserDTO dto = new ResUserDTO();
+		ResUserDTO.RoleUser role = new ResUserDTO.RoleUser();
+
+		if (user.getRole() != null) {
+			role.setId(user.getRole().getId());
+			role.setName(user.getRole().getName());
+			dto.setRole(role);
+
+		}
 		dto.setId(user.getId());
 		dto.setName(user.getName());
 		dto.setEmail(user.getEmail());
@@ -73,17 +88,22 @@ public class UserService {
 		dto.setId(user.getId());
 		dto.setName(user.getName());
 		dto.setUpdatedAt(user.getUpdatedAt());
-		return dto;
-	}
 
-	public List<User> fetchAllUser() {
-		return this.userRepository.findAll();
+		ResUpdateUserDTO.RoleUser role = new ResUpdateUserDTO.RoleUser();
+
+		if (user.getRole() != null) {
+			role.setId(user.getRole().getId());
+			role.setName(user.getRole().getName());
+			dto.setRole(role);
+
+		}
+		return dto;
 	}
 
 	public ResultPaginationDTO fetchAllUser(Specification<User> specification, Pageable pageable) {
 		Page<User> page = this.userRepository.findAll(specification, pageable);
 		ResultPaginationDTO result = new ResultPaginationDTO();
-		Meta meta = new Meta();
+		ResultPaginationDTO.Meta meta = new ResultPaginationDTO.Meta();
 
 		meta.setPage(pageable.getPageNumber() + 1);
 		meta.setPageSize(pageable.getPageSize());
@@ -93,12 +113,7 @@ public class UserService {
 		result.setMeta(meta);
 
 		List<ResUserDTO> dtos = page.getContent()
-				.stream().map(user -> new ResUserDTO(
-						user.getId(),
-						user.getName(),
-						user.getEmail(),
-						user.getCreatedAt(),
-						user.getUpdatedAt()))
+				.stream().map(user -> convertToResUserDTO(user))
 				.collect(Collectors.toList());
 
 		result.setResult(dtos);
@@ -110,6 +125,11 @@ public class UserService {
 		User currentUser = fetchUserById(reqUser.getId());
 
 		currentUser.setName(reqUser.getName());
+		if (reqUser.getRole() != null) {
+			Role role = this.roleService.handleFetchRoleById(reqUser.getRole().getId());
+			currentUser.setRole(role);
+
+		}
 
 		// update
 		currentUser = this.userRepository.save(currentUser);
