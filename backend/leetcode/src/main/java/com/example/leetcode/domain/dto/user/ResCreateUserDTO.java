@@ -1,4 +1,4 @@
-package com.example.leetcode.domain.response;
+package com.example.leetcode.domain.dto.user;
 
 import java.time.Instant;
 
@@ -11,14 +11,5 @@ public class ResCreateUserDTO {
 	private long id;
 	private String name;
 	private String email;
-	private String password;
 	private Instant createdAt;
-	private RoleUser role;
-
-	@Getter
-	@Setter
-	public static class RoleUser {
-		private long id;
-		private String name;
-	}
 }

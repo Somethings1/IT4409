@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.leetcode.domain.User;
 import com.example.leetcode.domain.dto.LoginDTO;
 import com.example.leetcode.domain.dto.ResLoginDTO;
-import com.example.leetcode.domain.response.ResCreateUserDTO;
+import com.example.leetcode.domain.dto.user.ResCreateUserDTO;
 import com.example.leetcode.service.UserService;
 import com.example.leetcode.util.SecurityUtil;
 import com.example.leetcode.util.annotation.ApiMessage;
@@ -111,23 +111,4 @@ public class AuthController {
 		return ResponseEntity.ok().body(userLogin);
 	}
 
-	// @PostMapping("/register")
-	// @ApiMessage("Register a new user")
-	// public ResponseEntity<ResCreateUserDTO> register(@Valid @RequestBody User
-	// postmanUser) throws IdInvalidException {
-
-	// boolean isEmailExist = this.userService.isEmailExist(postmanUser.getEmail());
-	// if (isEmailExist) {
-	// throw new IdInvalidException("Email " + postmanUser.getEmail() + "
-	// existed!!!");
-	// }
-
-	// String hashPassword = this.passwordEncoder.encode(postmanUser.getPassword());
-	// postmanUser.setPassword(hashPassword);
-
-	// User newUser = this.userService.handleCreateUser(postmanUser);
-
-	// return
-	// ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(newUser));
-	// }
 }
