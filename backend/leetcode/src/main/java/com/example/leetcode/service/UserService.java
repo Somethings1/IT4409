@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.leetcode.domain.Role;
 import com.example.leetcode.domain.User;
-import com.example.leetcode.domain.dto.ResultPaginationDTO;
-import com.example.leetcode.domain.dto.user.ResCreateUserDTO;
-import com.example.leetcode.domain.dto.user.ResUpdateUserDTO;
-import com.example.leetcode.domain.dto.user.ResUserDTO;
+import com.example.leetcode.domain.response.ResultPaginationDTO;
+import com.example.leetcode.domain.response.user.ResCreateUserDTO;
+import com.example.leetcode.domain.response.user.ResUpdateUserDTO;
+import com.example.leetcode.domain.response.user.ResUserDTO;
 import com.example.leetcode.repository.UserRepository;
 
 import lombok.AllArgsConstructor;

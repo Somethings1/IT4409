@@ -1,4 +1,4 @@
-package com.example.leetcode.domain.dto;
+package com.example.leetcode.domain.response;
 
 import com.example.leetcode.domain.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;

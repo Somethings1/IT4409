@@ -1,7 +1,12 @@
-package com.example.leetcode.domain.dto;
+package com.example.leetcode.domain.request;
 
-public class LoginDTO {
+import jakarta.validation.constraints.NotBlank;
+
+public class ReqLoginDTO {
+	@NotBlank(message = "Username must not blank")
 	private String username;
+
+	@NotBlank(message = "Password must not blank")
 	private String password;
 
 	public String getUsername() {

@@ -1,4 +1,4 @@
-package com.example.leetcode.domain.dto.user;
+package com.example.leetcode.domain.response.user;
 
 import java.time.Instant;
 
@@ -7,11 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResCreateUserDTO {
+public class ResUpdateUserDTO {
 	private long id;
 	private String name;
-	private String email;
-	private Instant createdAt;
+	private Instant updatedAt;
 	private RoleUser role;
 
 	@Getter

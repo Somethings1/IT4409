@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.leetcode.domain.Permission;
-import com.example.leetcode.domain.dto.ResultPaginationDTO;
+import com.example.leetcode.domain.response.ResultPaginationDTO;
 import com.example.leetcode.repository.PermissionRepository;
 
 import lombok.AllArgsConstructor;

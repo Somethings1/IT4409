@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.leetcode.domain.User;
-import com.example.leetcode.domain.dto.LoginDTO;
-import com.example.leetcode.domain.dto.ResLoginDTO;
-import com.example.leetcode.domain.dto.user.ResCreateUserDTO;
+import com.example.leetcode.domain.request.ReqLoginDTO;
+import com.example.leetcode.domain.response.ResLoginDTO;
+import com.example.leetcode.domain.response.user.ResCreateUserDTO;
 import com.example.leetcode.service.UserService;
 import com.example.leetcode.util.SecurityUtil;
 import com.example.leetcode.util.annotation.ApiMessage;
@@ -73,7 +73,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
+	public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody ReqLoginDTO loginDTO) {
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				loginDTO.getUsername(), loginDTO.getPassword());

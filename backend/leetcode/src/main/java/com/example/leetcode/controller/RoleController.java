@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.leetcode.domain.Role;
-import com.example.leetcode.domain.dto.ResultPaginationDTO;
+import com.example.leetcode.domain.response.ResultPaginationDTO;
 import com.example.leetcode.service.RoleService;
 import com.example.leetcode.util.annotation.ApiMessage;
 import com.example.leetcode.util.error.IdInvalidException;

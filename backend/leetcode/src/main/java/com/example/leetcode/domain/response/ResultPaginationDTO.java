@@ -1,4 +1,4 @@
-package com.example.leetcode.domain.dto;
+package com.example.leetcode.domain.response;
 
 import lombok.Getter;
 import lombok.Setter;
