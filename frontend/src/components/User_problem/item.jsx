@@ -16,6 +16,10 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   const [refreshTrigger, setRefreshTrigger] = useState(false);
   const navigate = useNavigate();
 
+  const [sortField, setSortField] = useState('');
+  const [sortDirection, setSortDirection] = useState('asc'); // asc hoặc desc
+  
+
   // Danh sách bài toán mẫu
   const sampleProblems = [
     {
@@ -172,6 +176,16 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
     }
   };
 
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+  
+
   // Lọc bài toán theo các tiêu chí
   let filteredProblems = problems.slice();
   
@@ -200,6 +214,32 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
     filteredProblems.reverse();
   }
 
+  if (sortField) {
+    filteredProblems.sort((a, b) => {
+      const valA = a[sortField] ?? '';
+      const valB = b[sortField] ?? '';
+      
+      if (typeof valA === 'string') {
+        return sortDirection === 'asc'
+          ? valA.localeCompare(valB)
+          : valB.localeCompare(valA);
+      }
+  
+      return sortDirection === 'asc' ? valA - valB : valB - valA;
+    });
+  }
+  
+  
+  if (sortField === 'difficulty') {
+    const difficultyOrder = { "Easy": 1, "Medium": 2, "Hard": 3 };
+    filteredProblems.sort((a, b) => {
+      const valA = difficultyOrder[a.difficulty];
+      const valB = difficultyOrder[b.difficulty];
+      return sortDirection === 'asc' ? valA - valB : valB - valA;
+    });
+  }
+  
+
   return (
     <>
       {problemToDelete && (
@@ -212,15 +252,22 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       
       <div className="problem-table-container">
         <table className="problem-table">
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Title</th>
-              <th >Tags</th>
-              <th>Category</th>
-              <th>Difficulty</th>
-            </tr>
-          </thead>
+         <thead>
+          <tr>
+            <th onClick={() => handleSort('status')}>
+              Status {sortField === 'status' && (sortDirection === 'asc' ? '↑' : '↓')}</th>
+            <th onClick={() => handleSort('title')}>
+              Title {sortField === 'title' && (sortDirection === 'asc' ? '↑' : '↓')}
+            </th>
+            <th onClick={() => handleSort('tags')}>
+              Tags </th>
+            <th onClick={() => handleSort('category')}>
+              Category {sortField === 'category' && (sortDirection === 'asc' ? '↑' : '↓')}</th>
+            <th onClick={() => handleSort('difficulty')}>
+              Difficulty {sortField === 'difficulty' && (sortDirection === 'asc' ? '↑' : '↓')} </th>
+          </tr>
+        </thead>
+
           <tbody>
             {filteredProblems.map((problem) => (
               <tr 

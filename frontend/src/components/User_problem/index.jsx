@@ -130,7 +130,13 @@ const ProductManager = () => {
           >
             <option value="Từ khó đến dễ">Từ khó đến dễ</option>
             <option value="Từ dễ đến khó">Từ dễ đến khó</option>
+            <option value="Submitted">Submitted</option>
+            <option value="Partial">Partial</option>  
+            <option value="Pending">Pending</option>
+            
+           
           </select>
+       
         </div>
       </div>
 

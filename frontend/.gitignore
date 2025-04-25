@@ -18,6 +18,7 @@ dist-ssr
 .idea
 /backend/*   # Bỏ qua mọi thứ trong backend
 !/backend/README.md  # Nhưng giữ lại README.md
+../hơw
 .DS_Store
 *.suo
 *.ntvs*

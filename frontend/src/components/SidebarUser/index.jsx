@@ -20,10 +20,10 @@ function Sidebar({ change }) {
   // Cập nhật trạng thái `selected` dựa trên đường dẫn hiện tại
   useEffect(() => {
     switch (location.pathname) {
-      case '/home':
+      case '/code':
         setSelected(1);
         break;
-      case '/home/manage-problem':
+      case '/code/manage-problem':
         setSelected(2);
         break;
 
@@ -41,7 +41,7 @@ function Sidebar({ change }) {
     <ul className="sidebar" style={{ width: isExpanded ? "20%" : "4%" }}>
       <div className="logo-header" style={isExpanded ? {} : { display: "flex", justifyContent: "center", alignItems: "center" }}>
         {isExpanded && (
-          <a href="/home">
+          <a href="/code">
            
           </a>
         )}
@@ -60,13 +60,13 @@ function Sidebar({ change }) {
         </div>
       </div>
       <li className="sidebar__home">
-        <Link className={`sidebar__link ${selected === 1 ? 'active' : ''} ${!isExpanded ? "add_jus" : ""}`} style={!isExpanded?{padding:"15px 0px"}:{}} to='/home'>
+        <Link className={`sidebar__link ${selected === 1 ? 'active' : ''} ${!isExpanded ? "add_jus" : ""}`} style={!isExpanded?{padding:"15px 0px"}:{}} to='/code'>
           <div className="sidebar__icon" style={!isExpanded?{marginRight:"0px"}:{}}><MdOutlineHome /></div>
           {isExpanded && "Home"}
         </Link>
       </li>
       <li className="sidebar__product">
-        <Link className={`sidebar__link ${selected === 2 ? 'active' : ''} ${!isExpanded ? "add_jus" : ""}`} style={!isExpanded?{padding:"15px 0px"}:{}} to='/home/manage-problem'>
+        <Link className={`sidebar__link ${selected === 2 ? 'active' : ''} ${!isExpanded ? "add_jus" : ""}`} style={!isExpanded?{padding:"15px 0px"}:{}} to='/code/manage-problem'>
           <div className="sidebar__icon" style={!isExpanded?{marginRight:"0px"}:{}}><LuClipboardCheck /></div>
           {isExpanded && "Quản lí bài tập"}
         </Link>

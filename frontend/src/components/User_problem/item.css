@@ -109,3 +109,29 @@
   background-color: #ffe6e6;
   color: #f5222d;
 }
+.problem-table tr:hover {
+  background-color: #ffffff;     /* Màu nền khi hover */
+  transform: scaleY(1.05);       /* Phóng to một chút khi hover */
+  cursor: pointer;               /* Biến con trỏ thành bàn tay */
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.submitted-code {
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.submitted-code summary {
+  font-weight: bold;
+  color: #3498db;
+}
+
+.submitted-code-block {
+  background-color: #1e1e1e;
+  color: #f8f8f2;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  font-family: 'Courier New', Courier, monospace;
+}
