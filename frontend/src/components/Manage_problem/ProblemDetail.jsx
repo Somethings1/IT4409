@@ -22,19 +22,19 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
       startLoading();
       try {
         // Fetch difficulties
-        // const diffResponse = await fetch('http://localhost:8080/problems/difficulties');
-        // const diffData = await diffResponse.json();
-        // setDifficulties(diffData);
+        const diffResponse = await fetch('http://localhost:8080/problems/difficulties');
+        const diffData = await diffResponse.json();
+        setDifficulties(diffData);
 
         // Fetch tags
-        // const tagsResponse = await fetch('http://localhost:8080/problems/tags');
-        // const tagsData = await tagsResponse.json();
-        // setTags(tagsData);
+        const tagsResponse = await fetch('http://localhost:8080/problems/tags');
+        const tagsData = await tagsResponse.json();
+        setTags(tagsData);
 
         // Fetch test cases for this problem
-        // const testCasesResponse = await fetch(`http://localhost:8080/problems/${problem.id}/testcases`);
-        // const testCasesData = await testCasesResponse.json();
-        // setTestCases(testCasesData);
+        const testCasesResponse = await fetch(`http://localhost:8080/problems/${problem.id}/testcases`);
+        const testCasesData = await testCasesResponse.json();
+        setTestCases(testCasesData);
 
         // Set selected tags
         if (problem.tags) {
@@ -151,14 +151,31 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
             <div className="problem-header">
               <h2>{problem.title}</h2>
               <span className={`difficulty-badge ${problem?.difficulty?.toLowerCase?.() || "default"}`}>
-                {problem.difficulty_name}
+                {problem.difficulty}
               </span>
             </div>
 
-            <div className="problem-tags">
-              {problem.tags && problem.tags.map(tag => (
+            {/* <div className="problem-tags"> */}
+              {/* {problem.tags && problem.tags.map(tag => (
                 <span key={tag.id} className="tag">{tag.tag_name}</span>
-              ))}
+              ))} */}
+                  {/* <div className="problem-header">
+              <h3 style={{fontColor: 'black'}}>
+                Tag:    {problem.tags.join(', ')} 
+              </h3>
+            
+                </div>
+            </div> */}
+
+            <div className="problem-tags">
+              <h3 style={{ color: '#222',textAlign: 'left'  }}>Tags:</h3>
+              <div className="tag-list">
+                {problem.tags?.map(tag => (
+                  <span key={tag.id || tag} className="tag">
+                    {tag.tag_name || tag}
+                  </span>
+                ))}
+              </div>
             </div>
 
             <div className="problem-description">
@@ -166,11 +183,11 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
               <pre>{problem.description}</pre>
             </div>
 
-            {user && user.role === 'admin' && (
+            {/* {user && user.role === 'Admin' && ( */}
               <button className="edit-button" onClick={handleEditToggle}>
                 Edit Problem
               </button>
-            )}
+            {/* )} */}
           </div>
         ) : (
           <div className="problem-edit-form">

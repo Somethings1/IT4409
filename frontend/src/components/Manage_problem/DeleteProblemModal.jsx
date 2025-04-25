@@ -33,11 +33,11 @@ const DeleteProblemModal = ({ problem, onDelete, onClose }) => {
           <p><strong>Title:</strong> {problem.title}</p>
           <p><strong>Difficulty:</strong> 
             <span className={`difficulty-badge ${problem?.difficulty?.toLowerCase?.() || "default"}`}>
-              {problem.difficulty_name}
+              {problem.difficulty}
             </span>
           </p>
           {problem.tags && problem.tags.length > 0 && (
-            <p><strong>Tags:</strong> {problem.tags.map(tag => tag.tag_name).join(', ')}</p>
+            <p><strong>Tags:</strong> {problem.tags.join(', ')}</p>
           )}
         </div>
 

@@ -254,7 +254,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
    
 
     {/* Hiển thị ProblemDetail khi có bài toán được chọn */}
-    {/* {selectedProblem && (
+    {selectedProblem && (
       <ProblemDetail 
         problem={selectedProblem} 
         onClose={() => setSelectedProblem(null)}
@@ -266,7 +266,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
           setSelectedProblem(null);
         }}
       />
-    )} */}
+    )}
   </div>
       {problemToDelete && (
         <DeleteProblemModal 

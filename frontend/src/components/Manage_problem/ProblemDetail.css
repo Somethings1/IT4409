@@ -1,189 +1,258 @@
-/* ProductDetail.css */
-
-.product-detail-overlay {
-    position: fixed;
+.problem-detail-overlay {
+    position: fixed; /* To cover the entire viewport */
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-}
-.product-image-show{
-    width: 150px;
-    border-radius: 10px;
-    object-fit: cover; /* Giữ tỉ lệ ảnh, cắt phần thừa để ảnh vừa khung */
-}
-.product-detail-container {
-    position: relative;
-    width: 80%;
-    max-width: 800px;
+    z-index: 1000; /* Ensure it's on top of other content */
+  }
+  
+  .problem-detail-container {
     background-color: #fff;
-    padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 80%; /* Adjust width as needed */
+    max-height: 90%; /* Limit height and allow scrolling */
     overflow-y: auto;
-    max-height: 90vh;
-}
-
-.close-button {
+    position: relative; /* For the close button positioning */
+  }
+  
+  .close-button {
     position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 28px;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
     font-weight: bold;
-    color: #aaa;
-    cursor: pointer;
-}
-
-.close-button:hover {
-    color: #000;
-}
-
-.product-info h2 {
-    margin-top: 0;
-    color: #333;
-}
-
-.product-info p {
-    margin: 8px 0;
     color: #555;
-}
-
-
-.product-info-details {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .product-info-details-row {
-    display: flex;
-    flex-wrap: wrap;
-    word-wrap: break-word; /* Cho phép nội dung dài được chia dòng nếu cần */
-    white-space: normal; /* Nội dung có thể xuống dòng */
-  }
-
-  .product-info-details-row strong {
-    width: 30%; /* Cột đầu tiên chiếm 30% */
-    color: gray;
-  }
-
-  .product-info-details-row span {
-    width: 70%; /* Cột thứ hai chiếm 70% */
-    padding-left: 10px;
-  }
-
-
-
-.edit-button-detail {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #ffc107;
-    border: none;
-    border-radius: 5px;
     cursor: pointer;
-    color: #fff;
-    transition: background-color 0.3s;
-}
-
-.edit-button-detail:hover {
-    background-color: #e0a800;
-}
-
-.product-edit-form h2 {
-    margin-top: 0;
+    border: none;
+    background: none;
+    padding: 0;
+  }
+  
+  .close-button:hover {
+    color: #000;
+  }
+  
+  .problem-edit-form {
+    padding: 20px;
+  }
+  
+  .problem-edit-form h2 {
+    margin-bottom: 20px;
     color: #333;
-}
-
-.product-edit-form .form-group {
+    text-align: center;
+  }
+  
+  .form-group {
     margin-bottom: 15px;
-}
-
-.product-edit-form label {
+  }
+  
+  .form-group label {
     display: block;
     margin-bottom: 5px;
-    color: #555;
     font-weight: bold;
-}
-
-.product-edit-form input[type="text"],
-.product-edit-form input[type="number"],
-.product-edit-form input[type="date"],
-.product-edit-form select,
-.product-edit-form textarea {
-    width: 100%;
-    padding: 8px 12px;
+    color: #555;
+  }
+  
+  .form-group input[type="text"],
+  .form-group textarea,
+  .form-group select {
+    width: calc(100% - 12px); /* Adjust for padding */
+    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
-}
-
-.product-edit-form input[type="text"]:focus,
-.product-edit-form input[type="number"]:focus,
-.product-edit-form input[type="date"]:focus,
-.product-edit-form select:focus,
-.product-edit-form textarea:focus {
+    font-size: 16px;
+  }
+  
+  .form-group textarea {
+    resize: vertical; /* Allow vertical resizing */
+  }
+  
+  .form-group select {
+    appearance: none; /* Remove default arrow */
+    background-image: linear-gradient(45deg, transparent 50%, gray 50%),
+      linear-gradient(135deg, gray 50%, transparent 50%),
+      linear-gradient(to right, #ccc, #ccc);
+    background-position: calc(100% - 20px) calc(1em + 2px),
+      calc(100% - 15px) calc(1em + 2px),
+      calc(100% - 2.5em) 0.5em;
+    background-size: 5px 5px, 5px 5px, 1px 1.5em;
+    background-repeat: no-repeat;
+    padding-right: 25px;
+  }
+  
+  .tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 5px;
+  }
+  
+  .tag-selector {
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+  }
+  
+  .tag-selector.selected {
+    background-color: #007bff;
+    color: #fff;
     border-color: #007bff;
-    outline: none;
-}
-
-.product-edit-form textarea {
+  }
+  
+  .test-cases-container {
+    margin-top: 15px;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 4px;
+  }
+  
+  .test-case {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+  
+  .test-case-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .test-case-header h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .remove-test-case {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .remove-test-case:hover {
+    background-color: #c82333;
+  }
+  
+  .test-case label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .test-case textarea {
+    width: calc(100% - 12px);
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
     resize: vertical;
-    height: 80px;
-}
-
-.submit-row {
+  }
+  
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+  }
+  
+  .checkbox-label input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
+  .new-test-case {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    background-color: #fefefe;
+  }
+  
+  .new-test-case h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .add-test-case {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .add-test-case:hover {
+    background-color: #1e7e34;
+  }
+  
+  .form-actions {
+    margin-top: 20px;
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    margin-top: 20px;
-}
-
-.save-button {
-    padding: 10px 20px;
-    background-color: #28a745;
-    border: none;
-    border-radius: 5px;
+  }
+  
+  .save-button,
+  .cancel-button {
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 16px;
     cursor: pointer;
-    color: #fff;
-    transition: background-color 0.3s;
-}
-
-.save-button:hover {
-    background-color: #218838;
-}
-
-.cancel-button {
-    padding: 10px 20px;
-    background-color: #6c757d;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #fff;
-    transition: background-color 0.3s;
-}
-
-.cancel-button:hover {
-    background-color: #5a6268;
-}
-.change_image{
-    height: 40px;
-    width: 150px;
-    margin-top: 3px;
-    background-color: #000;
+  }
+  
+  .save-button {
+    background-color: #007bff;
     color: white;
+  }
+  
+  .save-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .cancel-button {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .cancel-button:hover {
+    background-color: #545b62;
+  }
+  .tag-list {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 3px;
-    cursor: pointer;
-}
-.change_image:hover{
-    background-color: #000;
-    color: rgba(255, 255, 255, 0.564);
-}
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  
+  .tag {
+    background-color: #e0f2f1;
+    color: #00695c;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+  }
+  
