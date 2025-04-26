@@ -27,10 +27,14 @@ public class UserService {
 	private final RoleService roleService;
 
 	public User handleCreateUser(User user) {
-		if (!this.userRepository.existsByEmail(user.getEmail()))
-			return this.userRepository.save(user);
-		else
+		if (this.userRepository.existsByEmail(user.getEmail())) {
 			return null;
+		}
+		if (user.getRole() != null) {
+			Role role = this.roleService.handleFetchRoleById(user.getRole().getId());
+			user.setRole(role);
+		}
+		return this.userRepository.save(user);
 	}
 
 	public void handleDeleteUser(long id) {

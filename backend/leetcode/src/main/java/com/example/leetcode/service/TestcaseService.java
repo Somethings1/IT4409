@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.example.leetcode.domain.Problem;
 import com.example.leetcode.domain.Testcase;
 import com.example.leetcode.domain.response.ResultPaginationDTO;
 import com.example.leetcode.repository.TestcaseRepository;
@@ -17,8 +18,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class TestcaseService {
 	private final TestcaseRepository testcaseRepository;
+	private final ProblemService problemService;
 
 	public Testcase handleSaveTestcase(Testcase testcase) {
+		if (testcase.getProblem() != null) {
+			Problem problem = this.problemService.handleFetchProblemByID(testcase.getProblem().getId());
+			testcase.setProblem(problem);
+		}
 		return this.testcaseRepository.save(testcase);
 	}
 
