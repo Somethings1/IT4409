@@ -47,6 +47,8 @@ public class TagService {
 	}
 
 	public void handleDeleteTag(long id) {
-
+		Tag tag = fetchTagById(id);
+		tag.getProblems().forEach(problem -> problem.getTags().remove(tag));
+		this.tagRepository.delete(tag);
 	}
 }
