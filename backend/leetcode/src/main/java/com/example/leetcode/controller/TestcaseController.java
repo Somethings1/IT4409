@@ -48,6 +48,9 @@ public class TestcaseController {
 		}
 
 		testcase.setInput(postmanTestcase.getInput());
+		testcase.setOutput(postmanTestcase.getOutput());
+		testcase.setActive(postmanTestcase.isActive());
+		testcase.setProblem(postmanTestcase.getProblem());
 		this.testcaseService.handleSaveTestcase(testcase);
 		return ResponseEntity.ok(testcase);
 	}
