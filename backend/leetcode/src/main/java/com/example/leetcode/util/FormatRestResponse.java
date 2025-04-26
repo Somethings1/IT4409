@@ -1,4 +1,4 @@
-package com.example.leetcode.util.error;
+package com.example.leetcode.util;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import com.example.leetcode.domain.response.RestResponse;
-
 import jakarta.servlet.http.HttpServletResponse;
 
 @ControllerAdvice

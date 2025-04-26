@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.List;
 
 import com.example.leetcode.util.SecurityUtil;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -18,13 +17,16 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "tags")
+@Table(name = "permissions")
 @Getter
 @Setter
-public class Tag {
+@NoArgsConstructor
+public class Permission {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -32,15 +34,39 @@ public class Tag {
 	@NotBlank(message = "Name must not blank!")
 	private String name;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
+	@NotBlank(message = "API Path must not blank!")
+	private String apiPath;
+
+	@NotBlank(message = "Method must not blank!")
+	private String method;
+
+	@NotBlank(message = "Module must not blank!")
+	private String module;
+
 	private Instant createdAt;
 	private Instant updatedAt;
 	private String createdBy;
 	private String updatedBy;
 
-	@ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<Problem> problems;
+	private List<Role> roles;
+
+	/**
+	 * @param name
+	 * @param apiPath
+	 * @param method
+	 * @param module
+	 */
+	public Permission(@NotBlank(message = "Name must not blank!") String name,
+			@NotBlank(message = "API Path must not blank!") String apiPath,
+			@NotBlank(message = "Method must not blank!") String method,
+			@NotBlank(message = "Module must not blank!") String module) {
+		this.name = name;
+		this.apiPath = apiPath;
+		this.method = method;
+		this.module = module;
+	}
 
 	@PrePersist
 	public void handleBeforeCreate() {
