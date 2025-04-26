@@ -8,13 +8,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.example.leetcode.domain.Comment;
 import com.example.leetcode.domain.Problem;
+import com.example.leetcode.domain.Submission;
 import com.example.leetcode.domain.Tag;
+import com.example.leetcode.domain.Testcase;
 import com.example.leetcode.domain.response.ResultPaginationDTO;
 import com.example.leetcode.domain.response.problem.ResCreateProblemDTO;
 import com.example.leetcode.domain.response.problem.ResUpdateProblemDTO;
+import com.example.leetcode.repository.CommentRepository;
 import com.example.leetcode.repository.ProblemRepository;
+import com.example.leetcode.repository.SubmissionRepository;
 import com.example.leetcode.repository.TagRepository;
+import com.example.leetcode.repository.TestcaseRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -23,6 +29,9 @@ import lombok.AllArgsConstructor;
 public class ProblemService {
 	private final ProblemRepository problemRepository;
 	private final TagRepository tagRepository;
+	private final CommentRepository commentRepository;
+	private final TestcaseRepository testcaseRepository;
+	private final SubmissionRepository submissionRepository;
 
 	public ResCreateProblemDTO handleCreateProblem(Problem postmanProblem) {
 		if (postmanProblem.getTags() != null) {
@@ -96,5 +105,20 @@ public class ProblemService {
 		result.setMeta(meta);
 		result.setResult(page.getContent());
 		return result;
+	}
+
+	public void handleDeleteProblem(long id) {
+		Problem problem = handleFetchProblemByID(id);
+		List<Comment> comments = this.commentRepository.findByProblem(problem);
+		this.commentRepository.deleteAll(comments);
+
+		List<Testcase> testcases = this.testcaseRepository.findByProblem(problem);
+		this.testcaseRepository.deleteAll(testcases);
+
+		List<Submission> submissions = this.submissionRepository.findByProblem(problem);
+		this.submissionRepository.deleteAll(submissions);
+
+		this.problemRepository.delete(problem);
+
 	}
 }

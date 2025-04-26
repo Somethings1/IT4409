@@ -62,6 +62,15 @@ public class CommentController {
 		return ResponseEntity.ok(dto);
 	}
 
+	@GetMapping("/comments/{id}")
+	public ResponseEntity<Comment> getCommentById(@PathVariable("id") long id) throws IdInvalidException {
+		Comment comment = this.commentService.fetchCommentById(id);
+		if (comment == null) {
+			throw new IdInvalidException("Comment with ID = " + id + " does not exist!");
+		}
+		return ResponseEntity.ok(comment);
+	}
+
 	@DeleteMapping("/comments/{id}")
 	@ApiMessage("Delete a comment")
 	public ResponseEntity<Void> deleteComment(@PathVariable("id") long id)
