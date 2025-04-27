@@ -76,4 +76,14 @@ public class TestcaseController {
 		this.testcaseService.handleDeleteTestcase(id);
 		return ResponseEntity.ok(null);
 	}
+
+	@GetMapping("/testcases/{id}")
+	public ResponseEntity<Testcase> getTestcaseById(@PathVariable long id) throws IdInvalidException {
+		Testcase testcase = this.testcaseService.fetchTestcaseById(id);
+		if (testcase == null) {
+			throw new IdInvalidException("Testcase with ID = " + id + " does not exist!");
+		}
+		return ResponseEntity.ok(testcase);
+	}
+
 }
