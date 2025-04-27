@@ -1,5 +1,7 @@
 package com.example.leetcode.controller;
 
+import java.io.IOException;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,8 @@ public class SubmissionController {
 
 	@PostMapping("/submissions")
 	@ApiMessage("Create a new submission")
-	public ResponseEntity<Submission> createNewSubmission(@Valid @RequestBody Submission postmanSubmission) {
+	public ResponseEntity<Submission> createNewSubmission(@Valid @RequestBody Submission postmanSubmission)
+			throws IOException, InterruptedException {
 		Submission submission = this.submissionService.handleSaveSubmission(postmanSubmission);
 		return ResponseEntity.status(HttpStatus.CREATED).body(submission);
 	}

@@ -33,13 +33,25 @@ public class ExecResult {
 	@NotBlank(message = "Output must not blank!")
 	private String output;
 
-	private boolean active;
-
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
 	private Instant createdAt;
 	private Instant updatedAt;
 	private String createdBy;
 	private String updatedBy;
+
+	/**
+	 * @param input
+	 * @param output
+	 * @param problem
+	 * @param submission
+	 */
+	public ExecResult(@NotBlank(message = "Input must not blank!") String input,
+			@NotBlank(message = "Output must not blank!") String output, Problem problem, Submission submission) {
+		this.input = input;
+		this.output = output;
+		this.problem = problem;
+		this.submission = submission;
+	}
 
 	@ManyToOne
 	@JoinColumn(name = "problem_id")
