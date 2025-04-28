@@ -1,0 +1,335 @@
+.home-container {
+  padding: 24px;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.home-inner {
+  max-width: 1200px; /* Đặt lại độ rộng tối đa để tránh việc nội dung quá rộng */
+  margin: 0 auto;
+}
+
+.home-title {
+  text-align: left;
+  padding-bottom: 50px;
+}
+
+.home-heading {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 28px;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.home-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: #3b82f6;
+  border-radius: 2px;
+}
+
+/* KPI Cards Grid */
+.home-kpis {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 cột */
+  gap: 16px; /* khoảng cách giữa các card */
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  padding-left: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: left;
+  color: #1e293b;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 8px;
+}
+
+.card-number {
+  font-size: 24px;
+  text-align: left;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.card-description {
+  color: #666;
+  font-size: 14px;
+  text-align: left;
+}
+
+/* Highlight for changes */
+.highlight {
+  background-color: #f87171; /* Sử dụng màu đỏ sáng hơn */
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+}
+
+/* Main Layout Grid */
+.main-grid {
+  padding-top: 20px;
+}
+
+.card-header {
+  background-color: #f4f6f8;
+  padding: 10px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.card-description {
+  font-size: 14px;
+  color: #777;
+}
+
+.home-main-content {
+  display: grid;
+  margin-top: 32px;
+  gap: 24px;
+  grid-template-columns: 2fr 1fr;
+}
+
+.home-bottom-section {
+  display: grid;
+  margin-top: 32px;
+  gap: 24px;
+  grid-template-columns: 1fr 2fr;
+}
+
+/* Profile Section */
+.profile-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 1200px;
+    font-family: 'Arial', sans-serif;
+    margin: 0px;
+    padding: 20px;
+  }
+  .profile-card h6 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1e293b;
+    text-align: left;
+    background-color: #f3f4f6;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    padding-left:20px;
+  }
+  
+  .profile-card h9 {
+    font-size: 20px;
+    font-weight: normal;
+    /* color: #4b5563; */
+    text-align: left;
+    /* background-color: #f9fafb; */
+    padding: 12px;
+    border-radius: 6px;
+  }
+  
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e2e8f0;
+  }
+  
+  .profile-info {
+    flex-grow: 1;
+  }
+  
+  .profile-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1e293b;
+    margin: 0;
+  }
+  
+  .profile-join-date,
+  .profile-rank {
+    font-size: 14px;
+    color: #64748b;
+    margin: 4px 0;
+  }
+  
+  .profile-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  
+  .stat-item {
+    background-color: #f8fafc;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .stat-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 4px;
+  }
+  
+  .stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e40af;
+  }
+  
+
+.home-activity-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.home-activity-scroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.home-activity-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.home-activity-item {
+  padding: 16px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.home-activity-item:hover {
+  transform: translateX(2px);
+}
+
+.home-activity-detail {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.home-activity-date {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Activity Status Colors */
+.feed-item-success {
+  background: #f0fdf4;
+  border-left: 4px solid #10b981;
+}
+
+.feed-item-danger {
+  background: #fef2f2;
+  border-left: 4px solid #ef4444;
+}
+
+.feed-item-secondary {
+  background: #f1f5f9;
+  border-left: 4px solid #64748b;
+}
+
+.feed-item-info {
+  background: #eff6ff;
+  border-left: 4px solid #3b82f6;
+}
+
+.feed-item-warning {
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+}
+
+/* Chart Styles */
+.home-pie-chart-container {
+  position: relative;
+  height: 240px;
+}
+
+.home-pie-chart-label {
+  font-size: 12px;
+  fill: #475569;
+  font-weight: 500;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .home-main-content,
+  .home-bottom-section {
+    grid-template-columns: 1fr;
+  }
+
+  .home-kpis {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    padding: 16px;
+  }
+
+  .home-heading {
+    font-size: 24px;
+  }
+
+  .home-card-content-number {
+    font-size: 24px;
+  }
+}

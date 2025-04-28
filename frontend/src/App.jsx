@@ -5,6 +5,7 @@ import {Route, Routes} from 'react-router-dom';
 import LayoutDefault from './layouts/LayoutDefault/index.jsx';
 import LayoutUser from './layouts/LayoutUser/index.jsx';
 import Home from './pages/Home/index.jsx';
+import HomeUser from './pages/HomeUser/index.jsx';
 import ManageProblem from './pages/ManageProblem/index.jsx';
 import UserProblem from './pages/UserProblem/index.jsx';
 import Main  from './components/introduce/Main_intro.jsx'
@@ -46,7 +47,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-              <Route index element={<Home />} />
+              <Route index element={<HomeUser />} />
               <Route path='profile' element={<Profile/>}/>
               <Route path="manage-problem" element={<UserProblem />} />
               <Route path="code-editor" element={<CodeEditor />} />
