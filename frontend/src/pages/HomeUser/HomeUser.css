@@ -5,10 +5,15 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%;
+ 
+  margin: 0 auto; /* căn giữa container */
 }
 
+
 .home-inner {
-  max-width: 1200px; /* Đặt lại độ rộng tối đa để tránh việc nội dung quá rộng */
+  width: 100%;
+  max-width: 12000px; /* Đặt lại độ rộng tối đa để tránh việc nội dung quá rộng */
   margin: 0 auto;
 }
 
