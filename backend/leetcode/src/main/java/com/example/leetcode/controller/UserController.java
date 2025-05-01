@@ -2,6 +2,7 @@ package com.example.leetcode.controller;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -77,7 +78,7 @@ public class UserController {
 	@ApiMessage("Fetch all users")
 	public ResponseEntity<ResultPaginationDTO> getAllUser(
 			@Filter Specification<User> specification,
-			Pageable pageable) {
+			@PageableDefault(page = 0, size = 10) Pageable pageable) {
 		return ResponseEntity.status(HttpStatus.OK).body(this.userService.fetchAllUser(specification, pageable));
 
 	}
