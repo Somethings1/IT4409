@@ -153,28 +153,6 @@
     margin: 0px;
     padding: 20px;
   }
-  .profile-card h6 {
-    font-size: 24px;
-    font-weight: bold;
-    color: #1e293b;
-    text-align: left;
-    background-color: #f3f4f6;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    padding-left:20px;
-  }
-  
-  .profile-card h9 {
-    font-size: 20px;
-    font-weight: normal;
-    /* color: #4b5563; */
-    text-align: left;
-    /* background-color: #f9fafb; */
-    padding: 12px;
-    border-radius: 6px;
-  }
-  
   
   .profile-header {
     display: flex;
@@ -209,33 +187,62 @@
     margin: 4px 0;
   }
   
-  .profile-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  
-  .stat-item {
-    background-color: #f8fafc;
-    padding: 12px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  
-  .stat-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: #64748b;
-    margin-bottom: 4px;
-  }
-  
-  .stat-value {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1e40af;
-  }
-  
+  /* Profile Additional Info */
+/* Profile Additional Info */
+.profile-additional-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Khoảng cách giữa 2 dòng */
+  background-color: #f1f5f9; /* Màu nền xám nhạt */
+  padding: 16px; /* Thêm padding để màu nền trông đẹp hơn */
+  border-radius: 8px; /* Bo góc cho khối */
+}
 
+/* Stat Row */
+/* Profile Additional Info */
+.profile-additional-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Khoảng cách giữa 2 dòng */
+  background-color: #f1f5f9; /* Nền xám nhạt */
+  padding: 16px; /* Padding để màu nền trông đẹp hơn */
+  border-radius: 8px; /* Bo góc cho khối */
+}
+
+/* Stat Row */
+.profile-stat-row {
+  display: flex;
+  justify-content: space-between; /* Căn đều 2 thông tin trong mỗi dòng */
+  gap: 16px; /* Khoảng cách giữa 2 thông tin trong cùng một dòng */
+}
+
+/* Stat */
+.profile-stat {
+  font-size: 0.95rem;
+  color: #1e293b; /* Màu chữ đậm hơn để nổi bật */
+  background-color:rgb(114, 182, 228); /* Nền xanh nhạt cho text */
+  padding: 8px 12px; /* Padding để nền xanh bao quanh text */
+  border-radius: 6px; /* Bo góc cho nền xanh */
+  margin: 0;
+  flex: 1; /* Đảm bảo mỗi thông tin chiếm không gian đều */
+  text-align: center; /* Căn giữa text trong khối xanh */
+}
+
+/* Responsive cho màn hình nhỏ */
+@media (max-width: 480px) {
+  .profile-stat-row {
+    flex-direction: column; /* Xếp dọc trên mobile */
+    gap: 8px;
+  }
+}
+  
+  .avatar {
+    border-radius: 50%;
+    width: 80px;  /* tuỳ chỉnh */
+    height: 80px;
+    object-fit: cover;
+  }
+  
 .home-activity-scroll::-webkit-scrollbar {
   width: 6px;
 }
