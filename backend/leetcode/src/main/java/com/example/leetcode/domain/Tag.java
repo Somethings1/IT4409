@@ -18,12 +18,14 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "tags")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Tag {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

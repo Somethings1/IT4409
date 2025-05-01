@@ -15,12 +15,14 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "exec_results")
 @Getter
 @Setter
+@NoArgsConstructor
 public class ExecResult {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

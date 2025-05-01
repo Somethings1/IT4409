@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -16,11 +17,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.example.leetcode.domain.ExecResult;
 import com.example.leetcode.domain.Problem;
 import com.example.leetcode.domain.Submission;
 import com.example.leetcode.domain.Testcase;
 import com.example.leetcode.domain.User;
 import com.example.leetcode.domain.response.ResultPaginationDTO;
+import com.example.leetcode.repository.ExecResultRepository;
 import com.example.leetcode.repository.SubmissionRepository;
 import com.example.leetcode.util.constant.SubmissionStatusEnum;
 
@@ -32,7 +35,7 @@ public class SubmissionService {
 	private final SubmissionRepository submissionRepository;
 	private final UserService userService;
 	private final ProblemService problemService;
-	private final ExecResultService execResultService;
+	private final ExecResultRepository execResultRepository;
 
 	public Submission handleSaveSubmission(Submission postmanSubmission) throws IOException, InterruptedException {
 		if (postmanSubmission.getUser() != null) {
@@ -72,9 +75,9 @@ public class SubmissionService {
 		List<Testcase> testcases = postmanSubmission.getProblem().getTestcases();
 		String code = postmanSubmission.getCode();
 		String language = postmanSubmission.getLanguage();
-
 		long right = 0;
-		String baseDir = "./implement/";
+		String baseDir = "./";
+		List<ExecResult> execResults = new ArrayList<>();
 		for (Testcase testcase : testcases) {
 
 			String inputData = testcase.getInput();
@@ -83,29 +86,29 @@ public class SubmissionService {
 			String runCommand = getRunCommand(language, fileName);
 
 			if (fileName == null || runCommand == null) {
-				this.execResultService.handleSaveExecResult(inputData, false, postmanSubmission.getProblem(),
-						postmanSubmission);
+				execResults.add(new ExecResult(inputData, false, postmanSubmission.getProblem(),
+						null));
 				continue;
 			}
 
 			String filePath = baseDir + fileName;
 			writeToFile(filePath, code);
 
-			if (compileCommand != null && !executeCommand(compileCommand)) {
-				this.execResultService.handleSaveExecResult(inputData, false, postmanSubmission.getProblem(),
-						postmanSubmission);
+			if (language.equals("C++") && compileCommand != null && !executeCommand(compileCommand)) {
+				execResults.add(new ExecResult(inputData, false, postmanSubmission.getProblem(),
+						null));
 				continue;
 			}
 
 			String output = executeProgram(runCommand, inputData);
-			if (output == null || !output.equals(testcase.getOutput())) {
-				this.execResultService.handleSaveExecResult(inputData, false, postmanSubmission.getProblem(),
-						postmanSubmission);
+			if (output == null || !output.equals(testcase.getOutput() + "\n")) {
+				execResults.add(new ExecResult(inputData, false, postmanSubmission.getProblem(),
+						null));
 				continue;
 			}
 
 			right++;
-			this.execResultService.handleSaveExecResult(inputData, true, postmanSubmission.getProblem(), postmanSubmission);
+			execResults.add(new ExecResult(inputData, true, postmanSubmission.getProblem(), null));
 
 		}
 		postmanSubmission.setRightTestcase(right);
@@ -117,6 +120,9 @@ public class SubmissionService {
 		} else {
 			postmanSubmission.setStatus(SubmissionStatusEnum.PARTIAL);
 		}
+		Submission submission = this.submissionRepository.save(postmanSubmission);
+		execResults.forEach(execResult -> execResult.setSubmission(submission));
+		this.execResultRepository.saveAll(execResults);
 		return postmanSubmission;
 	}
 
@@ -126,9 +132,7 @@ public class SubmissionService {
 			case "C++":
 				return "program.cpp";
 			case "Java":
-				return "Program.java";
-			case "Python":
-				return "program.py";
+				return "program.java";
 			case "Javascript":
 				return "program.js";
 			default:
@@ -155,8 +159,6 @@ public class SubmissionService {
 				return "./program";
 			case "Java":
 				return "java Program";
-			case "Python":
-				return "python3 " + fileName;
 			case "Javascript":
 				return "node " + fileName;
 			default:
@@ -171,19 +173,25 @@ public class SubmissionService {
 	}
 
 	private boolean executeCommand(String command) throws IOException, InterruptedException {
-		Process process = new ProcessBuilder(command.split(" ")).start();
+		Process process = Runtime.getRuntime().exec(command.split(" "));
 		process.waitFor();
 		return process.exitValue() == 0;
 	}
 
 	private String executeProgram(String command, String input) throws IOException, InterruptedException {
-		Process process = new ProcessBuilder(command.split(" ")).start();
+		Process process = Runtime.getRuntime().exec(command.split(" "));
 		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 				BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
 			writer.write(input);
 			writer.flush();
+			writer.close();
+			String output = "", line;
+			while ((line = reader.readLine()) != null) {
+				output = output + line + "\n";
+			}
+
 			process.waitFor();
-			return reader.lines().collect(Collectors.joining());
+			return output;
 		}
 	}
 
