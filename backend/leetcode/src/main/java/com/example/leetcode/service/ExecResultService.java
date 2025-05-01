@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 public class ExecResultService {
 	private final ExecResultRepository execResultRepository;
 
-	public ExecResult handleSaveExecResult(String input, String output, Problem problem, Submission submission) {
-		return this.execResultRepository.save(new ExecResult(input, output, problem, submission));
+	public ExecResult handleSaveExecResult(String input, boolean status, Problem problem, Submission submission) {
+		return this.execResultRepository.save(new ExecResult(input, status, problem, submission));
 	}
 }

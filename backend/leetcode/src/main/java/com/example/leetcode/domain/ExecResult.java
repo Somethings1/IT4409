@@ -14,7 +14,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,11 +26,10 @@ public class ExecResult {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@NotBlank(message = "Input must not blank!")
 	private String input;
 
-	@NotBlank(message = "Output must not blank!")
-	private String output;
+	// private String output;
+	private boolean status;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
 	private Instant createdAt;
@@ -41,14 +39,13 @@ public class ExecResult {
 
 	/**
 	 * @param input
-	 * @param output
+	 * @param status
 	 * @param problem
 	 * @param submission
 	 */
-	public ExecResult(@NotBlank(message = "Input must not blank!") String input,
-			@NotBlank(message = "Output must not blank!") String output, Problem problem, Submission submission) {
+	public ExecResult(String input, boolean status, Problem problem, Submission submission) {
 		this.input = input;
-		this.output = output;
+		this.status = status;
 		this.problem = problem;
 		this.submission = submission;
 	}

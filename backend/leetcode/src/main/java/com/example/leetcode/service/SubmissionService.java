@@ -73,83 +73,110 @@ public class SubmissionService {
 		String language = postmanSubmission.getLanguage();
 
 		long right = 0;
+		String baseDir = "./implement/";
 		for (Testcase testcase : testcases) {
 
 			String inputData = testcase.getInput();
+			String fileName = getFileName(language);
+			String compileCommand = getCompileCommand(language, fileName);
+			String runCommand = getRunCommand(language, fileName);
 
-			String fileName = "";
-			String compileCommand = null;
-			String runCommand = "";
-
-			switch (postmanSubmission.getLanguage()) {
-				case "C":
-				case "C++":
-					fileName = "program.cpp";
-					compileCommand = "g++ program.cpp -o program";
-					runCommand = "./program";
-					break;
-				case "Java":
-					fileName = "program.java";
-					compileCommand = "javac Program.java";
-					runCommand = "java Program";
-					break;
-				case "Python":
-					fileName = "program.py";
-					runCommand = "python3 program.py";
-					break;
-				case "Javascript":
-					fileName = "program.js";
-					runCommand = "node program.js";
-					break;
-				default:
-					this.execResultService.handleSaveExecResult(inputData, "Unsupported language: " + language,
-							postmanSubmission.getProblem(), postmanSubmission);
-					continue;
+			if (fileName == null || runCommand == null) {
+				this.execResultService.handleSaveExecResult(inputData, false, postmanSubmission.getProblem(),
+						postmanSubmission);
+				continue;
 			}
 
-			FileWriter writer = new FileWriter("./implement/" + fileName);
-			writer.write(code);
-			writer.close();
+			String filePath = baseDir + fileName;
+			writeToFile(filePath, code);
 
-			if (compileCommand != null) {
-				Process compileProcess = Runtime.getRuntime().exec(compileCommand.split(""));
-				compileProcess.waitFor();
-				if (compileProcess.exitValue() != 0) {
-
-					BufferedReader errorReader = new BufferedReader(new InputStreamReader(compileProcess.getErrorStream()));
-					String line;
-					String error = errorReader.lines().collect(Collectors.joining());
-					this.execResultService.handleSaveExecResult(inputData, error, postmanSubmission.getProblem(),
-							postmanSubmission);
-					continue;
-				}
+			if (compileCommand != null && !executeCommand(compileCommand)) {
+				this.execResultService.handleSaveExecResult(inputData, false, postmanSubmission.getProblem(),
+						postmanSubmission);
+				continue;
 			}
 
-			Process runProcess = Runtime.getRuntime().exec(runCommand.split(""));
+			String output = executeProgram(runCommand, inputData);
+			if (output == null || !output.equals(testcase.getOutput())) {
+				this.execResultService.handleSaveExecResult(inputData, false, postmanSubmission.getProblem(),
+						postmanSubmission);
+				continue;
+			}
 
-			BufferedWriter processInput = new BufferedWriter(new OutputStreamWriter(runProcess.getOutputStream()));
-			processInput.write(inputData);
-			processInput.flush();
-			processInput.close();
-
-			long startTime = System.nanoTime();
-
-			BufferedReader outputReader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
-
-			String output = outputReader.lines().collect(Collectors.joining());
-
-			BufferedReader errorReader = new BufferedReader(new InputStreamReader(runProcess.getErrorStream()));
-			String error = errorReader.lines().collect(Collectors.joining());
-
-			runProcess.waitFor();
 			right++;
-			this.execResultService.handleSaveExecResult(inputData, output + System.lineSeparator() + error,
-					postmanSubmission.getProblem(), postmanSubmission);
+			this.execResultService.handleSaveExecResult(inputData, true, postmanSubmission.getProblem(), postmanSubmission);
 
 		}
-		postmanSubmission.setRight(right);
-		postmanSubmission.setTotal(postmanSubmission.getProblem().getTestcases().size());
+		postmanSubmission.setRightTestcase(right);
+		postmanSubmission.setTotalTestcase(testcases.size());
 		return postmanSubmission;
+	}
+
+	private String getFileName(String language) {
+		switch (language) {
+			case "C":
+			case "C++":
+				return "program.cpp";
+			case "Java":
+				return "Program.java";
+			case "Python":
+				return "program.py";
+			case "Javascript":
+				return "program.js";
+			default:
+				return null;
+		}
+	}
+
+	private String getCompileCommand(String language, String fileName) {
+		switch (language) {
+			case "C":
+			case "C++":
+				return "g++ " + fileName + " -o program";
+			case "Java":
+				return "javac " + fileName;
+			default:
+				return null;
+		}
+	}
+
+	private String getRunCommand(String language, String fileName) {
+		switch (language) {
+			case "C":
+			case "C++":
+				return "./program";
+			case "Java":
+				return "java Program";
+			case "Python":
+				return "python3 " + fileName;
+			case "Javascript":
+				return "node " + fileName;
+			default:
+				return null;
+		}
+	}
+
+	private void writeToFile(String filePath, String content) throws IOException {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+			writer.write(content);
+		}
+	}
+
+	private boolean executeCommand(String command) throws IOException, InterruptedException {
+		Process process = new ProcessBuilder(command.split(" ")).start();
+		process.waitFor();
+		return process.exitValue() == 0;
+	}
+
+	private String executeProgram(String command, String input) throws IOException, InterruptedException {
+		Process process = new ProcessBuilder(command.split(" ")).start();
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+			writer.write(input);
+			writer.flush();
+			process.waitFor();
+			return reader.lines().collect(Collectors.joining());
+		}
 	}
 
 }

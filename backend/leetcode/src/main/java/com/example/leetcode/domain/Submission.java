@@ -40,8 +40,8 @@ public class Submission {
 	@NotBlank(message = "Language must not blank!")
 	private String language;
 
-	private long right;
-	private long total;
+	private long rightTestcase;
+	private long totalTestcase;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
 	private Instant createdAt;
