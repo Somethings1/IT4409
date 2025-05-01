@@ -22,6 +22,7 @@ import com.example.leetcode.domain.Testcase;
 import com.example.leetcode.domain.User;
 import com.example.leetcode.domain.response.ResultPaginationDTO;
 import com.example.leetcode.repository.SubmissionRepository;
+import com.example.leetcode.util.constant.SubmissionStatusEnum;
 
 import lombok.AllArgsConstructor;
 
@@ -109,6 +110,13 @@ public class SubmissionService {
 		}
 		postmanSubmission.setRightTestcase(right);
 		postmanSubmission.setTotalTestcase(testcases.size());
+		if (right == testcases.size()) {
+			postmanSubmission.setStatus(SubmissionStatusEnum.ACCEPTED);
+		} else if (right == 0) {
+			postmanSubmission.setStatus(SubmissionStatusEnum.FAILED);
+		} else {
+			postmanSubmission.setStatus(SubmissionStatusEnum.PARTIAL);
+		}
 		return postmanSubmission;
 	}
 
