@@ -32,6 +32,13 @@ public class Tag {
 	@NotBlank(message = "Name must not blank!")
 	private String name;
 
+	/**
+	 * @param name
+	 */
+	public Tag(@NotBlank(message = "Name must not blank!") String name) {
+		this.name = name;
+	}
+
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
 	private Instant createdAt;
 	private Instant updatedAt;

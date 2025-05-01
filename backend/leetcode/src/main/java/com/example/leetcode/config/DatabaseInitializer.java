@@ -2,17 +2,25 @@ package com.example.leetcode.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.leetcode.domain.Permission;
+import com.example.leetcode.domain.Problem;
 import com.example.leetcode.domain.Role;
+import com.example.leetcode.domain.Tag;
+import com.example.leetcode.domain.Testcase;
 import com.example.leetcode.domain.User;
 import com.example.leetcode.repository.PermissionRepository;
+import com.example.leetcode.repository.ProblemRepository;
 import com.example.leetcode.repository.RoleRepository;
+import com.example.leetcode.repository.TagRepository;
+import com.example.leetcode.repository.TestcaseRepository;
 import com.example.leetcode.repository.UserRepository;
+import com.example.leetcode.util.constant.DifficultyEnum;
 
 import lombok.AllArgsConstructor;
 
@@ -22,6 +30,9 @@ public class DatabaseInitializer implements CommandLineRunner {
 	private final PermissionRepository permissionRepository;
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
+	private final TagRepository tagRepository;
+	private final ProblemRepository problemRepository;
+	private final TestcaseRepository testcaseRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
@@ -30,6 +41,9 @@ public class DatabaseInitializer implements CommandLineRunner {
 		long countPermissions = this.permissionRepository.count();
 		long countRoles = this.roleRepository.count();
 		long countUsers = this.userRepository.count();
+		long countTags = this.tagRepository.count();
+		long countProblems = this.problemRepository.count();
+		long countTestcases = this.testcaseRepository.count();
 
 		if (countPermissions == 0) {
 			ArrayList<Permission> arr = new ArrayList<>();
@@ -114,7 +128,23 @@ public class DatabaseInitializer implements CommandLineRunner {
 			this.userRepository.save(adminUser);
 		}
 
-		if (countPermissions > 0 && countRoles > 0 && countUsers > 0) {
+		if (countTags == 0) {
+			// Tag
+			ArrayList<Tag> tagList = new ArrayList<>();
+			Tag tag1 = new Tag("Dynamic Programming");
+			Tag tag2 = new Tag("BFS");
+			Tag tag3 = new Tag("Math");
+			Tag tag4 = new Tag("Graph");
+
+			tagList.add(tag1);
+			tagList.add(tag2);
+			tagList.add(tag3);
+			tagList.add(tag4);
+
+			this.tagRepository.saveAll(tagList);
+		}
+
+		if (countPermissions > 0 && countRoles > 0 && countUsers > 0 && countTags > 0) {
 			System.out.println(">>> SKIP INIT DATABASE");
 		} else {
 			System.out.println(">>> END INIT DATABASE");
