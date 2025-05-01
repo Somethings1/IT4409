@@ -613,30 +613,7 @@ const CodeEditor = () => {
   const [language, setLanguage] = useState('javascript');
   const [code, setCode] = useState('');
   const [comments, setComments] = useState('');
-  const [selectedSubmission, setSelectedSubmission] = useState(null);
-  const [showSubmissionDetail, setShowSubmissionDetail] = useState(false);
-  
-
-  const [submittedComments, setSubmittedComments] = useState([
-    {
-      id: '1',
-      code: `function twoSum(nums, target) {\n  for (let i = 0; i < nums.length; i++) {\n    for (let j = i + 1; j < nums.length; j++) {\n      if (nums[i] + nums[j] === target) {\n        return [i, j];\n      }\n    }\n  }\n  return [];\n}`,
-      text: 'First attempt, brute force solution',
-      timestamp: '2025-05-01 10:00:00',
-      language: 'javascript',
-      author: 'You',
-      status: 'Partial',
-    },
-    {
-      id: '2',
-      code: `function twoSum(nums, target) {\n  let map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    let complement = target - nums[i];\n    if (map.has(complement)) {\n      return [map.get(complement), i];\n    }\n    map.set(nums[i], i);\n  }\n  return [];\n}`,
-      text: 'Optimized with hash map',
-      timestamp: '2025-05-01 10:30:00',
-      language: 'python',
-      author: 'You',
-      status: 'Submit Failed',
-    },
-  ]);
+  const [submittedComments, setSubmittedComments] = useState([]);
   const [showCommentsSection, setShowCommentsSection] = useState(false);
   const [showTestCases, setShowTestCases] = useState(false);
   const [showSubmissionPanel, setShowSubmissionPanel] = useState(false);
@@ -670,6 +647,9 @@ const CodeEditor = () => {
       setCode(`// Write your ${language} solution here`);
     }
     
+    // Fetch submissions from backend
+    fetchSubmissions();
+    
     setupResizeHandlers();
     
     return () => {
@@ -681,6 +661,17 @@ const CodeEditor = () => {
       document.body.style.userSelect = '';
     };
   }, [language, initialCode]);
+
+  const fetchSubmissions = async () => {
+    try {
+      const response = await fetch('/api/submissions');
+      const data = await response.json();
+      setSubmittedComments(data); // Expecting array of { id, code, text, timestamp, author, status }
+    } catch (error) {
+      console.error('Error fetching submissions:', error);
+      notify(1, 'Failed to fetch submissions', 'Error');
+    }
+  };
 
   const setupResizeHandlers = () => {
     const horizontalResizeHandle = resizeHandleRef.current;
@@ -765,80 +756,39 @@ const CodeEditor = () => {
     notify(1, "Code executed! Check console for output", "Success");
   };
 
-  // const handleSubmit = () => {
-  //   const newComment = {
-  //     id: `${Date.now()}`, // Simple ID generation for demo
-  //     code,
-  //     text: comments,
-  //     timestamp: new Date().toLocaleString(),
-  //     author: "You",
-  //     status: Math.random() > 0.5 ? 'Partial' : 'Submit Failed', // Random status for demo
-  //   };
-  //   setSubmittedComments(prev => [newComment, ...prev]);
-  //   setComments("");
-  //   setShowSubmissionPanel(true);
-  //   notify(1, "Code submitted and saved", "Success");
-  // };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newComment = {
-      id: `${Date.now()}`,
       code,
       text: comments,
       timestamp: new Date().toLocaleString(),
       author: "You",
-      status: 'Pending', // ban đầu là Pending
-      language,
-      passedTests: null,
-      totalTests: testCases.length,
     };
-  
-    // Thêm ngay submission dạng "Pending"
-    setSubmittedComments(prev => [newComment, ...prev]);
-    setComments("");
-    setShowSubmissionPanel(true);
-    notify(1, "Code submitted, waiting for result...", "Info");
-  
-    // Mô phỏng xử lý từ backend sau 1.5 giây
-    setTimeout(() => {
-      const randomResult = Math.random();
-      const updatedStatus = randomResult > 0.5 ? 'Partial' : 'Submit Failed';
-      const passedTests = randomResult > 0.5 ? testCases.length - 1 : 0;
-  
-      // Cập nhật lại submission mới nhất
-      setSubmittedComments(prev => {
-        const updated = [...prev];
-        updated[0] = {
-          ...updated[0],
-          status: updatedStatus,
-          passedTests,
-          totalTests: testCases.length
-        };
-        return updated;
+    try {
+      const response = await fetch('/api/submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newComment),
       });
-  
-      notify(1, `Submission ${updatedStatus}`, updatedStatus === 'Partial' ? 'Success' : 'Error');
-    }, 1500);
+      if (response.ok) {
+        setComments("");
+        setShowSubmissionPanel(true);
+        notify(1, "Code submitted and saved", "Success");
+        fetchSubmissions(); // Refresh submissions list
+      } else {
+        notify(1, "Failed to submit code", "Error");
+      }
+    } catch (error) {
+      console.error('Error submitting code:', error);
+      notify(1, "Failed to submit code", "Error");
+    }
   };
-  
 
-  
-  // const handleSubmissionClick = (submissionId) => {
-  //   navigate(`/submission/${problem.title.replace(/\s+/g, '-').toLowerCase()}/${submissionId}`, { state: { problem } });
-  // };
   const handleSubmissionClick = (submissionId) => {
-    const submission = submittedComments.find(s => s.id === submissionId);
-    setSelectedSubmission(submission);
-    setShowSubmissionDetail(true);
+    navigate(`/submission/${submissionId}`, { state: { problem } });
   };
-  
+
   return (
-    
     <div className="code-editor-container">
-
-      {/* showsubmissiondetail */}
-      
-{/*  */}
-
       <div 
         className="problem-info" 
         ref={leftPanelRef}
@@ -896,36 +846,18 @@ const CodeEditor = () => {
                 <div className="submission-list">
                   {submittedComments.map((submission) => (
                     <div 
-                    key={submission.id} 
-                    className="submission-item"
-                    onClick={() => handleSubmissionClick(submission.id)}
-                  >
-                    {/* <div className="submission-header">
-                      <span className="submission-time">{submission.timestamp}</span>
-                      <span className={`submission-status ${submission.status.toLowerCase().replace(' ', '-')}`}>
-                        {submission.status}
-                      </span>
-                    </div> */}
-                        <div className="submission-header">
-                            <span className="submission-time">{submission.timestamp}</span>
-                            <span className={`submission-status ${submission.status.toLowerCase().replace(' ', '-')}`}>
-                              {submission.status}
-                            </span>
-                            {submission.status !== 'Pending' && (
-                              <span className="submission-result">
-                                {submission.passedTests}/{submission.totalTests} test cases passed
-                              </span>
-                            )}
-                          </div>
-
-                    <div className="submission-meta">
-                      <p><strong>ID:</strong> {submission.id}</p>
-                      <p><strong>Language:</strong> {submission.language}</p>
-                      <p><strong>Passed:</strong> {submission.passedTests ?? 0}/{submission.totalTests ?? 0}</p>
+                      key={submission.id} 
+                      className="submission-item"
+                      onClick={() => handleSubmissionClick(submission.id)}
+                    >
+                      <div className="submission-header">
+                        <span className="submission-time">{submission.timestamp}</span>
+                        <span className={`submission-status ${submission.status.toLowerCase().replace(' ', '-')}`}>
+                          {submission.status}
+                        </span>
+                      </div>
+                      <div className="submission-comment">{submission.text}</div>
                     </div>
-                  
-                  </div>
-                  
                   ))}
                 </div>
               ) : (
@@ -941,7 +873,7 @@ const CodeEditor = () => {
         ref={resizeHandleRef}
         onMouseDown={startHorizontalResize}
       />
-      {!showSubmissionDetail && (
+
       <div 
         className="editor-section"
         ref={rightPanelRef}
@@ -978,7 +910,7 @@ const CodeEditor = () => {
         <div 
           className="editor-wrapper"
           ref={editorRef}
-          style={{ height: showTestCases || showCommentsSection 
+          style={{ height: showTestCases || showCommentsSection || showSubmissionPanel 
             ? `calc(100% - ${bottomPanelHeight})` 
             : '100%' 
           }}
@@ -997,7 +929,7 @@ const CodeEditor = () => {
           />
         </div>
 
-        {(showTestCases || showCommentsSection ) && (
+        {(showTestCases || showCommentsSection || showSubmissionPanel) && (
           <div 
             className="vertical-resize-handle"
             ref={verticalResizeHandleRef}
@@ -1088,44 +1020,6 @@ const CodeEditor = () => {
 
         
       </div>
-      )}
-      {showSubmissionDetail && selectedSubmission && (
-            <div className="submission-detail-panel">
-              <h2>Submission ID: {selectedSubmission.id}</h2>
-              <p>Language: {selectedSubmission.language}</p>
-              <p>Status: {selectedSubmission.status}</p>
-              <p><strong>Code:</strong></p>
-              <pre className="code-block">{selectedSubmission.code}</pre>
-
-              <p>
-                Result: {selectedSubmission.passedTests}/{selectedSubmission.totalTests} test cases passed
-              </p>
-
-              <h3>Test Case Results:</h3>
-              {testCases.map((test, index) => {
-                const passed = selectedSubmission.passedTests > index; // giả lập kết quả
-                return (
-                  <div
-                    key={index}
-                    className={`testcase-result ${passed ? "pass" : "fail"}`}
-                  >
-                    <p><strong>Input:</strong> {test.input}</p>
-                    <p><strong>Expected Output:</strong> {test.output}</p>
-                    <p><strong>Your Output:</strong> {passed ? test.output : "Wrong Answer"}</p>
-                    <p>
-                      <strong>Status:</strong>
-                      <span className={`testcase-status ${passed ? "success" : "fail"}`}>
-                        {passed ? "✅ Pass" : "❌ Fail"}
-                      </span>
-                    </p>
-                    <hr />
-                  </div>
-
-                );
-              })}
-              <button onClick={() => setShowSubmissionDetail(false)}>Close</button>
-            </div>
-          )}
     </div>
   );
 };

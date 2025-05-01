@@ -7,6 +7,7 @@ import facebook from '../introduce/facebook.png';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth.jsx';
+import axios from 'axios';
 
 import { useLoading } from "./Loading.jsx";
 
@@ -28,72 +29,134 @@ function LoginModal({ off, isSignup }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const submit_log = (e) => {
+  // const submit_log = (e) => {
+  //   e.preventDefault();
+  //   if (isSignup) {
+  //     if (formData.password !== formData.confirmPassword) {
+  //       setError("Mật khẩu khác với xác nhận mật khẩu");
+  //     } else {
+  //       const body = {
+  //         email: formData.email,
+  //         password: formData.password,
+  //         name: formData.username,
+  //         confirm: confirm,
+  //         code: formData.code,
+  //       };
+  //       console.log(body);
+  //       startLoading();
+
+  //       // Giả lập gọi API - Đăng ký
+  //       setTimeout(() => {
+  //         stopLoading();
+  //         console.log('API response:', { message: "User created successfully" });
+          
+  //         if (confirm) {
+  //           // Giả lập lưu người dùng và role_id là 2 (thường là 'registered')
+  //           const user = { email: formData.email, username: formData.username, role_id: 2 }; 
+  //           Cookies.set('user', JSON.stringify(user), { expires: 7, secure: true, sameSite: 'Strict' });
+  //           login(user);  // Gọi hàm login sau khi đăng ký thành công
+  //           navigate('/home');
+  //           // if (data.user.role_id === "Admin") {
+  //           //   navigate('/home');
+  //           // } else {
+  //           //   navigate('/code');
+  //           // }
+  //         } else {
+  //           setConfirm(true);
+  //         }
+  //       }, 2000); // Giả lập thời gian chờ 2s
+  //     }
+  //   } else {
+  //     const body = {
+  //       email: formData.email,
+  //       password: formData.password,
+  //     };
+  //     console.log(formData);
+  //     startLoading();
+
+  //     // Giả lập gọi API - Đăng nhập
+  //     setTimeout(() => {
+  //       stopLoading();
+  //       console.log('API response:', { message: "Login successful", token: "fakeToken", user: { email: formData.email, role_id: 2 } });
+        
+  //       // Giả lập xử lý login
+  //       localStorage.setItem("token", "fakeToken");
+  //       const user = { email: formData.email, role_id: res.data.user.role_id};  // role_id có thể lấy từ API thực tế
+  //       Cookies.set("user", JSON.stringify(user), { expires: 7, secure: true, sameSite: 'Strict' });
+  //       login(user);
+  //       navigate('/home');
+  //       // if (data.user.role_id === "Admin") {
+  //       //   navigate('/home');
+  //       // } else {
+  //       //   navigate('/code');
+  //       // }
+  //     }, 2000); // Giả lập thời gian chờ 2s
+  //   }
+  // };
+
+  // Google login
+
+  const submit_log = async (e) => {
     e.preventDefault();
+    setError('');
+  
     if (isSignup) {
       if (formData.password !== formData.confirmPassword) {
         setError("Mật khẩu khác với xác nhận mật khẩu");
-      } else {
-        const body = {
-          email: formData.email,
-          password: formData.password,
-          name: formData.username,
-          confirm: confirm,
-          code: formData.code,
-        };
-        console.log(body);
-        startLoading();
-
-        // Giả lập gọi API - Đăng ký
-        setTimeout(() => {
-          stopLoading();
-          console.log('API response:', { message: "User created successfully" });
-          
-          if (confirm) {
-            // Giả lập lưu người dùng và role_id là 2 (thường là 'registered')
-            const user = { email: formData.email, username: formData.username, role_id: 2 }; 
-            Cookies.set('user', JSON.stringify(user), { expires: 7, secure: true, sameSite: 'Strict' });
-            login(user);  // Gọi hàm login sau khi đăng ký thành công
-            navigate('/home');
-            // if (data.user.role_id === "Admin") {
-            //   navigate('/home');
-            // } else {
-            //   navigate('/code');
-            // }
-          } else {
-            setConfirm(true);
-          }
-        }, 2000); // Giả lập thời gian chờ 2s
+        return;
       }
+  
+      const body = {
+        email: formData.email,
+        password: formData.password,
+        name: formData.username,
+        confirm: confirm,
+        code: formData.code,
+      };
+  
+      startLoading();
+      try {
+        const res = await axios.post('http://localhost:8080/api/auth/signup', body);
+        stopLoading();
+        console.log('API response:', res.data);
+  
+        if (confirm) {
+          const user = res.data.user; // giả định API trả về user object
+          Cookies.set('user', JSON.stringify(user), { expires: 7, secure: true, sameSite: 'Strict' });
+          login(user);
+          navigate('/home');
+        } else {
+          setConfirm(true);
+        }
+      } catch (err) {
+        stopLoading();
+        setError(err.response?.data?.message || 'Đăng ký thất bại');
+      }
+  
     } else {
       const body = {
         email: formData.email,
         password: formData.password,
       };
-      console.log(formData);
+  
       startLoading();
-
-      // Giả lập gọi API - Đăng nhập
-      setTimeout(() => {
+      try {
+        const res = await axios.post('http://localhost:8080/api/auth/login', body);
         stopLoading();
-        console.log('API response:', { message: "Login successful", token: "fakeToken", user: { email: formData.email, role_id: 2 } });
-        
-        // Giả lập xử lý login
-        localStorage.setItem("token", "fakeToken");
-        const user = { email: formData.email, role_id: res.data.user.role_id};  // role_id có thể lấy từ API thực tế
+        console.log('API response:', res.data);
+  
+        localStorage.setItem("token", res.data.token);
+        const user = res.data.user;
         Cookies.set("user", JSON.stringify(user), { expires: 7, secure: true, sameSite: 'Strict' });
         login(user);
         navigate('/home');
-        // if (data.user.role_id === "Admin") {
-        //   navigate('/home');
-        // } else {
-        //   navigate('/code');
-        // }
-      }, 2000); // Giả lập thời gian chờ 2s
+      } catch (err) {
+        stopLoading();
+        setError(err.response?.data?.message || 'Đăng nhập thất bại');
+      }
     }
   };
-
-  // Google login
+  
   const responseMessage = (response) => {
     const credential = response.credential;
     const decoded = jwtDecode(credential);

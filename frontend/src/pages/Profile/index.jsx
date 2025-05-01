@@ -28,7 +28,7 @@ const [x,SetX]=useState(false);
     const fetchProfile = async () => {
       if (loading) return;
       startLoading();
-      const response = await fetch("http://localhost:5000/profile/get_profile", {
+      const response = await fetch("http://localhost:8080/profile/get_profile", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user }),
@@ -55,7 +55,7 @@ const [x,SetX]=useState(false);
 
   const saveChanges = async () => {
     startLoading();
-    const response = await fetch("http://localhost:5000/profile/change_profile", {
+    const response = await fetch("http://localhost:8080/profile/change_profile", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user: newData }),

@@ -242,13 +242,13 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
 
   return (
     <>
-      {/* {selectedProblem && (
+      {selectedProblem && (
         <ProblemDetail 
           problem={selectedProblem} 
           onClose={closeDetail} 
           onUpdate={handleUpdate}
         />
-      )} */}
+      )}
       
          <div>
    
