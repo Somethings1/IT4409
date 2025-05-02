@@ -2,6 +2,7 @@ package com.example.leetcode.service;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -78,12 +79,12 @@ public class SubmissionService {
 		long right = 0;
 		String baseDir = "./";
 		List<ExecResult> execResults = new ArrayList<>();
+		String fileName = getFileName(language, code);
+		String compileCommand = getCompileCommand(language, fileName);
+		String runCommand = getRunCommand(language, fileName);
+		String filePath = baseDir + fileName;
 		for (Testcase testcase : testcases) {
-
 			String inputData = testcase.getInput();
-			String fileName = getFileName(language);
-			String compileCommand = getCompileCommand(language, fileName);
-			String runCommand = getRunCommand(language, fileName);
 
 			if (fileName == null || runCommand == null) {
 				execResults.add(new ExecResult(inputData, false, postmanSubmission.getProblem(),
@@ -91,10 +92,9 @@ public class SubmissionService {
 				continue;
 			}
 
-			String filePath = baseDir + fileName;
 			writeToFile(filePath, code);
-
-			if (language.equals("C++") && compileCommand != null && !executeCommand(compileCommand)) {
+			boolean check = executeCommand(compileCommand);
+			if (language.equals("C++") && compileCommand != null && !check) {
 				execResults.add(new ExecResult(inputData, false, postmanSubmission.getProblem(),
 						null));
 				continue;
@@ -123,16 +123,24 @@ public class SubmissionService {
 		Submission submission = this.submissionRepository.save(postmanSubmission);
 		execResults.forEach(execResult -> execResult.setSubmission(submission));
 		this.execResultRepository.saveAll(execResults);
+
+		deleteExecFile(filePath);
 		return postmanSubmission;
 	}
 
-	private String getFileName(String language) {
+	private void deleteExecFile(String filePath) {
+		String classPath = filePath.substring(0, filePath.length() - 5);
+		new File(filePath).delete();
+		new File(classPath + ".class").delete();
+	}
+
+	private String getFileName(String language, String code) {
 		switch (language) {
 			case "C":
 			case "C++":
 				return "program.cpp";
 			case "Java":
-				return "program.java";
+				return code.split("class")[1].split("\\s+")[1].split("\\{")[0].trim() + ".java";
 			case "Javascript":
 				return "program.js";
 			default:
@@ -158,7 +166,7 @@ public class SubmissionService {
 			case "C++":
 				return "./program";
 			case "Java":
-				return "java Program";
+				return "java " + fileName.substring(0, fileName.length() - 5);
 			case "Javascript":
 				return "node " + fileName;
 			default:
