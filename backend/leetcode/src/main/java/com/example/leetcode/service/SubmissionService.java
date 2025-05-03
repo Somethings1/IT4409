@@ -77,7 +77,7 @@ public class SubmissionService {
 		String code = postmanSubmission.getCode();
 		String language = postmanSubmission.getLanguage();
 		long right = 0;
-		String baseDir = "./";
+		String baseDir = "./implement/";
 		List<ExecResult> execResults = new ArrayList<>();
 		String fileName = getFileName(language, code);
 		String compileCommand = getCompileCommand(language, fileName);
