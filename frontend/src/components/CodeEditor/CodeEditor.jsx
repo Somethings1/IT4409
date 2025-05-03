@@ -1043,7 +1043,7 @@ const CodeEditor = () => {
           </div>
         )}
 
-        {showCommentsSection && (
+        {/* {showCommentsSection && (
           <div 
             className="bottom-panel"
             style={{ height: bottomPanelHeight }}
@@ -1081,6 +1081,69 @@ const CodeEditor = () => {
                 >
                   Cancel
                 </button>
+              </div>
+            </div>
+          </div>
+        )} */}
+        {showCommentsSection && (
+          <div 
+            className="bottom-panel"
+            style={{ height: bottomPanelHeight }}
+          >
+            <div className="comments-section">
+              <h3>Comments</h3>
+              <textarea
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
+                placeholder="Add your comments here..."
+                rows={4}
+                className="comment-textarea"
+              />
+              <div className="comment-controls">
+                <button
+                  className="comment-submit"
+                  onClick={() => {
+                    if (!comments.trim()) return; // Prevent empty comments
+                    const newComment = {
+                      id: `${Date.now()}`, // Unique ID for the comment
+                      text: comments,
+                      timestamp: new Date().toLocaleString(),
+                      author: "You",
+                    };
+                    setSubmittedComments(prev => [newComment, ...prev]); // Add new comment to the top
+                    setComments(""); // Clear the textarea
+                    notify(1, "Comment submitted", "Success");
+                  }}
+                  disabled={!comments.trim()}
+                >
+                  Post Comment
+                </button>
+                <button
+                  className="comment-cancel"
+                  onClick={() => setComments("")}
+                  disabled={!comments.trim()}
+                >
+                  Cancel
+                </button>
+              </div>
+
+              {/* Display submitted comments */}
+              <div className="submitted-comments">
+                <h4>Submitted Comments</h4>
+                {submittedComments.length > 0 ? (
+                  <ul className="comment-list">
+                    {submittedComments
+                      .filter(comment => comment.text) // Only show comments with text (exclude submissions without text)
+                      .map((comment) => (
+                        <li key={comment.id} className="comment-item">
+                          <p><strong>{comment.author}</strong> <small>{comment.timestamp}</small></p>
+                          <p>{comment.text}</p>
+                        </li>
+                      ))}
+                  </ul>
+                ) : (
+                  <p>No comments yet.</p>
+                )}
               </div>
             </div>
           </div>

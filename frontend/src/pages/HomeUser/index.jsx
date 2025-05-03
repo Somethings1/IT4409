@@ -161,11 +161,19 @@ const Home = () => {
                         height: '20px', 
                         borderRadius: '50%' 
                       }}>
-                <AvatarImage 
-              src="https://github.com/shadcn.png" 
-              alt="User Avatar" 
-        
+        {/* <AvatarImage 
+  src="https://github.com/shadcn.png" 
+  alt="User Avatar" 
+  style={{ borderRadius: "50%" }}
+   className="avatar"
+/> */}
+                <img 
+                  src="https://github.com/shadcn.png" 
+                  alt="User Avatar" 
+                  className="avatar"
                 />
+
+
 
                   <AvatarFallback>{user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
