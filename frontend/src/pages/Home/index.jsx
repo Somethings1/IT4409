@@ -89,16 +89,16 @@ function Home() {
       };
 
       await Promise.all([
-        fetchWithErrorHandling('http://localhost:8080/admin/total_submissions', setSubmissions, submissions),
-        fetchWithErrorHandling('http://localhost:8080/admin/total_problems', setProblems, problems),
-        fetchWithErrorHandling('http://localhost:8080/admin/active_users', setUsers, users),
-        fetchWithErrorHandling('http://localhost:8080/admin/upcoming_contests', setContests, contests),
-        fetchWithErrorHandling('http://localhost:8080/admin/submission_trends', setChartData, sampleChartData),
-        fetchWithErrorHandling('http://localhost:8080/admin/problem_difficulty', setDifficultyData, sampleDifficultyData),
-        fetchWithErrorHandling('http://localhost:8080/admin/recent_activity', setActivity, [], true),
-        fetchWithErrorHandling('http://localhost:8080/admin/recent_comments', setComments, sampleComments),
-        fetchWithErrorHandling('http://localhost:8080/admin/recent_submissions', setRecentSubmissions, sampleRecentSubmissions),
-        fetchWithErrorHandling('http://localhost:8080/admin/recent_problems', setRecentProblems, sampleRecentProblems),
+        // fetchWithErrorHandling('http://localhost:8080/admin/total_submissions', setSubmissions, submissions),
+        // fetchWithErrorHandling('http://localhost:8080/admin/total_problems', setProblems, problems),
+        // fetchWithErrorHandling('http://localhost:8080/admin/active_users', setUsers, users),
+        // fetchWithErrorHandling('http://localhost:8080/admin/upcoming_contests', setContests, contests),
+        // fetchWithErrorHandling('http://localhost:8080/admin/submission_trends', setChartData, sampleChartData),
+        // fetchWithErrorHandling('http://localhost:8080/admin/problem_difficulty', setDifficultyData, sampleDifficultyData),
+        // fetchWithErrorHandling('http://localhost:8080/admin/recent_activity', setActivity, [], true),
+        // fetchWithErrorHandling('http://localhost:8080/admin/recent_comments', setComments, sampleComments),
+        // fetchWithErrorHandling('http://localhost:8080/admin/recent_submissions', setRecentSubmissions, sampleRecentSubmissions),
+        // fetchWithErrorHandling('http://localhost:8080/admin/recent_problems', setRecentProblems, sampleRecentProblems),
       ]);
     };
 
@@ -157,12 +157,12 @@ function Home() {
           </button>
 
           {/* Theme Toggle */}
-          <button
+          {/* <button
             className="btn btn-outline-secondary theme-toggle"
             onClick={toggleDarkMode}
           >
             <i className={`fas ${isDarkMode ? 'fa-sun' : 'fa-moon'}`}></i>
-          </button>
+          </button> */}
 
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h3>Overview</h3>

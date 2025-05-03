@@ -4,7 +4,7 @@ import LoginModal from './intro.jsx'
 import './main.css'
 import { Navigate } from "react-router-dom";
 import Cookies from 'js-cookie';
-
+import notify from '../../components/Notification/notification.jsx'
 import logo from "./img/computer-coding-icons-set_1284-37673-removebg-preview.png"
 
 function Main(){
