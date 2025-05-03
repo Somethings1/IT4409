@@ -1,16 +1,24 @@
-FROM eclipse-temurin:21 AS build
+FROM gradle:8.7.0-jdk21 AS build
 
+# Đặt thư mục làm việc
 WORKDIR /app
+
+# Copy toàn bộ mã nguồn vào container
 COPY . .
 
-WORKDIR /app/leetcode/backend
+# Di chuyển vào thư mục chứa backend
+WORKDIR /app/backend/leetcode
 
-RUN chmod +x ./gradlew
-RUN ./gradlew build --no-daemon
+# Build project bằng Gradle global (KHÔNG cần ./gradlew)
+RUN gradle build --no-daemon
 
+# ----- Runtime stage -----
 FROM eclipse-temurin:21-jre-alpine
+
 WORKDIR /app
-COPY --from=build /app/leetcode/backend/gradle/wrapper/*.jar app.jar
+
+# Copy file JAR từ giai đoạn build
+COPY --from=build /app/backend/leetcode/gradle/wrapper/*.jar app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
