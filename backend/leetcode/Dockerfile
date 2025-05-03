@@ -18,7 +18,9 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 # Copy file JAR từ giai đoạn build
-COPY --from=build /app/backend/leetcode/gradle/wrapper/*.jar app.jar
+COPY --from=build /app/backend/leetcode/build/libs/*.war app.war
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.war"]
+
+
