@@ -255,4 +255,9 @@
     border-radius: 999px;
     font-size: 13px;
   }
+  .tag-selector.original-tag {
+    border: 2px dashed #007bff;
+    background-color: #f0f8ff;
+    color: #007bff;
+  }
   
