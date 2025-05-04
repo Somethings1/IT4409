@@ -6,7 +6,7 @@ import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import './Profile.css';
 import { useAuth } from '../../components/introduce/useAuth.jsx';
-import Avatar from '../../components/Avatar/index.js';
+import Avatar from '../../components/Avatar/index.jsx';
 import { useLoading } from '../../components/introduce/Loading.jsx';
 import ProfilePictureOptions from './image.jsx';
 import { notify } from '../../components/Notification/notification.jsx';

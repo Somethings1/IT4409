@@ -853,12 +853,24 @@ const CodeEditor = () => {
           {problem.difficulty}
         </div>
 
-        <div className="problem-description-container">
+        {/* <div className="problem-description-container">
           <div className="problem-description left-aligned">
             <h3>Description</h3>
             <p>{problem.description}</p>
           </div>
+        </div> */}
+        
+        <div className="problem-description-container">
+          <div className="problem-description left-aligned">
+            <h3>Description</h3>
+            <p className="problem-description">
+              {problem.description.length > 100
+                ? <span dangerouslySetInnerHTML={{ __html: problem.description.substring(0, 100) + '...' }} />
+                : <span dangerouslySetInnerHTML={{ __html: problem.description }} />}
+            </p>
+          </div>
         </div>
+    
 
         <div className="problem-examples flush-left">
           <h3>Examples</h3>
@@ -900,13 +912,13 @@ const CodeEditor = () => {
                     className="submission-item"
                     onClick={() => handleSubmissionClick(submission.id)}
                   >
-                    {/* <div className="submission-header">
+                    <div className="submission-header">
                       <span className="submission-time">{submission.timestamp}</span>
                       <span className={`submission-status ${submission.status.toLowerCase().replace(' ', '-')}`}>
                         {submission.status}
                       </span>
-                    </div> */}
-                        <div className="submission-header">
+                    </div>
+                        {/* <div className="submission-header">
                             <span className="submission-time">{submission.timestamp}</span>
                             <span className={`submission-status ${submission.status.toLowerCase().replace(' ', '-')}`}>
                               {submission.status}
@@ -916,7 +928,7 @@ const CodeEditor = () => {
                                 {submission.passedTests}/{submission.totalTests} test cases passed
                               </span>
                             )}
-                          </div>
+                          </div> */}
 
                     <div className="submission-meta">
                       <p><strong>ID:</strong> {submission.id}</p>

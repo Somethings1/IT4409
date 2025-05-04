@@ -162,7 +162,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   if (sortByA === "Tên") {
     filteredProblems.sort((a, b) => a.title.localeCompare(b.title));
   } else if (sortByA === "Mức độ") {
-    const difficultyOrder = { Easy: 1, Medium: 2, Hard: 3 };
+    const difficultyOrder = { EASY: 1, Medium: 2, HARD: 3 };
     filteredProblems.sort(
       (a, b) => (difficultyOrder[a.difficulty] || 0) - (difficultyOrder[b.difficulty] || 0)
     );
@@ -207,12 +207,20 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
               )}
             </div>
 
-            <p className="problem-description">
+            {/* <p className="problem-description">
               {problem.description.length > 100
                 ? `${problem.description.substring(0, 100)}...`
                 : problem.description}
             </p>
+             */}
+            <p className="problem-description">
+              {problem.description.length > 100
+                ? <span dangerouslySetInnerHTML={{ __html: problem.description.substring(0, 100) + '...' }} />
+                : <span dangerouslySetInnerHTML={{ __html: problem.description }} />}
+            </p>
 
+            
+             
             <div className="problem-actions">
               <button
                 className="action-button view-button"
