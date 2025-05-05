@@ -50,7 +50,6 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
         // Set selected tags
         if (problem.tags) {
           setSelectedTags(problem.tags.map(tag => tag.id));
-          console.log("select tag gốc của bài táon",selectedTags);
         }
         setOriginalTags(problem.tags.map(tag => tag.id)); // 👈 lưu tag gốc
         console.log("tag gốc của bài táon",originalTags);
@@ -74,6 +73,7 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
     }
   };
 
+  // xuống dong khoảng cách cho description
    const editor = useEditor({
       extensions: [StarterKit],
       content: editData.description, // initial content
@@ -153,6 +153,7 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
     const newTestCaseData = {
       input: newTestCase.input,
       output: newTestCase.output,
+      active: !newTestCase.active,
       createdBy: 'admin',
       updatedBy: 'admin',
       problem: {
