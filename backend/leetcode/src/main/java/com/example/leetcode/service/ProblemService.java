@@ -67,7 +67,7 @@ public class ProblemService {
 					.stream().map(tag -> tag.getId())
 					.toList();
 			List<Tag> tags = this.tagRepository.findByIdIn(ids);
-			postmanProblem.setTags(tags);
+			updatedProblem.setTags(tags);
 		}
 		updatedProblem.setTitle(postmanProblem.getTitle());
 		updatedProblem.setDescription(postmanProblem.getDescription());
