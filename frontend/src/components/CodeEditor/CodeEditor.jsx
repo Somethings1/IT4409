@@ -427,8 +427,13 @@ const CodeEditor = () => {
                         {testCases.map((testCase, index) => (
                           <div className="testcase" key={index}>
                             <p><strong>Case {index + 1}:</strong></p>
-                            <p><strong>Input:</strong> {testCase.input}</p>
-                            <p><strong>Output:</strong> {testCase.output}</p>
+                            <p style={{ whiteSpace: 'pre-line' }}>
+                              <strong>Input:</strong> {testCase.input}
+                            </p>
+                            <p style={{ whiteSpace: 'pre-line' }}>
+                              <strong>Output:</strong> {testCase.output}
+                            </p>
+
                           </div>
                         ))}
                         </p>
