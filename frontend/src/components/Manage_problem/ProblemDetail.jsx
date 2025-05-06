@@ -16,6 +16,8 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [testCases, setTestCases] = useState([]);
+  const [showOldTestCases, setShowOldTestCases] = useState(false);
+
   
   const [newTestCase, setNewTestCase] = useState({ input: '', output: '', active: false });
   const [changeDetails, setChangeDetails] = useState("");
@@ -43,10 +45,17 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
       
 
         // Fetch test cases for this problem
-        // const testCasesResponse = await fetch(`http://localhost:8080/problems/${problem.id}/testcases`);
+        const testCasesResponse = await axios.get(`http://localhost:8080/api/v1/testcases?filter=problem.id:${problem.id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const allTestCases = testCasesResponse.data.data.result
+          .map(tc => ({ id: tc.id, input: tc.input, output: tc.output, active: tc.active }));
+        setTestCases(allTestCases);
+        console.log("testcase", allTestCases);
+
         // const testCasesData = await testCasesResponse.json()||[];
         // setTestCases(testCasesData);
-
+        console.log("tesstcase",testCases);
         // Set selected tags
         if (problem.tags) {
           setSelectedTags(problem.tags.map(tag => tag.id));
@@ -68,6 +77,7 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
     if (!isEditing) {
+      console.log("old testcase",testCases);
       setEditData({ ...problem });
       setSelectedTags(problem.tags ? problem.tags.map(tag => tag.id) : []);
     }
@@ -139,10 +149,34 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
     }
   };
 
-  const removeTestCase = (index) => {
-    // setTestCases(prev => prev.filter((_, i) => i !== index));
-  };
+  // const removeTestCase = (index) => {
+    
+  //   //không xóaxóa
+  //   setTestCases(prev => prev.filter((_, i) => i !== index));
+  // };
 
+  const removeTestCase = async (index) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("No access token found");
+      stopLoading();
+      return;
+    }
+  
+    const testCaseId = testCases[index].id;
+  
+    try {
+      await axios.delete(`http://localhost:8080/api/v1/testcases/${testCaseId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      notify(1, "Delete Testcase success", "Success");
+      // Xóa khỏi danh sách hiển thị sau khi xóa thành công
+      setTestCases(prev => prev.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error("Failed to delete test case:", error);
+    }
+  };
+  
   const submitTestCase = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -420,8 +454,12 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
 
               <div className="form-group">
                 <label>Test Cases</label>
+                <button onClick={() => setShowOldTestCases(prev => !prev)}>
+                  {showOldTestCases ? "Hide Old Test Cases" : "Show Old Test Cases"}
+                </button>
+
                 <div className="test-cases-container">
-                  {/* {testCases.map((testCase, index) => (
+                  {showOldTestCases &&testCases.map((testCase, index) => (
                     <div key={index} className="test-case">
                       <div className="test-case-header">
                         <h4>Test Case #{index + 1}</h4>
@@ -453,13 +491,13 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
                         <input
                           type="checkbox"
                           name="active"
-                          checked={testCase.active}
+                          checked={!testCase.active}
                           onChange={(e) => handleTestCaseChange(e, index)}
                         />
                         Hidden Test Case
                       </label>
                     </div>
-                  ))} */}
+                  ))}
 
                   <div className="new-test-case">
                     <h4>Add New Test Case</h4>
