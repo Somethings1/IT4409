@@ -30,7 +30,7 @@ function UsersOnlineCard() {
         const fetchData = async () => {
 if(loading) return ;
 try {
-    const response = await fetch('http://localhost:8080/home/generatedailyCustomer', {
+    const response = await fetch(import.meta.env.VITE_API_URL + '/home/generatedailyCustomer', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ try {
     console.error("Error fetching revenue:", error);
   }
 };
-        
+
         fetchData()
     },[loading])
     return (

@@ -16,10 +16,10 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   const [refreshTrigger, setRefreshTrigger] = useState(0); // Use number for cleaner toggle
   const navigate = useNavigate();
 
-  
+
   const [sortField, setSortField] = useState('');
   const [sortDirection, setSortDirection] = useState('asc'); // asc hoặc desc
-  
+
   // Memoize fetchProblems to ensure stable function reference
   const fetchProblems = useCallback(async () => {
     // Skip if auth is still loading
@@ -38,7 +38,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
         return;
       }
 
-      const response = await fetch("http://localhost:8080/api/v1/problems", {
+      const response = await fetch(api/v1/problems", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -96,8 +96,8 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   }, [fetchProblems, user, refreshTrigger]);
 
   const showCodeEditor = (problem) => {
-    navigate('/code/code-editor', { 
-      state: { 
+    navigate('/code/code-editor', {
+      state: {
         problem,
         initialCode: {
           javascript:  '',
@@ -124,32 +124,32 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       setSortDirection('asc');
     }
   };
-  
+
 
   // Lọc bài toán theo các tiêu chí
   let filteredProblems = problems.slice();
-  
+
   if (selectedCategory) {
-    filteredProblems = filteredProblems.filter(problem => 
-      problem.category === selectedCategory || 
+    filteredProblems = filteredProblems.filter(problem =>
+      problem.category === selectedCategory ||
       (problem.tags && problem.tags.includes(selectedCategory))
     );
   }
-  
+
   if (searchTerm) {
-    filteredProblems = filteredProblems.filter(problem => 
+    filteredProblems = filteredProblems.filter(problem =>
       problem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       problem.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
-  
+
   if (sortByA === "Tên") {
     filteredProblems.sort((a, b) => a.title.localeCompare(b.title));
   } else if (sortByA === "Mức độ") {
     const difficultyOrder = { "Easy": 1, "Medium": 2, "Hard": 3 };
     filteredProblems.sort((a, b) => difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty]);
   }
-  
+
   if (sortByB === "Từ khó đến dễ") {
     filteredProblems.reverse();
   }
@@ -158,18 +158,18 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
     filteredProblems.sort((a, b) => {
       const valA = a[sortField] ?? '';
       const valB = b[sortField] ?? '';
-      
+
       if (typeof valA === 'string') {
         return sortDirection === 'asc'
           ? valA.localeCompare(valB)
           : valB.localeCompare(valA);
       }
-  
+
       return sortDirection === 'asc' ? valA - valB : valB - valA;
     });
   }
-  
-  
+
+
   if (sortField === 'difficulty') {
     const difficultyOrder = { "EASY": 1, "Medium": 2, "HARD": 3 };
     filteredProblems.sort((a, b) => {
@@ -178,18 +178,18 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       return sortDirection === 'asc' ? valA - valB : valB - valA;
     });
   }
-  
+
 
   return (
     <>
       {problemToDelete && (
-        <DeleteProblemModal 
-          problem={problemToDelete} 
-          onClose={closeDeleteModal} 
+        <DeleteProblemModal
+          problem={problemToDelete}
+          onClose={closeDeleteModal}
           onDelete={handleDelete}
         />
       )}
-      
+
       <div className="problem-table-container">
         <table className="problem-table">
          <thead>
@@ -210,8 +210,8 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
 
           <tbody>
             {filteredProblems.map((problem) => (
-              <tr 
-                key={problem.id} 
+              <tr
+                key={problem.id}
                 className="problem-row"
                 onClick={() => showCodeEditor(problem)}
               >
@@ -223,8 +223,8 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
                 <td className="problem-title-cell">
                   <div className="problem-title">{problem.title}</div>
                   <div className="problem-description">
-                    {problem.description.length > 100 
-                      ? `${problem.description.substring(0, 100)}...` 
+                    {problem.description.length > 100
+                      ? `${problem.description.substring(0, 100)}...`
                       : problem.description}
                   </div>
                 </td>

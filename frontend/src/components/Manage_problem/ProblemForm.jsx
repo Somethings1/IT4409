@@ -10,10 +10,10 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
   const [difficulties, setDifficulties] = useState([]);
   const [tags, setTags] = useState([]);
   const [testCases, setTestCases] = useState([]);
-  const [newTestCase, setNewTestCase] = useState({ 
-    input: '', 
-    expected_output: '', 
-    is_hidden: false 
+  const [newTestCase, setNewTestCase] = useState({
+    input: '',
+    expected_output: '',
+    is_hidden: false
   });
   const [changeDetails, setChangeDetails] = useState('');
 
@@ -32,12 +32,12 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
       startLoading();
       try {
         // Fetch difficulties
-        const diffResponse = await fetch('http://localhost:8080/problems/difficulties');
+        const diffResponse = await fetch(import.meta.env.VITE_API_URL + '/problems/difficulties');
         const diffData = await diffResponse.json();
         setDifficulties(diffData);
 
         // Fetch tags
-        const tagsResponse = await fetch('http://localhost:8080/problems/tags');
+        const tagsResponse = await fetch(import.meta.env.VITE_API_URL + '/problems/tags');
         const tagsData = await tagsResponse.json();
         setTags(tagsData);
 
@@ -52,7 +52,7 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
 
           // Fetch test cases
           const testCasesResponse = await fetch(
-            `http://localhost:8080/problems/${problemData.id}/testcases`
+            import.meta.env.VITE_API_URL + `/problems/${problemData.id}/testcases`
           );
           const testCasesData = await testCasesResponse.json();
           setTestCases(testCasesData);
@@ -85,17 +85,17 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
   const handleTestCaseChange = (e, index) => {
     const { name, value, type, checked } = e.target;
     const updatedTestCases = [...testCases];
-    
+
     if (index !== undefined) {
-      updatedTestCases[index] = { 
-        ...updatedTestCases[index], 
-        [name]: type === 'checkbox' ? checked : value 
+      updatedTestCases[index] = {
+        ...updatedTestCases[index],
+        [name]: type === 'checkbox' ? checked : value
       };
       setTestCases(updatedTestCases);
     } else {
-      setNewTestCase(prev => ({ 
-        ...prev, 
-        [name]: type === 'checkbox' ? checked : value 
+      setNewTestCase(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
       }));
     }
   };
@@ -113,7 +113,7 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.title || !formData.description || !formData.difficulty_id) {
       notify(2, "Title, description and difficulty are required", "Error");
       return;
@@ -128,10 +128,10 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
 
     try {
       startLoading();
-      const url = isEditMode 
-        ? `http://localhost:8080/problems/${problemData.id}`
-        : 'http://localhost:8080/problems';
-      
+      const url = isEditMode
+        ? import.meta.env.VITE_API_URL + `/problems/${problemData.id}`
+        : import.meta.env.VITE_API_URL + '/problems';
+
       const method = isEditMode ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -145,8 +145,8 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
       if (!response.ok) throw new Error("Operation failed");
 
       const data = await response.json();
-      notify(1, 
-        `Problem ${isEditMode ? 'updated' : 'created'} successfully`, 
+      notify(1,
+        `Problem ${isEditMode ? 'updated' : 'created'} successfully`,
         "Success"
       );
       refresh();
@@ -164,7 +164,7 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
       <div className="problem-form-container">
         <span className="close-button" onClick={turnoff}>&times;</span>
         <h2>{isEditMode ? 'Edit Problem' : 'Create New Problem'}</h2>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Title *</label>
@@ -209,7 +209,7 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
             <label>Tags</label>
             <div className="tags-container">
               {tags.map(tag => (
-                <div 
+                <div
                   key={tag.id}
                   className={`tag-selector ${
                     formData.tags.includes(tag.id) ? 'selected' : ''
@@ -229,8 +229,8 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
                 <div key={index} className="test-case">
                   <div className="test-case-header">
                     <h4>Test Case #{index + 1}</h4>
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       className="remove-test-case"
                       onClick={() => removeTestCase(index)}
                     >
@@ -292,8 +292,8 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
                   />
                   Hidden Test Case
                 </label>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="add-test-case"
                   onClick={addTestCase}
                 >
@@ -318,8 +318,8 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
             <button type="submit" className="submit-button">
               {isEditMode ? 'Update Problem' : 'Create Problem'}
             </button>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="cancel-button"
               onClick={turnoff}
             >
