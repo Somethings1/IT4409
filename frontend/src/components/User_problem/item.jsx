@@ -220,14 +220,29 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
                     {problem.status}
                   </span>
                 </td>
-                <td className="problem-title-cell">
+                {/* <td className="problem-title-cell">
                   <div className="problem-title">{problem.title}</div>
                   <div className="problem-description">
                     {problem.description.length > 100
                       ? `${problem.description.substring(0, 100)}...`
                       : problem.description}
                   </div>
+                  <p className="problem-description">
+                    {problem.description.length > 100
+                      ? <span dangerouslySetInnerHTML={{ __html: problem.description.substring(0, 100) + '...' }} />
+                      : <span dangerouslySetInnerHTML={{ __html: problem.description }} />}
+                  </p>
+                </td> */}
+                <td className="problem-title-cell">
+                  <div className="problem-title">{problem.title}</div>
+                  <p className="problem-description">
+                    {problem.description.length > 100
+                      ? <span dangerouslySetInnerHTML={{ __html: problem.description.substring(0, 100) + '...' }} />
+                      : <span dangerouslySetInnerHTML={{ __html: problem.description }} />}
+                  </p>
                 </td>
+
+
                 <td>
                   {problem.tags && problem.tags.map(tag => (
                     <span key={tag} className="problem-tag">{tag}</span>

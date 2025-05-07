@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
+import { useAuth } from "../introduce/useAuth.jsx"; // Import useAuth hook
+import { useLoading } from "../introduce/Loading.jsx"; // Import useLoading hook
 import "./Form_delete.css";
 import { notify } from '../Notification/notification.jsx';
 
 const DeleteProblemModal = ({ problem, onDelete, onClose }) => {
+  // Extract startLoading and stopLoading from useLoading hook
+  const { startLoading, stopLoading } = useLoading();
+  // Extract user from useAuth hook
+  const { user } = useAuth();
+
   const [reason, setReason] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -14,7 +21,30 @@ const DeleteProblemModal = ({ problem, onDelete, onClose }) => {
 
     setIsDeleting(true);
     try {
-      await onDelete(problem.id, reason);
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        notify(2, 'No access token found', 'Error');
+        return;
+      }
+
+      startLoading(); // Start loading spinner or indicator
+
+      // Xóa vấn đề thông qua API
+      const response = await fetch(`http://localhost:8080/api/v1/problems/${problem.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,  // Gửi token trong header
+        },
+        body: JSON.stringify({ reason }),  // Gửi lý do xóa
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete problem: ${response.statusText}`);
+      }
+
+      // Thông báo và đóng modal khi xóa thành công
       notify(1, `Problem "${problem.title}" deleted successfully`, 'Success');
       onClose();
     } catch (error) {
@@ -22,6 +52,7 @@ const DeleteProblemModal = ({ problem, onDelete, onClose }) => {
       notify(2, `Failed to delete problem "${problem.title}"`, 'Error');
     } finally {
       setIsDeleting(false);
+      stopLoading(); // Stop loading indicator after completion
     }
   };
 

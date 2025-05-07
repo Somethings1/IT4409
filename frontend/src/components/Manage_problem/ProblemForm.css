@@ -181,3 +181,23 @@
     border-radius: 4px;
     cursor: pointer;
   }
+  /* Add a border, padding, and a shadow to the editor container */
+.tiptap-editor-container {
+  border: 1px solid #ccc; /* Light gray border */
+  padding: 10px; /* Padding around the editor */
+  border-radius: 4px; /* Optional: rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
+  background-color: #fff; /* Optional: background color */
+  min-height: 200px; /* Optional: adjust height */
+}
+
+.tiptap-editor-container {
+  white-space: pre-line; /* Giữ dấu xuống dòng */
+  word-wrap: break-word; /* Đảm bảo không bị cắt chữ nếu dòng dài */
+}
+
+/* Optional: Change border color on focus */
+.tiptap-editor-container:focus-within {
+  border-color: #007bff; /* Blue border on focus */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* Optional: blue shadow */
+}
