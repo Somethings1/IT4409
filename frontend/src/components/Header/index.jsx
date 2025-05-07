@@ -7,7 +7,7 @@ import Modal from "../Modal/index.jsx";
 import Notification from "./noti.jsx"
 function Header({size}) {
   return(<>
-  
+
     <div className="header" style={{width:`${size}%`,marginLeft:`${100-size}%`}}>
       <div className="search-box">
 
@@ -15,7 +15,6 @@ function Header({size}) {
 
       <div className="header__right">
         <div className="header__setting"><RiSettings4Line /></div>
-        <div className="header__notify"><Notification /></div>
         <div className="header__user"><Modal /></div>
       </div>
     </div></>
