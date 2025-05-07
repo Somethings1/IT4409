@@ -11,7 +11,7 @@ const Change_password=({email,off})=>{
         email:email,
         password:password
       };
-      fetch(login/change_password2", {
+      fetch(import.meta.env.VITE_API_URL + "/change_password2", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -15,7 +15,7 @@ const Forgot_password=({off,turnon})=>{
         email:email,
       };
       startLoading();
-      fetch(login/forgot_password", {
+      fetch(import.meta.env.VITE_API_URL + "/forgot_password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +42,7 @@ const Forgot_password=({off,turnon})=>{
         ma:ma
       };
       startLoading()
-      fetch(login/change_password", {
+      fetch(import.meta.env.VITE_API_URL + "/change_password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +66,7 @@ if(data.message==='Success'){off();turnon(email)}else{
         email:email,
       };
       startLoading();
-      fetch(login/forgot_password", {
+      fetch(import.meta.env.VITE_API_URL + "/forgot_password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

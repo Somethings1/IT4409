@@ -38,7 +38,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
         return;
       }
 
-      const response = await fetch(api/v1/problems", {
+      const response = await fetch(import.meta.env.VITE_API_URL + "/problems", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

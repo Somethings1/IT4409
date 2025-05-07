@@ -154,7 +154,7 @@ function LoginModal({ off, isSignup }) {
         };
         console.log(JSON.stringify(body));
         startLoading();
-        fetch(login/login_google", {
+        fetch(import.meta.env.VITE_API_URL + "/login_google", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -206,7 +206,7 @@ function LoginModal({ off, isSignup }) {
         };
         console.log(body);
         startLoading();
-        fetch(login/sign_up", {
+        fetch(import.meta.env.VITE_API_URL + "/sign_up", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
