@@ -6,7 +6,7 @@ import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import './Profile.css';
 import { useAuth } from '../../components/introduce/useAuth.jsx';
-import Avatar from '../../components/Avatar/index.js';
+import Avatar from '../../components/Avatar/index.jsx';
 import { useLoading } from '../../components/introduce/Loading.jsx';
 import ProfilePictureOptions from './image.jsx';
 import { notify } from '../../components/Notification/notification.jsx';
@@ -21,7 +21,7 @@ function Profile() {
   const { startLoading, stopLoading } = useLoading();
   const [newData, setNewData] = useState(null);
   const [refresh, setRefresh] = useState(false);
- 
+
 const [image,SetImage]=useState(null)
 const [x,SetX]=useState(false);
   useEffect(() => {
@@ -33,16 +33,16 @@ const [x,SetX]=useState(false);
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user }),
       });
-      
+
       if (!response.ok) {
         notify(2,"network is not okay!","Thất bại");}
       const profileData = await response.json();
-      
+
       console.log(profileData)
       stopLoading();
       setData(profileData);
       setNewData(profileData);
-    
+
     };
 
     fetchProfile();
@@ -73,9 +73,9 @@ const [x,SetX]=useState(false);
 
 
 
- 
 
-    
+
+
   return (
     <div className="profile-container">
       <div className="profile-header">
