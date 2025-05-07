@@ -21,28 +21,28 @@ function Profile() {
   const { startLoading, stopLoading } = useLoading();
   const [newData, setNewData] = useState(null);
   const [refresh, setRefresh] = useState(false);
- 
+
 const [image,SetImage]=useState(null)
 const [x,SetX]=useState(false);
   useEffect(() => {
     const fetchProfile = async () => {
       if (loading) return;
       startLoading();
-      const response = await fetch("http://localhost:8080/profile/get_profile", {
+      const response = await fetch(import.meta.env.VITE_API_URL + "/profile/get_profile", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user }),
       });
-      
+
       if (!response.ok) {
         notify(2,"network is not okay!","Thất bại");}
       const profileData = await response.json();
-      
+
       console.log(profileData)
       stopLoading();
       setData(profileData);
       setNewData(profileData);
-    
+
     };
 
     fetchProfile();
@@ -55,7 +55,7 @@ const [x,SetX]=useState(false);
 
   const saveChanges = async () => {
     startLoading();
-    const response = await fetch("http://localhost:8080/profile/change_profile", {
+    const response = await fetch(import.meta.env.VITE_API_URL + "/profile/change_profile", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user: newData }),
@@ -73,9 +73,9 @@ const [x,SetX]=useState(false);
 
 
 
- 
 
-    
+
+
   return (
     <div className="profile-container">
       <div className="profile-header">

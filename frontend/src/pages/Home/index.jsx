@@ -89,16 +89,16 @@ function Home() {
       };
 
       await Promise.all([
-        // fetchWithErrorHandling('http://localhost:8080/admin/total_submissions', setSubmissions, submissions),
-        // fetchWithErrorHandling('http://localhost:8080/admin/total_problems', setProblems, problems),
-        // fetchWithErrorHandling('http://localhost:8080/admin/active_users', setUsers, users),
-        // fetchWithErrorHandling('http://localhost:8080/admin/upcoming_contests', setContests, contests),
-        // fetchWithErrorHandling('http://localhost:8080/admin/submission_trends', setChartData, sampleChartData),
-        // fetchWithErrorHandling('http://localhost:8080/admin/problem_difficulty', setDifficultyData, sampleDifficultyData),
-        // fetchWithErrorHandling('http://localhost:8080/admin/recent_activity', setActivity, [], true),
-        // fetchWithErrorHandling('http://localhost:8080/admin/recent_comments', setComments, sampleComments),
-        // fetchWithErrorHandling('http://localhost:8080/admin/recent_submissions', setRecentSubmissions, sampleRecentSubmissions),
-        // fetchWithErrorHandling('http://localhost:8080/admin/recent_problems', setRecentProblems, sampleRecentProblems),
+        // fetchWithErrorHandling(import.meta.env.VITE_API_URL + '/admin/total_submissions', setSubmissions, submissions),
+        // fetchWithErrorHandling(import.meta.env.VITE_API_URL + '/admin/total_problems', setProblems, problems),
+        // fetchWithErrorHandling(import.meta.env.VITE_API_URL + '/admin/active_users', setUsers, users),
+        // fetchWithErrorHandling(import.meta.env.VITE_API_URL + '/admin/upcoming_contests', setContests, contests),
+        // fetchWithErrorHandling(import.meta.env.VITE_API_URL + '/admin/submission_trends', setChartData, sampleChartData),
+        // fetchWithErrorHandling(import.meta.env.VITE_API_URL + '/admin/problem_difficulty', setDifficultyData, sampleDifficultyData),
+        // fetchWithErrorHandling(import.meta.env.VITE_API_URL + '/admin/recent_activity', setActivity, [], true),
+        // fetchWithErrorHandling(import.meta.env.VITE_API_URL + '/admin/recent_comments', setComments, sampleComments),
+        // fetchWithErrorHandling(import.meta.env.VITE_API_URL + '/admin/recent_submissions', setRecentSubmissions, sampleRecentSubmissions),
+        // fetchWithErrorHandling(import.meta.env.VITE_API_URL + '/admin/recent_problems', setRecentProblems, sampleRecentProblems),
       ]);
     };
 
@@ -181,7 +181,7 @@ function Home() {
               <a href="#" className="btn btn-secondary ms-2">Manage Contests</a> */}
             </div>
           </div>
-{/* 
+{/*
           {error && <div className="alert alert-danger">{error}</div>} */}
 
           {/* Metrics Cards */}

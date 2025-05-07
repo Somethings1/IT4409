@@ -21,12 +21,14 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "roles")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Role {
 
 	@Id
@@ -51,6 +53,20 @@ public class Role {
 	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<User> users;
+
+	/**
+	 * @param name
+	 * @param description
+	 * @param active
+	 * @param permissions
+	 */
+	public Role(@NotBlank(message = "Name must not blank!") String name, String description, boolean active,
+			List<Permission> permissions) {
+		this.name = name;
+		this.description = description;
+		this.active = active;
+		this.permissions = permissions;
+	}
 
 	@PrePersist
 	public void handleBeforeCreate() {

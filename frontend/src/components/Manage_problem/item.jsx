@@ -16,7 +16,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   const [refreshTrigger, setRefreshTrigger] = useState(0); // Use number for cleaner toggle
   const navigate = useNavigate();
 
-  
+
   // Memoize fetchProblems to ensure stable function reference
   const fetchProblems = useCallback(async () => {
     // Skip if auth is still loading
@@ -35,7 +35,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
         return;
       }
 
-      const response = await fetch("http://localhost:8080/api/v1/problems", {
+      const response = await fetch(import.meta.env.VITE_API_URL + "/problems", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

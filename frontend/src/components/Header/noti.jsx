@@ -20,7 +20,7 @@ const Notification = () => {
     startLoading();
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/problems", {
+      const response = await fetch(import.meta.env.VITE_API_URL + "/problem/show", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user }),
@@ -65,7 +65,7 @@ const Notification = () => {
       setHasUnreadNotifications(false);
     }
   };
-  
+
 
   return (
     <div className="notification-container">
@@ -78,7 +78,7 @@ const Notification = () => {
           fontSize: "24px",
         }}
       />
-      
+
       {/* Hiển thị hình tròn đỏ nếu có thông báo */}
       {/* {hasUnreadNotifications && (
         <div className="notification-badge"></div>

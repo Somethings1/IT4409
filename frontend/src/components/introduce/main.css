@@ -13,57 +13,6 @@ input{
     background-size: cover;
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 15vh; /* 20% chiều cao của trang */
-    width: 100%;
-    background-color: #00000000;
-    padding: 0 20px;
-}
-
-.logo {
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-    flex: 1;
-    margin-left: 10%;
-}
-
-.auth-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-.auth-buttons .btn {
-    white-space: nowrap;
-    font-weight: bold;
-    padding: 15px 20px;
-    background-color: #ffffff;
-    color: rgb(0, 0, 0);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    border: 2px solid #000000;
-}
-.auth-buttons .btn:hover {
-    background-color: #000000;
-    color: white;
-    border: 2px solid #ffffff;
-}
-
-.content {
-    padding: 20px;
-    text-align: center;
-    font-size: 1.2rem;
-}
-
-
-
-
-
 @keyframes tiltAnimation {
     0% { transform: rotate(-10deg); }
     50% { transform: rotate(10deg); }

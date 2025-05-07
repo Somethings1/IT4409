@@ -43,7 +43,7 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
         }
 
         // Fetch tags
-        const tagsResponse = await axios.get("http://localhost:8080/api/v1/tags", {
+        const tagsResponse = await fetch(import.meta.env.VITE_API_URL + '/problems/tags', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const tagsData = tagsResponse.data.data?.result || [];
@@ -52,7 +52,7 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
 
         // Fetch test cases
         const testCasesResponse = await axios.get(
-          `http://localhost:8080/api/v1/testcases?filter=problem.id:${problem.id}`,
+          `${import.meta.env.VITE_API_URL}/testcases?filter=problem.id:${problem.id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const allTestCases = (testCasesResponse.data.data?.result || []).map((tc) => ({
@@ -215,12 +215,6 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      notify(2, "Authentication required", "Error");
-      return;
-    }
-
     if (!editData.title || !editData.description || !editData.difficulty) {
       notify(2, "Title, description, and difficulty are required", "Error");
       return;
@@ -243,7 +237,7 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
       startLoading();
       console.log("Sending updated problem:", updatedProblem);
       const response = await axios.put(
-        "http://localhost:8080/api/v1/problems",
+        import.meta.env.VITE_API_URL + "/problems",
         updatedProblem,
         {
           headers: {
