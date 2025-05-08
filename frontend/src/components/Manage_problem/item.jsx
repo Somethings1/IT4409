@@ -92,7 +92,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   }, [fetchProblems, user, refreshTrigger]);
 
   const showCodeEditor = useCallback((problem) => {
-    navigate("/home/code-editor", {
+    navigate("/home/solve", {
       state: {
         problem,
         initialCode: {
@@ -219,8 +219,8 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
                 : <span dangerouslySetInnerHTML={{ __html: problem.description }} />}
             </p>
 
-            
-             
+
+
             <div className="problem-actions">
               <button
                 className="action-button view-button"

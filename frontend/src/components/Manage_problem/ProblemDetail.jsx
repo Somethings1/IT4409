@@ -43,10 +43,10 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
         }
 
         // Fetch tags
-        const tagsResponse = await fetch(import.meta.env.VITE_API_URL + '/problems/tags', {
+        const tagsResponse = await fetch(import.meta.env.VITE_API_URL + '/tags', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const tagsData = tagsResponse.data.data?.result || [];
+        const tagsData = tagsResponse.data?.result || [];
         setTags(tagsData);
         console.log("Fetched tags:", tagsData);
 
