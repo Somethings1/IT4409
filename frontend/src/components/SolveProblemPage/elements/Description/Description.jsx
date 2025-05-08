@@ -1,58 +1,382 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Tabs, Typography, Tag, Input, Button, List, Card, Empty, Divider, Modal, Spin } from 'antd';
+import { SendOutlined, ReloadOutlined } from '@ant-design/icons';
+import Editor from '@monaco-editor/react'; // For showing code in submission detail
+import axios from 'axios'; // For fetching
+import { notify } from '@/components/Notification/notification'; // Assuming you have this for user feedback
 
-const Description = ({ problem, testCases = [] }) => {
-  if (!problem) return <div>No problem provided. Why are we even here?</div>;
+const { TabPane } = Tabs;
+const { Title, Paragraph, Text } = Typography;
+const { TextArea } = Input;
+
+const Description = ({
+  problem, // { id, title, description, difficulty, constraints, example, etc. }
+  onPostTextCommentSuccess, // Callback for parent to know a comment was posted, (newComment) => void
+  isLoadingProblem, // boolean to indicate if main problem data is loading
+}) => {
+  const [activeTabKey, setActiveTabKey] = useState('description');
+  const [newCommentInput, setNewCommentInput] = useState('');
+
+  // State for fetched data
+  const [textComments, setTextComments] = useState([]);
+  const [codeSubmissions, setCodeSubmissions] = useState([]);
+
+  // State for loading indicators for tabs
+  const [isLoadingComments, setIsLoadingComments] = useState(false);
+  const [isLoadingSubmissions, setIsLoadingSubmissions] = useState(false);
+
+  // State to track if data has been fetched at least once
+  const [commentsFetched, setCommentsFetched] = useState(false);
+  const [submissionsFetched, setSubmissionsFetched] = useState(false);
+
+  // Submission Detail Modal state
+  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
+  const [selectedSubmissionForDetail, setSelectedSubmissionForDetail] = useState(null);
+
+  const getAuthToken = () => localStorage.getItem("token");
+
+  // --- Fetching Logic ---
+  const fetchComments = async (forceRefresh = false) => {
+    if (!problem?.id || (commentsFetched && !forceRefresh) ) return;
+    setIsLoadingComments(true);
+    try {
+      const token = getAuthToken();
+      // Replace with your actual endpoint for fetching comments for a problem
+      // Example: GET /problems/{problem.id}/comments
+      // For now, mocking a generic user comments endpoint and filtering by problem idea (if API supports it)
+      // Or, if you have a dedicated problem comments endpoint:
+      // const response = await axios.get(`${API_BASE_URL}/problems/${problem.id}/comments`, {
+      //   headers: { Authorization: `Bearer ${token}` }
+      // });
+      // Mocking:
+      console.log(`Fetching comments for problem ID: ${problem.id}`);
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+      const mockComments = [
+        { id: 'cmt1', problemId: problem.id, text: 'This is a great problem!', author: 'User123', timestamp: '2023-10-26 10:00 AM' },
+        { id: 'cmt2', problemId: problem.id, text: 'Found it challenging but fun.', author: 'CoderX', timestamp: '2023-10-26 11:30 AM' },
+      ];
+      setTextComments(mockComments.filter(c => c.problemId === problem.id));
+      setCommentsFetched(true);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      notify(0, 'Failed to load comments.', 'Error');
+    } finally {
+      setIsLoadingComments(false);
+    }
+  };
+
+  const fetchSubmissions = async (forceRefresh = false) => {
+    if (!problem?.id || (submissionsFetched && !forceRefresh)) return;
+    setIsLoadingSubmissions(true);
+    try {
+      const token = getAuthToken();
+      // Replace with your actual endpoint for fetching user's submissions for a problem
+      // Example: GET /users/me/submissions?problemId={problem.id}
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/submissions?filter=problem.id:${problem.id},user.id:me`, { // Assuming 'me' resolves to current user
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // Assuming response.data.data.result is the array of submissions
+      // And each submission has problemTestCasesUsedForThisSubmission
+      // For now, I'll mock a structure
+      const fetchedSubmissions = response.data.data.result.map(sub => ({
+        ...sub,
+        id: sub.id || `sub-${Math.random()}`, // ensure id
+        timestamp: sub.timestamp || new Date().toLocaleString(),
+        // Mocking test case details if not present
+        problemTestCasesUsedForThisSubmission: sub.problemTestCasesUsedForThisSubmission ||
+            (sub.testCases ? sub.testCases.map((tc, idx) => ({...tc, passed: sub.passedTests > idx})) : []),
+      }));
+      setCodeSubmissions(fetchedSubmissions);
+      setSubmissionsFetched(true);
+    } catch (error) {
+      console.error('Error fetching submissions:', error);
+      // notify(0, 'Failed to load submissions.', 'Error'); // Can be noisy if endpoint is not ready
+      setCodeSubmissions([]); // Clear or keep old on error?
+    } finally {
+      setIsLoadingSubmissions(false);
+    }
+  };
+
+  useEffect(() => {
+    // Reset fetched status when problem changes
+    setCommentsFetched(false);
+    setSubmissionsFetched(false);
+    setTextComments([]);
+    setCodeSubmissions([]);
+
+    if (problem?.id && activeTabKey === 'comments' && !commentsFetched) {
+      fetchComments();
+    }
+    if (problem?.id && activeTabKey === 'submissions' && !submissionsFetched) {
+      fetchSubmissions();
+    }
+  }, [problem?.id]); // Re-run if problem ID changes
+
+  useEffect(() => {
+    if (problem?.id && activeTabKey === 'comments' && !commentsFetched) {
+      fetchComments();
+    }
+    if (problem?.id && activeTabKey === 'submissions' && !submissionsFetched) {
+      fetchSubmissions();
+    }
+  }, [activeTabKey, problem?.id, commentsFetched, submissionsFetched]); // Fetch when tab becomes active
+
+  const handlePostCommentClick = async () => {
+    if (!newCommentInput.trim() || !problem?.id) return;
+    try {
+      const token = getAuthToken();
+      // Replace with your actual endpoint for posting a comment
+      // Example: POST /problems/{problem.id}/comments
+      // const response = await axios.post(`${API_BASE_URL}/problems/${problem.id}/comments`,
+      //   { text: newCommentInput },
+      //   { headers: { Authorization: `Bearer ${token}` } }
+      // );
+      // const newPostedComment = response.data;
+
+      // Mocking:
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const newPostedComment = {
+        id: `cmt-${Date.now()}`,
+        problemId: problem.id,
+        text: newCommentInput,
+        author: 'You (Me)', // Get actual user later
+        timestamp: new Date().toLocaleString()
+      };
+
+      setTextComments(prev => [newPostedComment, ...prev]);
+      setNewCommentInput('');
+      notify(1, 'Comment posted!', 'Success');
+      if (onPostTextCommentSuccess) {
+        onPostTextCommentSuccess(newPostedComment);
+      }
+    } catch (error) {
+      console.error('Error posting comment:', error);
+      notify(0, 'Failed to post comment.', 'Error');
+    }
+  };
+
+  const handleViewSubmissionClick = (submission) => {
+    setSelectedSubmissionForDetail(submission);
+    setIsDetailModalVisible(true);
+  };
+
+  const closeDetailModal = () => {
+    setIsDetailModalVisible(false);
+    setSelectedSubmissionForDetail(null);
+  };
+
+  const getDifficultyColor = (difficulty) => {
+    difficulty = difficulty?.toLowerCase();
+    if (difficulty === 'easy') return 'green';
+    if (difficulty === 'medium') return 'orange';
+    if (difficulty === 'hard') return 'red';
+    return 'default';
+  };
+
+  if (isLoadingProblem) {
+      return <Card style={{padding: 20, textAlign: 'center'}}><Spin tip="Loading problem details..."/></Card>;
+  }
+
+  if (!problem || !problem.id) {
+      return <Card style={{padding: 20, textAlign: 'center'}}><Empty description="No problem selected or data available." /></Card>;
+  }
+
+  const submissionDetailTestCases = selectedSubmissionForDetail?.problemTestCasesUsedForThisSubmission || [];
 
   return (
-    <div className="problem-container">
-      <h1>{problem.title}</h1>
+    <Card style={{ height: '100%', overflowY: 'auto' }} bodyStyle={{ padding: '16px' }}>
+      <Title level={4} style={{ marginTop: 0 }}>{problem.id}. {problem.title}</Title>
+      {problem.difficulty && (
+        <Tag color={getDifficultyColor(problem.difficulty)} style={{ marginBottom: '16px' }}>
+          {problem.difficulty}
+        </Tag>
+      )}
 
-      <div className={`difficulty-badge ${problem.difficulty?.toLowerCase()}`}>
-        {problem.difficulty}
-      </div>
+      <Tabs activeKey={activeTabKey} onChange={setActiveTabKey}>
+        <TabPane tab="Description" key="description">
+          {/* ... Description, Example, Constraints (same as before) ... */}
+          <Typography>
+            <Title level={5}>Problem Description</Title>
+            {problem.description ? (
+              <Paragraph>
+                <span dangerouslySetInnerHTML={{ __html: problem.description }} />
+              </Paragraph>
+            ) : <Text type="secondary">No description available.</Text>}
 
-      <div className="problem-description-container">
-        <div className="problem-description left-aligned">
-          <h3>Description</h3>
-          <p className="problem-description">
-            {problem.description.length > 100 ? (
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: problem.description.substring(0, 100) + '...',
-                }}
-              />
-            ) : (
-              <span
-                dangerouslySetInnerHTML={{ __html: problem.description }}
-              />
+            {problem.example && (
+              <>
+                <Divider />
+                <Title level={5}>Example</Title>
+                <Card size="small" style={{backgroundColor: '#f9f9f9'}}>
+                  {problem.example.input && <><Text strong>Input:</Text> <Text code>{problem.example.input}</Text><br/></>}
+                  {problem.example.output && <><Text strong>Output:</Text> <Text code>{problem.example.output}</Text><br/></>}
+                  {problem.example.explanation && <><Text strong>Explanation:</Text> <Paragraph>{problem.example.explanation}</Paragraph></>}
+                </Card>
+              </>
             )}
-          </p>
-        </div>
-      </div>
 
-      <div className="problem-examples flush-left">
-        <h3>Examples</h3>
-        {testCases.length > 0 ? (
-          <div className="example">
-            <p><strong>Input:</strong> {testCases[0].input}</p>
-            <p><strong>Output:</strong> {testCases[0].output}</p>
-            <p>
-              <strong>Explanation:</strong>{' '}
-              {problem?.example?.explanation ?? 'No explanation.'}
-            </p>
-          </div>
-        ) : (
-          <p>Wow, no examples? How generous.</p>
-        )}
-      </div>
+            {problem.constraints && (
+              <>
+                <Divider />
+                <Title level={5}>Constraints</Title>
+                <Paragraph>{problem.constraints}</Paragraph>
+              </>
+            )}
+          </Typography>
+        </TabPane>
 
-      <div className="problem-constraints left-aligned">
-        <h3>Constraints</h3>
-        <p>{problem.constraints}</p>
-      </div>
-    </div>
+        <TabPane tab="Comments" key="comments">
+          <TextArea
+            rows={3}
+            value={newCommentInput}
+            onChange={(e) => setNewCommentInput(e.target.value)}
+            placeholder="Add a public comment about this problem..."
+            style={{ marginBottom: '10px' }}
+          />
+          <Button
+            type="primary"
+            icon={<SendOutlined />}
+            onClick={handlePostCommentClick}
+            disabled={!newCommentInput.trim() || isLoadingComments}
+            loading={isLoadingComments && !commentsFetched} // Show loading on button only during initial fetch
+          >
+            Post Comment
+          </Button>
+          <Button
+            icon={<ReloadOutlined />}
+            onClick={() => fetchComments(true)}
+            style={{marginLeft: 8}}
+            loading={isLoadingComments}
+            disabled={isLoadingComments}
+          >
+            Refresh
+          </Button>
+          <Divider />
+          <Title level={5} style={{ marginTop: '20px' }}>Posted Comments</Title>
+          {isLoadingComments ? <div style={{textAlign: 'center', padding: '20px'}}><Spin /></div> :
+           textComments && textComments.length > 0 ? (
+            <List
+              itemLayout="horizontal"
+              dataSource={textComments}
+              renderItem={item => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={<Text strong>{item.author} <Text type="secondary" style={{fontSize: '0.8em'}}>{item.timestamp}</Text></Text>}
+                    description={<Paragraph style={{whiteSpace: 'pre-wrap'}}>{item.text}</Paragraph>}
+                  />
+                </List.Item>
+              )}
+            />
+          ) : <Empty description={commentsFetched ? "No comments yet." : "Click refresh or comments will load automatically."} />}
+        </TabPane>
+
+        <TabPane tab="Submissions" key="submissions">
+         <Button
+            icon={<ReloadOutlined />}
+            onClick={() => fetchSubmissions(true)}
+            style={{marginBottom: 10}}
+            loading={isLoadingSubmissions}
+            disabled={isLoadingSubmissions}
+          >
+            Refresh My Submissions
+          </Button>
+          <Divider style={{marginTop:0}}/>
+          {isLoadingSubmissions ? <div style={{textAlign: 'center', padding: '20px'}}><Spin /></div> :
+           codeSubmissions && codeSubmissions.length > 0 ? (
+            <List
+              itemLayout="horizontal"
+              dataSource={codeSubmissions}
+              renderItem={item => (
+                <List.Item
+                  actions={[
+                    <Button type="link" onClick={() => handleViewSubmissionClick(item)}>
+                      View Details
+                    </Button>
+                  ]}
+                >
+                  <List.Item.Meta
+                    title={<>
+                        <Text strong>ID: {typeof item.id === 'string' ? item.id.substring(0,10) : item.id}...</Text>
+                        <Tag
+                            color={item.status === 'Accepted' ? 'success' :
+                                   item.status === 'Pending' ? 'processing' :
+                                   item.status && (item.status.includes('Failed') || item.status.includes('Error')) ? 'error' :
+                                   item.status === 'Partial' ? 'warning' :
+                                   'default'}
+                            style={{marginLeft: 8}}
+                        >
+                            {item.status || "N/A"}
+                        </Tag>
+                    </>}
+                    description={
+                        <>
+                            {item.timestamp} - {item.language} <br/>
+                            Result: {item.passedTests ?? 'N/A'} / {item.totalTests ?? 'N/A'}
+                            {item.submissionNote && <><br/><Text italic>Note: {item.submissionNote.substring(0,30)}{item.submissionNote.length > 30 ? '...' : ''}</Text></>}
+                        </>
+                    }
+                  />
+                </List.Item>
+              )}
+            />
+          ) : <Empty description={submissionsFetched ? "No code submissions yet for this problem." : "Click refresh or submissions will load automatically."} />}
+        </TabPane>
+      </Tabs>
+
+      {/* Submission Detail Modal (same as before) */}
+      {selectedSubmissionForDetail && (
+        <Modal
+          title={`Submission ID: ${typeof selectedSubmissionForDetail.id === 'string' ? selectedSubmissionForDetail.id.substring(0,10) : selectedSubmissionForDetail.id}...`}
+          visible={isDetailModalVisible}
+          onCancel={closeDetailModal}
+          footer={[<Button key="close" onClick={closeDetailModal}>Close</Button>]}
+          width={800}
+          bodyStyle={{maxHeight: '70vh', overflowY: 'auto'}}
+        >
+            <Paragraph>
+                <Text strong>Language:</Text> {selectedSubmissionForDetail.language} <br/>
+                <Text strong>Timestamp:</Text> {selectedSubmissionForDetail.timestamp} <br/>
+                <Text strong>Status:</Text> <Tag color={selectedSubmissionForDetail.status === 'Accepted' ? 'success' : (selectedSubmissionForDetail.status && (selectedSubmissionForDetail.status.includes('Failed') || selectedSubmissionForDetail.status.includes('Error'))) ? 'error' : 'default'}>{selectedSubmissionForDetail.status}</Tag> <br/>
+                <Text strong>Result:</Text> {selectedSubmissionForDetail.passedTests} / {selectedSubmissionForDetail.totalTests} passed
+                {selectedSubmissionForDetail.submissionNote && <><br/><Text strong>Note:</Text> <Text italic>{selectedSubmissionForDetail.submissionNote}</Text></>}
+            </Paragraph>
+            <Divider>Submitted Code</Divider>
+            <div style={{border: '1px solid #f0f0f0', height: '250px'}}>
+                <Editor
+                    height="100%"
+                    language={selectedSubmissionForDetail.language}
+                    value={selectedSubmissionForDetail.code}
+                    theme="vs-dark"
+                    options={{ readOnly: true, minimap: { enabled: false }, automaticLayout: true, scrollBeyondLastLine: false }}
+                />
+            </div>
+            <Divider>Test Case Results</Divider>
+            {selectedSubmissionForDetail.status === 'Pending' ? (
+                <Paragraph>Evaluation results are not yet available.</Paragraph>
+            ) : submissionDetailTestCases && submissionDetailTestCases.length > 0 ? (
+                <List
+                    dataSource={submissionDetailTestCases.map((tc, index) => ({
+                        ...tc,
+                        passed: tc.passed !== undefined ? tc.passed : (selectedSubmissionForDetail.passedTests > index)
+                    }))}
+                    renderItem={(tc, index) => (
+                        <List.Item>
+                            <Card size="small" title={`Test Case ${index + 1}`} style={{width: '100%', backgroundColor: tc.passed ? '#f6ffed' : '#fff1f0'}}>
+                                <Text strong>Input:</Text> <Text code style={{whiteSpace: 'pre-wrap'}}>{tc.input}</Text><br/>
+                                <Text strong>Expected Output:</Text> <Text code style={{whiteSpace: 'pre-wrap'}}>{tc.output}</Text><br/>
+                                {!tc.passed && tc.actualOutput && <><Text strong>Your Output:</Text> <Text code style={{whiteSpace: 'pre-wrap'}}>{tc.actualOutput}</Text><br/></>}
+                                <Text strong>Status:</Text> {tc.passed ? <Tag color="success">Pass</Tag> : <Tag color="error">Fail</Tag>}
+                            </Card>
+                        </List.Item>
+                    )}
+                />
+            ) : (
+                <Paragraph>Detailed test case results not available for this submission or status.</Paragraph>
+            )}
+        </Modal>
+      )}
+    </Card>
   );
 };
 
 export default Description;
-
