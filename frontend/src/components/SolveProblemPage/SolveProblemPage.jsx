@@ -40,7 +40,7 @@ const SolveProblemPage = () => {
     }, [problem]);
 
     return (
-        <div style={{ height: '100vh', width: '100%' }}>
+        <div style={{ height: '90vh', width: '100%', textAlign: 'left' }}>
             <SplitPane split="vertical" defaultSize="50%" minSize={200}>
                 <div style={{ overflowY: 'auto', height: '100%' }}>
                     <Description problem={problem} />
@@ -49,7 +49,7 @@ const SolveProblemPage = () => {
                     <div style={{ overflow: 'auto', width: '100%' }}>
                         <CodeEditor problem={problem} />
                     </div>
-                    <div style={{ overflow: 'auto' }}>
+                    <div style={{ overflow: 'auto', height: '100%' }}>
                         <TestCase problem={problem} testCases={testCases} />
                     </div>
                 </SplitPane>
