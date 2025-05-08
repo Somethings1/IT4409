@@ -48,7 +48,6 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
                 });
                 const tagsData = tagsResponse.data?.result || [];
                 setTags(tagsData);
-                console.log("Fetched tags:", tagsData);
 
                 // Fetch test cases
                 const testCasesResponse = await axios.get(
@@ -62,7 +61,6 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
                     active: tc.active,
                 }));
                 setTestCases(allTestCases);
-                console.log("Fetched test cases:", allTestCases);
 
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -171,7 +169,6 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
 
         try {
             startLoading();
-            console.log("Submitting test case:", newTestCaseData); // Debug log
             const response = await axios.post(
                 `${import.meta.env.VITE_API_URL}/testcases`,
                 newTestCaseData,
@@ -235,7 +232,6 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
 
         try {
             startLoading();
-            console.log("Sending updated problem:", updatedProblem);
             const response = await axios.put(
                 import.meta.env.VITE_API_URL + "/problems",
                 updatedProblem,
@@ -247,7 +243,6 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
                 }
             );
             notify(1, "Problem updated successfully", "Success");
-            console.log("Update successful:", response.data);
             setIsEditing(false);
             onUpdate(response.data);
         } catch (error) {

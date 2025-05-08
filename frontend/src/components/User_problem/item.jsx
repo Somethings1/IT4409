@@ -36,7 +36,6 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
             const token = localStorage.getItem("token");
 
             if (!token) {
-                console.log("No access token found");
                 stopLoading();
                 return;
             }
@@ -54,7 +53,6 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
             }
 
             const data = await response.json();
-            console.log("API data:", data.data.result);
 
             const uniqueProblems = Array.from(
                 new Map(data.data.result.map((item) => [item.id, item])).values()

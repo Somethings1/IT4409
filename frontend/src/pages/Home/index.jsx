@@ -74,7 +74,6 @@ function Home() {
           });
           if (!response.ok) throw new Error(`Network response was not ok: ${response.status}`);
           const data = await response.json();
-          console.log(`Fetched ${url}:`, data); // Debug log
           // For activity, ensure data.events is an array; for others, ensure data is an array or object
           if (isActivity) {
             setState(Array.isArray(data.events) ? data.events : []);
