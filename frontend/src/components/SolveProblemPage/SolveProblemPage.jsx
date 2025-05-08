@@ -12,8 +12,8 @@ import './SolveProblemPage.css';
 const SolveProblemPage = () => {
     const { state } = useLocation();
     const [testCases, setTestCases] = useState([]);
+    const [ submit, setSubmit ] = useState(false);
     const problem = state?.problem || {};
-    const initialCode = state?.initialCode || {};
 
     useEffect(() => {
         const fetchTestCases = async () => {
@@ -43,13 +43,13 @@ const SolveProblemPage = () => {
         <div style={{ height: '90vh', width: '100%', textAlign: 'left' }}>
             <SplitPane split="vertical" defaultSize="50%" minSize={200}>
                 <div style={{ overflowY: 'auto', height: '100%' }}>
-                    <Description problem={problem} />
+                    <Description problem={problem} example={testCases[0]} triggerOpenSubmission={submit}/>
                 </div>
                 <SplitPane split="horizontal" defaultSize="50%" minSize={100}>
                     <div style={{ overflow: 'auto', width: '100%' }}>
-                        <CodeEditor problem={problem} />
+                        <CodeEditor problem={problem} onSubmissionSuccess={setSubmit} />
                     </div>
-                    <div style={{ overflow: 'auto', height: '100%' }}>
+                    <div style={{ overflow: 'auto', height: '100%' }} >
                         <TestCase problem={problem} testCases={testCases} />
                     </div>
                 </SplitPane>
