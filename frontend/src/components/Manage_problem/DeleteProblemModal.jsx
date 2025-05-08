@@ -31,7 +31,7 @@ const DeleteProblemModal = ({ problem, onDelete, onClose }) => {
       startLoading(); // Start loading spinner or indicator
 
       // Xóa vấn đề thông qua API
-      const response = await fetch(`http://localhost:8080/api/v1/problems/${problem.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/problems/${problem.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ const DeleteProblemModal = ({ problem, onDelete, onClose }) => {
         <h2>Confirm Problem Deletion</h2>
         <div className="problem-info">
           <p><strong>Title:</strong> {problem.title}</p>
-          <p><strong>Difficulty:</strong> 
+          <p><strong>Difficulty:</strong>
             <span className={`difficulty-badge ${problem?.difficulty?.toLowerCase?.() || "default"}`}>
               {problem.difficulty}
             </span>
@@ -89,15 +89,15 @@ const DeleteProblemModal = ({ problem, onDelete, onClose }) => {
         </div>
 
         <div className="delete-actions">
-          <button 
-            className="delete-btn delete-btn-confirm" 
+          <button
+            className="delete-btn delete-btn-confirm"
             onClick={handleDelete}
             disabled={isDeleting}
           >
             {isDeleting ? 'Deleting...' : 'Confirm Delete'}
           </button>
-          <button 
-            className="delete-btn delete-btn-cancel" 
+          <button
+            className="delete-btn delete-btn-cancel"
             onClick={onClose}
             disabled={isDeleting}
           >

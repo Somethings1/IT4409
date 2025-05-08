@@ -30,7 +30,6 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       const token = localStorage.getItem("token");
 
       if (!token) {
-        console.log("No access token found");
         stopLoading();
         return;
       }
@@ -48,7 +47,6 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       }
 
       const data = await response.json();
-      console.log("API data:", data.data.result);
 
       // Deduplicate problems by id
       const uniqueProblems = Array.from(
@@ -78,7 +76,6 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       const categories = [...new Set(formattedProblems.map((problem) => problem.category))];
       reload(categories);
       setProblems(formattedProblems);
-      console.log("Formatted problems:", formattedProblems);
       stopLoading();
     } catch (error) {
       console.error("Error fetching problems:", error);
@@ -92,7 +89,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   }, [fetchProblems, user, refreshTrigger]);
 
   const showCodeEditor = useCallback((problem) => {
-    navigate("/home/code-editor", {
+    navigate("/home/solve", {
       state: {
         problem,
         initialCode: {
@@ -219,8 +216,8 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
                 : <span dangerouslySetInnerHTML={{ __html: problem.description }} />}
             </p>
 
-            
-             
+
+
             <div className="problem-actions">
               <button
                 className="action-button view-button"

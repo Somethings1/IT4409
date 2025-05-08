@@ -45,7 +45,6 @@ try {
     }
 
     const data = await response.json();
-    console.log("generatedailyuser:", data);
     Setdt(data);
   } catch (error) {
     console.error("Error fetching revenue:", error);

@@ -12,10 +12,10 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
   const [difficulties, setDifficulties] = useState([]);
   const [tags, setTags] = useState([]);
   const [testCases, setTestCases] = useState([]);
-  const [newTestCase, setNewTestCase] = useState({ 
-    input: '', 
-    output: '', 
-    active: false 
+  const [newTestCase, setNewTestCase] = useState({
+    input: '',
+    output: '',
+    active: false
   });
   const [changeDetails, setChangeDetails] = useState('');
 
@@ -24,8 +24,8 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
     title: "",
     description: "", // Will be replaced by Tiptap editor
     difficulty: "",
-    tags: [], 
-    test_cases: [] 
+    tags: [],
+    test_cases: []
   });
 
   // Initialize form with problem data if in edit mode
@@ -36,7 +36,6 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
         const token = localStorage.getItem("token");
 
         if (!token) {
-          console.log("No access token found");
           stopLoading();
           return;
         }
@@ -147,17 +146,16 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
 
       const token = localStorage.getItem("token");
       if (!token) {
-        console.log("No access token found");
         stopLoading();
         return;
       }
-      
-      const url = isEditMode 
+
+      const url = isEditMode
         ? `${import.meta.env.VITE_API_URL}/problems/${problemData.id}`
         : `${import.meta.env.VITE_API_URL}/problems`;
-      
+
       const method = isEditMode ? 'PUT' : 'POST';
-      
+
       const response = await fetch(url, {
         method,
         headers: {
