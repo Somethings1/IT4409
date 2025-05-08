@@ -65,80 +65,8 @@ const CodeEditor = () => {
     if (problem?.id) {
       fetchTestCases();
     }
-    setupResizeHandlers();
 
-    return () => {
-      window.removeEventListener('mousemove', handleHorizontalResize);
-      window.removeEventListener('mouseup', stopHorizontalResize);
-      window.removeEventListener('mousemove', handleVerticalResize);
-      window.removeEventListener('mouseup', stopVerticalResize);
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
-    };
   }, [language, initialCode, problem]);
-
-  const setupResizeHandlers = () => {
-    const horizontalResizeHandle = resizeHandleRef.current;
-    const verticalResizeHandle = verticalResizeHandleRef.current;
-
-    if (horizontalResizeHandle) horizontalResizeHandle.addEventListener('mousedown', startHorizontalResize);
-    if (verticalResizeHandle) verticalResizeHandle.addEventListener('mousedown', startVerticalResize);
-  };
-
-  const startHorizontalResize = (e) => {
-    e.preventDefault();
-    isResizing.current = true;
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-    window.addEventListener('mousemove', handleHorizontalResize);
-    window.addEventListener('mouseup', stopHorizontalResize);
-  };
-
-  const handleHorizontalResize = (e) => {
-    if (!isResizing.current) return;
-    const container = leftPanelRef.current?.parentElement;
-    if (!container) return;
-    const containerRect = container.getBoundingClientRect();
-    const newLeftWidth = e.clientX - containerRect.left;
-    const minWidth = 300;
-    const maxWidth = containerRect.width - 300;
-    if (newLeftWidth > minWidth && newLeftWidth < maxWidth) {
-      leftPanelRef.current.style.width = `${newLeftWidth}px`;
-      rightPanelRef.current.style.width = `calc(100% - ${newLeftWidth}px)`;
-    }
-  };
-
-  const stopHorizontalResize = () => {
-    isResizing.current = false;
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
-    window.removeEventListener('mousemove', handleHorizontalResize);
-    window.removeEventListener('mouseup', stopHorizontalResize);
-    if (leftPanelRef.current) setLeftPanelWidth(`${leftPanelRef.current.offsetWidth}px`);
-  };
-
-  const startVerticalResize = (e) => {
-    e.preventDefault();
-    window.addEventListener('mousemove', handleVerticalResize);
-    window.addEventListener('mouseup', stopVerticalResize);
-  };
-
-  const handleVerticalResize = (e) => {
-    const container = editorRef.current?.parentElement;
-    if (!container) return;
-    const containerRect = container.getBoundingClientRect();
-    const newBottomHeight = containerRect.bottom - e.clientY;
-    const minHeight = 100;
-    const maxHeight = 400;
-    if (newBottomHeight > minHeight && newBottomHeight < maxHeight) {
-      setBottomPanelHeight(`${newBottomHeight}px`);
-    }
-  };
-
-  const stopVerticalResize = () => {
-    window.removeEventListener('mousemove', handleVerticalResize);
-    window.removeEventListener('mouseup', stopVerticalResize);
-  };
 
   const handleRun = () => {
     console.log('Running code:', code);
@@ -191,13 +119,13 @@ const CodeEditor = () => {
     <div className="code-editor-container">
 
       {/* showsubmissiondetail */}
-      
+
  {/*  */}
 
-       <div 
-        className="problem-info" 
+       <div
+        className="problem-info"
         ref={leftPanelRef}
-        style={{ 
+        style={{
           width: leftPanelWidth,
           minWidth: '300px',
           maxWidth: 'calc(100% - 300px)'
@@ -209,13 +137,7 @@ const CodeEditor = () => {
           {/* {problem.id} */}
         </div>
 
-        {/* <div className="problem-description-container">
-          <div className="problem-description left-aligned">
-            <h3>Description</h3>
-            <p>{problem.description}</p>
-          </div>
-        </div> */}
-        
+
         <div className="problem-description-container">
           <div className="problem-description left-aligned">
             <h3>Description</h3>
@@ -226,17 +148,10 @@ const CodeEditor = () => {
             </p>
           </div>
         </div>
-    
+
 
         <div className="problem-examples flush-left">
           <h3>Examples</h3>
-          {/* {problem.example && (
-            <div className="example">
-              <p><strong>Input:</strong> {problem.example.input}</p>
-              <p><strong>Output:</strong> {problem.example.output}</p>
-              <p><strong>Explanation:</strong> {problem.example.explanation}</p>
-            </div>
-          )} */}
             {testCases.length > 0 && (
           <div className="example">
             <p><strong>Input:</strong> {testCases[0].input}</p>
@@ -253,7 +168,7 @@ const CodeEditor = () => {
         </div>
 
         <div className="toggle-buttons">
-          <button 
+          <button
             className={`toggle-button ${showSubmissionPanel ? 'active' : ''}`}
             onClick={() => {
               setShowSubmissionPanel(!showSubmissionPanel);
@@ -271,8 +186,8 @@ const CodeEditor = () => {
               {submittedComments.length > 0 ? (
                 <div className="submission-list">
                   {submittedComments.map((submission) => (
-                    <div 
-                    key={submission.id} 
+                    <div
+                    key={submission.id}
                     className="submission-item"
                     onClick={() => handleSubmissionClick(submission.id)}
                   >
@@ -283,26 +198,15 @@ const CodeEditor = () => {
                       </span>
 
                     </div>
-                        {/* <div className="submission-header">
-                            <span className="submission-time">{submission.timestamp}</span>
-                            <span className={`submission-status ${submission.status.toLowerCase().replace(' ', '-')}`}>
-                              {submission.status}
-                            </span>
-                            {submission.status !== 'Pending' && (
-                              <span className="submission-result">
-                                {submission.passedTests}/{submission.totalTests} test cases passed
-                              </span>
-                            )}
-                          </div> */}
 
                     <div className="submission-meta">
                       <p><strong>ID:</strong> {submission.id}</p>
                       <p><strong>Language:</strong> {submission.language}</p>
                       <p><strong>Passed:</strong> {submission.passedTests ?? 0}/{submission.totalTests ?? 0}</p>
                     </div>
-                  
+
                   </div>
-                  
+
                   ))}
                 </div>
               ) : (
@@ -313,16 +217,11 @@ const CodeEditor = () => {
         )}
       </div>
 
-      <div 
-        className="resize-handle"
-        ref={resizeHandleRef}
-        onMouseDown={startHorizontalResize}
-      />
       {!showSubmissionDetail && (
-      <div 
+      <div
         className="editor-section"
         ref={rightPanelRef}
-        style={{ 
+        style={{
           width: `calc(100% - ${leftPanelWidth})`,
           minWidth: '300px'
         }}
@@ -352,12 +251,12 @@ const CodeEditor = () => {
           </div>
         </div>
 
-        <div 
+        <div
           className="editor-wrapper"
           ref={editorRef}
-          style={{ height: showTestCases || showCommentsSection 
-            ? `calc(100% - ${bottomPanelHeight})` 
-            : '100%' 
+          style={{ height: showTestCases || showCommentsSection
+            ? `calc(100% - ${bottomPanelHeight})`
+            : '100%'
           }}
         >
           <Editor
@@ -375,7 +274,7 @@ const CodeEditor = () => {
         </div>
 
         {(showTestCases || showCommentsSection ) && (
-          <div 
+          <div
             className="vertical-resize-handle"
             ref={verticalResizeHandleRef}
             onMouseDown={startVerticalResize}
@@ -383,7 +282,7 @@ const CodeEditor = () => {
         )}
 
         <div className="toggle-buttons">
-          <button 
+          <button
             className={`toggle-button ${showTestCases ? 'active' : ''}`}
             onClick={() => {
               setShowTestCases(!showTestCases);
@@ -393,7 +292,7 @@ const CodeEditor = () => {
           >
             {showTestCases ? 'Hide Test Cases' : 'Show Test Cases'}
           </button>
-          <button 
+          <button
             className={`toggle-button ${showCommentsSection ? 'active' : ''}`}
             onClick={() => {
               setShowCommentsSection(!showCommentsSection);
@@ -404,7 +303,7 @@ const CodeEditor = () => {
             {showCommentsSection ? 'Hide Comments' : 'Show Comments'}
           </button>
         </div>
-        
+
         {showTestCases && (
           <div className="bottom-panel" style={{ height: bottomPanelHeight }}>
             <div className="problem-testcases left-aligned">
@@ -415,15 +314,6 @@ const CodeEditor = () => {
                 ) : (
                   <ul className="space-y-2">
                     <p>
-                    {/* {testCases.map((tc, idx) => (
-                      <div className="testcase" key={idx}>
-                      <li key={idx} className="bg-gray-100 p-2 rounded shadow">
-                        <p><strong>Test {idx + 1}</strong></p>
-                        <p><strong>Input:</strong> {tc.input}</p>
-                        <p><strong>Expected Output:</strong> {tc.output}</p>
-                      </li>
-                      </div>
-                    ))} */}
                         {testCases.map((testCase, index) => (
                           <div className="testcase" key={index}>
                             <p><strong>Case {index + 1}:</strong></p>
@@ -442,65 +332,8 @@ const CodeEditor = () => {
             </div>
           </div>
         )}
-        {/* {showTestCases && (
-          <div className="bottom-panel" style={{ height: bottomPanelHeight }}>
-            <div className="problem-testcases left-aligned">
-              <h3>Test Cases</h3>
-              {testCases.map((testCase, index) => (
-                <div className="testcase" key={index}>
-                  <p><strong>Case {index + 1}:</strong></p>
-                  <p><strong>Input:</strong> {testCase.input}</p>
-                  <p><strong>Output:</strong> {testCase.output}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )} */}
-
-        {/* {showCommentsSection && (
-          <div 
-            className="bottom-panel"
-            style={{ height: bottomPanelHeight }}
-          >
-            <div className="comments-section">
-              <h3>Comments</h3>
-              <textarea
-                value={comments}
-                onChange={(e) => setComments(e.target.value)}
-                placeholder="Add your comments here..."
-                rows={4}
-                className="comment-textarea"
-              />
-              <div className="comment-controls">
-                <button
-                  className="comment-submit"
-                  onClick={() => {
-                    const newComment = {
-                      text: comments,
-                      timestamp: new Date().toLocaleString(),
-                      author: "You"
-                    };
-                    setSubmittedComments(prev => [newComment, ...prev]);
-                    setComments("");
-                    notify(1, "Comment submitted", "Success");
-                  }}
-                  disabled={!comments.trim()}
-                >
-                  Post Comment
-                </button>
-                <button
-                  className="comment-cancel"
-                  onClick={() => setComments("")}
-                  disabled={!comments.trim()}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )} */}
         {showCommentsSection && (
-          <div 
+          <div
             className="bottom-panel"
             style={{ height: bottomPanelHeight }}
           >
@@ -563,7 +396,7 @@ const CodeEditor = () => {
           </div>
         )}
 
-        
+
       </div>
       )}
       {showSubmissionDetail && selectedSubmission && (
