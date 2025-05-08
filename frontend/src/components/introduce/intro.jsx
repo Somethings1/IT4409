@@ -45,8 +45,6 @@ const LoginModal = ({ off, isSignup }) => {
                 email: formData.email,
                 password: formData.password,
                 name: formData.username,
-                confirm,
-                code: formData.code
             }),
         });
 
@@ -72,8 +70,13 @@ const LoginModal = ({ off, isSignup }) => {
             }),
         });
 
-        if (!response.ok) throw new Error("Login failed");
         const data = await response.json();
+
+        if (!response.ok) {
+            setError(data.error);
+            stopLoading();
+            return;
+        }
 
         const user = data.data.user;
         const userCookieData = {
@@ -81,7 +84,6 @@ const LoginModal = ({ off, isSignup }) => {
             name: user.name,
             email: user.email,
             password: user.password,
-            GoogleID: null,
             role: user.role?.name ?? "USER",
             role_id: user.role?.id.toString() ?? 2,
             //createdAt: user.role.createdAt,

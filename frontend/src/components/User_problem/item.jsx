@@ -96,7 +96,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   }, [fetchProblems, user, refreshTrigger]);
 
   const showCodeEditor = (problem) => {
-    navigate('/code/code-editor', {
+    navigate('/code/solve', {
       state: {
         problem,
         initialCode: {
