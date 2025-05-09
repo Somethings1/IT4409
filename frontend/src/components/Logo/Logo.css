@@ -1,0 +1,16 @@
+@font-face {
+  font-family: 'CodezillaFont';
+  src: url('/Nasalization Rg.otf') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Optional style just for the logo if you're feeling extra */
+.codezilla-logo {
+  font-family: 'CodezillaFont', sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 2px;
+}
+
