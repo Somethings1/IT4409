@@ -74,10 +74,11 @@ public class SubmissionService {
 
 	public Submission handleImplementCode(Submission postmanSubmission) throws IOException, InterruptedException {
 		List<Testcase> testcases = postmanSubmission.getProblem().getTestcases();
+
 		String code = postmanSubmission.getCode();
 		String language = postmanSubmission.getLanguage();
 		long right = 0;
-		String baseDir = "./implement/";
+		String baseDir = "./";
 		List<ExecResult> execResults = new ArrayList<>();
 		String fileName = getFileName(language, code);
 		String compileCommand = getCompileCommand(language, fileName);
@@ -94,13 +95,8 @@ public class SubmissionService {
 
 			writeToFile(filePath, code);
 			boolean check = executeCommand(compileCommand);
-			if (language.equals("C++") && compileCommand != null && !check) {
-				execResults.add(new ExecResult(inputData, false, postmanSubmission.getProblem(),
-						null));
-				continue;
-			}
-
 			String output = executeProgram(runCommand, inputData);
+
 			if (output == null || !output.equals(testcase.getOutput() + "\n")) {
 				execResults.add(new ExecResult(inputData, false, postmanSubmission.getProblem(),
 						null));

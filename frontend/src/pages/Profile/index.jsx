@@ -38,7 +38,6 @@ const [x,SetX]=useState(false);
         notify(2,"network is not okay!","Thất bại");}
       const profileData = await response.json();
 
-      console.log(profileData)
       stopLoading();
       setData(profileData);
       setNewData(profileData);
