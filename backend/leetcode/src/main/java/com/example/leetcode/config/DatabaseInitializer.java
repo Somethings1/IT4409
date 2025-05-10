@@ -1,26 +1,21 @@
 package com.example.leetcode.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.leetcode.domain.Permission;
-import com.example.leetcode.domain.Problem;
 import com.example.leetcode.domain.Role;
 import com.example.leetcode.domain.Tag;
-import com.example.leetcode.domain.Testcase;
 import com.example.leetcode.domain.User;
 import com.example.leetcode.repository.PermissionRepository;
-import com.example.leetcode.repository.ProblemRepository;
 import com.example.leetcode.repository.RoleRepository;
 import com.example.leetcode.repository.TagRepository;
-import com.example.leetcode.repository.TestcaseRepository;
 import com.example.leetcode.repository.UserRepository;
-import com.example.leetcode.util.constant.DifficultyEnum;
 
 import lombok.AllArgsConstructor;
 
@@ -31,8 +26,6 @@ public class DatabaseInitializer implements CommandLineRunner {
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
 	private final TagRepository tagRepository;
-	private final ProblemRepository problemRepository;
-	private final TestcaseRepository testcaseRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
@@ -42,8 +35,6 @@ public class DatabaseInitializer implements CommandLineRunner {
 		long countRoles = this.roleRepository.count();
 		long countUsers = this.userRepository.count();
 		long countTags = this.tagRepository.count();
-		long countProblems = this.problemRepository.count();
-		long countTestcases = this.testcaseRepository.count();
 
 		if (countPermissions == 0) {
 			ArrayList<Permission> arr = new ArrayList<>();
@@ -105,14 +96,13 @@ public class DatabaseInitializer implements CommandLineRunner {
 
 		if (countRoles == 0) {
 			List<Permission> permissions = this.permissionRepository.findAll();
-			Role adminRole = new Role();
-
-			adminRole.setName("ADMIN");
-			adminRole.setDescription("Admin thì full permissions");
-			adminRole.setActive(true);
-			adminRole.setPermissions(permissions);
+			Role adminRole = new Role("ADMIN", "Admin thì full permissions", true, permissions);
 
 			this.roleRepository.save(adminRole);
+			List<Long> ids = Arrays.asList(1L, 2L, 3L, 4L, 5L, 14L, 15L, 19L, 21L, 22L, 26L, 27L, 31L, 32L);
+			List<Permission> userPermissions = this.permissionRepository.findByIdIn(ids);
+			Role userRole = new Role("USER", "User", true, userPermissions);
+			this.roleRepository.save(userRole);
 		}
 
 		if (countUsers == 0) {

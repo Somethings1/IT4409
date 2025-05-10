@@ -11,12 +11,12 @@ function Sales_daily() {
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
-    
-    
+
+
     const handleClose = () => {
         setAnchorEl(null);
     };
-    
+
     const data = {
         labels: dt.date,
         datasets: [
@@ -33,7 +33,7 @@ function Sales_daily() {
         const fetchData = async () => {
 if(loading) return ;
 try {
-    const response = await fetch('http://localhost:8080/home', {
+    const response = await fetch(import.meta.env.VITE_API_URL + '/home', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -48,13 +48,12 @@ try {
     }
 
     const data = await response.json();
-    console.log("generatedailySale:", data);
     Setdt(data);
   } catch (error) {
     console.error("Error fetching revenue:", error);
   }
 };
-        
+
         fetchData()
     },[loading])
     return (

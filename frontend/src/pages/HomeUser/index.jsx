@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card.jsx";
 import { Badge } from "../../components/ui/badge.jsx";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar.jsx";
 import { ScrollArea } from "../../components/ui/scroll-area.jsx";
 import { cn } from "../../utils/utils.jsx";
+import { useAuth } from '../../components/introduce/useAuth.jsx';
+import axios from 'axios';
+
 // import { PieChart, Pie, Cell } from 'recharts';
 import './HomeUser.css';
 // import { PieChart, Pie, Cell, Tooltip } from 'recharts';
@@ -19,9 +22,16 @@ const pieChartColors = [
 ];
 
 const Home = () => {
-  const [revenueData] = useState({ percentChange: "12.5%", totalRevenueToday: "250,000", state: "increase" });
-  const [incomeData] = useState({ profitToday: 120000, profitYesterday: 100000, percentChange: "20%", message: "increase" });
-  const [customerData] = useState({ customerToday: 50, customerYesterday: 40, percentChange: "25%", state: "increase" });
+  // const [submissionData] = useState({ percentChange: "12.5%", totalRevenueToday: "250,000", state: "increase" });
+  
+    const [submissionData, setSubmissionData] = useState({
+    percentChange: "0%",
+    totalRevenueToday: "0",
+    totalRevenue:"0",
+    state: "increase",
+  });
+  const [streakData] = useState({ profitToday: 0, profitYesterday: 0, percentChange: "0%", message: "increase" });
+  const [problemData,SetProblemdata] = useState({ problemToday: 0, problemYesterday: 0, percentChange: "0%", state: "increase" });
   const [chartData] = useState([
     { date: "2025-04-01", easy: 45, medium: 135, hard: 30 },
     { date: "2025-04-02", easy: 60, medium: 158, hard: 40 },
@@ -40,12 +50,85 @@ const Home = () => {
     { name: "Time Limit Exceeded", value: 40 },
   ]);
   
-  const [recentActivity] = useState([
+  const [recentActivity, setRecentActivity] = useState([
     { date: "2024-07-28", type: "feed-item-success", detail: "Đã giải bài <a href='#'>'Two Sum'</a> (Thành công)" },
   ]);
-  const pieChartColors = ['#0088FE', '#00C49F', '#FFBB28'];
 
-  const user = { name: "Test User" };
+  
+  // const user = { name: "Test User" };
+  const { user, loading } = useAuth();
+  
+  // console.log("user",user)
+    
+ useEffect(() => {
+    const fetchSubmissionData = async () => {
+      try {
+       const token = localStorage.getItem('token');
+
+        console.log("usser",user)
+      const response = await axios.get(`http://localhost:8080/api/v1/submissions?filter=user.id:${user._id}&page=0&page=1&page=2&pageSize=100`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // nếu không dùng auth thì bỏ dòng này
+        },
+      });
+         const responsepro = await axios.get(`http://localhost:8080/api/v1/problems`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // nếu không dùng auth thì bỏ dòng này
+        },
+      });
+    
+        const data = response.data;
+        console.log("lastdata",data)
+         const allSubmissions = response.data.data.result;
+        
+      // const submissions = response.data.result;
+      //  console.log("allSubmissions", allSubmissions)
+      const activities = allSubmissions.map((submission) => ({
+        date: submission.createdAt.slice(0, 10), // "YYYY-MM-DD"
+        type: submission.status === "ACCEPTED" ? "feed-item-success" : "feed-item-danger",
+        detail: `Đã submit bài <a href='#'>${submission.problem?.title || "Không rõ tên bài"}</a> (${submission.status})`,
+      }));
+
+      setRecentActivity(activities);
+        console.log("recentactive", recentActivity)
+         const allProblem = responsepro.data.data.result;
+        // console.log("lastdata 53 ",responsepro.data.data.meta.total)
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+     
+      const todaySubmissions = allSubmissions.filter((sub) =>
+        sub.createdAt.startsWith(today)
+      );
+      const todayproblems=allProblem.filter((sub) =>
+        sub.createdAt.startsWith(today)
+      );
+      
+      setSubmissionData({
+        totalRevenueToday: todaySubmissions.length ,
+        percentChange: calculatePercentChange(todaySubmissions.length,response.data.data.meta.total),
+        totalRevenue : response.data.data.meta.total,
+      });
+        SetProblemdata({
+        problemToday : responsepro.data.data.meta.total,
+        percentChange: calculatePercentChange(todayproblems.length,responsepro.data.data.meta.total),
+
+      })
+       console.log("lastdata",submissionData)
+      } catch (error) {
+        console.error('Error fetching submission data:', error);
+      }
+    };
+
+    fetchSubmissionData();
+  }, [loading,user]);
+
+  const calculatePercentChange = (rightTestcase, totalTestcase) => {
+    if (totalTestcase === 0) return "0%";
+    return `${((rightTestcase / totalTestcase) * 100).toFixed(2)}%`;
+  };
+
+  const formatRevenue = (rightTestcase) => {
+    return `$${(rightTestcase * 50000).toLocaleString()}`;
+  };
 
   const renderChangeBadge = (change) => {
     if (!change) return <Badge variant="secondary">Không đổi</Badge>;
@@ -68,8 +151,8 @@ const Home = () => {
               <CardTitle className="card-title">Bài giải hôm nay</CardTitle>
             </CardHeader>
             <CardContent className="card-content">
-              <div className="card-number">{revenueData.totalRevenueToday}</div>
-              <p className="card-description"><span class="highlight">{renderChangeBadge(revenueData.percentChange)}</span>  so với hôm qua</p>
+              <div className="card-number">{submissionData.totalRevenueToday}</div>
+              <p className="card-description"><span class="highlight">{renderChangeBadge(submissionData.percentChange)}</span>  so với hôm qua</p>
             </CardContent>
           </Card>
 
@@ -78,8 +161,8 @@ const Home = () => {
               <CardTitle className="card-title">Streak đạt được</CardTitle>
             </CardHeader>
             <CardContent className="card-content">
-              <div className="card-number">${incomeData.profitToday}</div>
-              <p className="card-description"><span class="highlight">{renderChangeBadge(incomeData.percentChange)}</span> so với hôm qua</p>
+              <div className="card-number">{streakData.profitToday}</div>
+              <p className="card-description"><span class="highlight">{renderChangeBadge(streakData.percentChange)}</span> so với hôm qua</p>
             </CardContent>
           </Card>
 
@@ -88,8 +171,8 @@ const Home = () => {
               <CardTitle className="card-title">Bài toán mới</CardTitle>
             </CardHeader>
             <CardContent className="card-content">
-              <div className="card-number">{customerData.customerToday}</div>
-              <p className="card-description"><span class="highlight">{renderChangeBadge(customerData.percentChange)}</span> so với hôm qua</p>
+              <div className="card-number">{problemData.problemToday}</div>
+              <p className="card-description"><span class="highlight">{renderChangeBadge(problemData.percentChange)}</span> so với hôm qua</p>
             </CardContent>
           </Card>
 
@@ -98,8 +181,8 @@ const Home = () => {
               <CardTitle className="card-title">Tổng bài giải</CardTitle>
             </CardHeader>
             <CardContent className="card-content">
-              <div className="card-number">1,234</div>
-              <p className="card-description">Tổng bài đã giải</p>
+              <div className="card-number">{problemData.problemToday}</div>
+              <p className="card-description">Tổng bài giải</p>
             </CardContent>
           </Card>
         </div>
@@ -175,23 +258,26 @@ const Home = () => {
 
 
 
-                  <AvatarFallback>{user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+               
                 </Avatar>
-                <div>
-                  <h2 className="profile-name">{user.name}</h2>
-                  <p className="profile-join-date">Ngày tham gia: {new Date(user.joinDate).toLocaleDateString()}</p>
-                  <p className="profile-rank">Xếp hạng: Cao Thủ</p>
-                </div>
+              <div>
+                <h2 className="profile-name">{user ? user.name : 'Chưa có tên'}</h2>
+                <p className="profile-join-date">
+                  Ngày tham gia: {user ? new Date(user.joinDate).toLocaleDateString() : 'Chưa có ngày tham gia'}
+                </p>
+                <p className="profile-rank">Xếp hạng: Cao Thủ</p>
+              </div>
+
               </div>
 
               {/* Thêm thông tin bổ sung */}
               <div className="profile-additional-info">
                 <div className="profile-stat-row">
                   <p className="profile-stat">Số bài đã giải: 567</p>
-                  <p className="profile-stat">Streak hiện tại: 23 ngày</p>
+                  <p className="profile-stat">Streak hiện tại: {streakData.profitToday}</p>
                 </div>
                 <div className="profile-stat-row">
-                  <p className="profile-stat">Bài nộp gần đây: 10</p>
+                  <p className="profile-stat">Bài nộp gần đây:{submissionData.totalRevenue} </p>
                   <p className="profile-stat">Điểm Rep: 999</p>
                 </div>
               </div>
@@ -231,7 +317,7 @@ const Home = () => {
             </CardHeader>
             <CardContent>
               <ScrollArea className="activity-scroll">
-                {recentActivity.map((item, index) => (
+                {recentActivity.slice(0, 10).map((item, index) => (
                   <div key={index} className={`activity-item ${item.type}`}>
                     <div dangerouslySetInnerHTML={{ __html: item.detail }} />
                     <time className="activity-time">{item.date}</time>

@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import { useAuth } from "../introduce/useAuth.jsx";
 import { useLoading } from "../introduce/Loading.jsx";
 import { notify } from '../Notification/notification.jsx';
@@ -10,18 +12,18 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
   const [difficulties, setDifficulties] = useState([]);
   const [tags, setTags] = useState([]);
   const [testCases, setTestCases] = useState([]);
-  const [newTestCase, setNewTestCase] = useState({ 
-    input: '', 
-    expected_output: '', 
-    is_hidden: false 
+  const [newTestCase, setNewTestCase] = useState({
+    input: '',
+    output: '',
+    active: false
   });
   const [changeDetails, setChangeDetails] = useState('');
 
   // Form data state
   const [formData, setFormData] = useState({
     title: "",
-    description: "",
-    difficulty_id: "",
+    description: "", // Will be replaced by Tiptap editor
+    difficulty: "",
     tags: [],
     test_cases: []
   });
@@ -31,28 +33,31 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
     const fetchInitialData = async () => {
       startLoading();
       try {
-        // Fetch difficulties
-        const diffResponse = await fetch('http://localhost:8080/problems/difficulties');
-        const diffData = await diffResponse.json();
-        setDifficulties(diffData);
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          stopLoading();
+          return;
+        }
 
         // Fetch tags
-        const tagsResponse = await fetch('http://localhost:8080/problems/tags');
-        const tagsData = await tagsResponse.json();
-        setTags(tagsData);
+        const tagsResponse = await fetch(import.meta.env.VITE_API_URL + '/tags', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const tagsJson = await tagsResponse.json();
+        setTags(tagsJson.data.result); // vì result nằm trong data
 
-        // If editing, load problem data
         if (isEditMode && problemData) {
           setFormData({
             title: problemData.title,
             description: problemData.description,
-            difficulty_id: problemData.difficulty_id,
+            difficulty: problemData.difficulty,
             tags: problemData.tags ? problemData.tags.map(t => t.id) : []
           });
 
           // Fetch test cases
           const testCasesResponse = await fetch(
-            `http://localhost:8080/problems/${problemData.id}/testcases`
+            import.meta.env.VITE_API_URL + `/problems/${problemData.id}/testcases`
           );
           const testCasesData = await testCasesResponse.json();
           setTestCases(testCasesData);
@@ -67,6 +72,14 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
 
     fetchInitialData();
   }, [isEditMode, problemData]);
+
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: formData.description, // initial content
+    onUpdate: ({ editor }) => {
+      setFormData(prev => ({ ...prev, description: editor.getHTML() }));
+    }
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -85,17 +98,17 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
   const handleTestCaseChange = (e, index) => {
     const { name, value, type, checked } = e.target;
     const updatedTestCases = [...testCases];
-    
+
     if (index !== undefined) {
-      updatedTestCases[index] = { 
-        ...updatedTestCases[index], 
-        [name]: type === 'checkbox' ? checked : value 
+      updatedTestCases[index] = {
+        ...updatedTestCases[index],
+        [name]: type === 'checkbox' ? checked : value
       };
       setTestCases(updatedTestCases);
     } else {
-      setNewTestCase(prev => ({ 
-        ...prev, 
-        [name]: type === 'checkbox' ? checked : value 
+      setNewTestCase(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
       }));
     }
   };
@@ -113,31 +126,41 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!formData.title || !formData.description || !formData.difficulty_id) {
-      notify(2, "Title, description and difficulty are required", "Error");
+    if (!formData.title || !formData.description || !formData.difficulty) {
+      notify(2, "Title, description, and difficulty are required", "Error");
       return;
     }
 
     const problemPayload = {
-      ...formData,
-      test_cases: testCases,
-      change_details: changeDetails,
-      created_by: user.id
+      title: formData.title,
+      description: formData.description,
+      difficulty: formData.difficulty,
+      tags: formData.tags.map(tagId => ({ id: tagId })),
+      createdBy: user.username,
+      updatedBy: user.username,
+      test_cases: testCases.length ? testCases : []
     };
 
     try {
       startLoading();
-      const url = isEditMode 
-        ? `http://localhost:8080/problems/${problemData.id}`
-        : 'http://localhost:8080/problems';
-      
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        stopLoading();
+        return;
+      }
+
+      const url = isEditMode
+        ? `${import.meta.env.VITE_API_URL}/problems/${problemData.id}`
+        : `${import.meta.env.VITE_API_URL}/problems`;
+
       const method = isEditMode ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(problemPayload),
       });
@@ -145,10 +168,7 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
       if (!response.ok) throw new Error("Operation failed");
 
       const data = await response.json();
-      notify(1, 
-        `Problem ${isEditMode ? 'updated' : 'created'} successfully`, 
-        "Success"
-      );
+      notify(1, `Problem ${isEditMode ? 'updated' : 'created'} successfully`, "Success");
       refresh();
       turnoff();
     } catch (error) {
@@ -164,7 +184,7 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
       <div className="problem-form-container">
         <span className="close-button" onClick={turnoff}>&times;</span>
         <h2>{isEditMode ? 'Edit Problem' : 'Create New Problem'}</h2>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Title *</label>
@@ -177,7 +197,7 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
             />
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label>Description *</label>
             <textarea
               name="description"
@@ -186,22 +206,28 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
               required
               rows={10}
             />
+          </div> */}
+
+          <div className="form-group">
+            <label>Description *</label>
+            <div className="tiptap-editor-container">
+              <EditorContent editor={editor} />
+            </div>
           </div>
+
 
           <div className="form-group">
             <label>Difficulty *</label>
             <select
-              name="difficulty_id"
-              value={formData.difficulty_id}
+              name="difficulty"
+              value={formData.difficulty}
               onChange={handleInputChange}
               required
             >
               <option value="">Select Difficulty</option>
-              {difficulties.map(diff => (
-                <option key={diff.id} value={diff.id}>
-                  {diff.difficulty_name}
-                </option>
-              ))}
+              <option value="0">EASY</option>
+              <option value="1">MEDIUM</option>
+              <option value="2">HARD</option>
             </select>
           </div>
 
@@ -209,14 +235,12 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
             <label>Tags</label>
             <div className="tags-container">
               {tags.map(tag => (
-                <div 
+                <div
                   key={tag.id}
-                  className={`tag-selector ${
-                    formData.tags.includes(tag.id) ? 'selected' : ''
-                  }`}
+                  className={`tag-selector ${formData.tags.includes(tag.id) ? 'selected' : ''}`}
                   onClick={() => handleTagToggle(tag.id)}
                 >
-                  {tag.tag_name}
+                  {tag.name}
                 </div>
               ))}
             </div>
@@ -229,8 +253,8 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
                 <div key={index} className="test-case">
                   <div className="test-case-header">
                     <h4>Test Case #{index + 1}</h4>
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       className="remove-test-case"
                       onClick={() => removeTestCase(index)}
                     >
@@ -292,8 +316,8 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
                   />
                   Hidden Test Case
                 </label>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="add-test-case"
                   onClick={addTestCase}
                 >
@@ -318,8 +342,8 @@ const ProblemForm = ({ turnoff, refresh, isEditMode, problemData }) => {
             <button type="submit" className="submit-button">
               {isEditMode ? 'Update Problem' : 'Create Problem'}
             </button>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="cancel-button"
               onClick={turnoff}
             >

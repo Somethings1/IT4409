@@ -4,14 +4,14 @@ const Change_password=({email,off})=>{
     const [password,SetPassword]=useState("")
     const [confirmpassword,SetconfirmPassword]=useState("")
     const [error,SetError]=useState("")
-    const submit_log=(e)=>{  
+    const submit_log=(e)=>{
       e.preventDefault();
       if(password!=confirmpassword){SetError("nhập lại mật khẩu không khớp với mật khẩu");return}
       const body = {
         email:email,
         password:password
       };
-      fetch("http://localhost:8080/login/change_password2", {
+      fetch(import.meta.env.VITE_API_URL + "/change_password2", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -21,11 +21,11 @@ const Change_password=({email,off})=>{
         .then((response) => response.json())
         .then((data) => {
             console.log(data.message);
-      if(data.message==='Success'){   
+      if(data.message==='Success'){
 off();
       }else{
         SetError(data.message)
-      } 
+      }
         })
         .catch((error) => {
           console.error('Lỗi:', error);
@@ -39,7 +39,7 @@ off();
         <h1 style={{fontSize:"30px",  lineHeight: "1.7",  fontWeight: "bold"}}>Reset Password</h1>
         <h2 style={{marginTop:"10px"}}>Điền mật khẩu mới</h2>
         </div>
-        <span className="change-close-btn" 
+        <span className="change-close-btn"
         onClick={()=>{off()}}
         >
           &times;
@@ -52,8 +52,8 @@ off();
             type="password"
             placeholder="password"
             value={password}
-            onChange={(e)=>{SetPassword(e.target.value) ;SetError("")} 
-            } 
+            onChange={(e)=>{SetPassword(e.target.value) ;SetError("")}
+            }
             required
           />
           <input
@@ -61,8 +61,8 @@ off();
             type="password"
             placeholder="Nhập lại password"
             value={confirmpassword}
-            onChange={(e)=>{SetconfirmPassword(e.target.value) ;SetError("")} 
-            } 
+            onChange={(e)=>{SetconfirmPassword(e.target.value) ;SetError("")}
+            }
             required
           />
           <button id="login-btn" type="submit">

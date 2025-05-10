@@ -9,13 +9,13 @@ const Forgot_password=({off,turnon})=>{
     const [error2,SetError2]=useState("")
     const [color,SetColor]=useState("green")
     const [a,SetA]=useState(false)
-    const submit_log=(e)=>{  
+    const submit_log=(e)=>{
       e.preventDefault();
       const body = {
         email:email,
       };
       startLoading();
-      fetch("http://localhost:8080/login/forgot_password", {
+      fetch(import.meta.env.VITE_API_URL + "/forgot_password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,7 +26,7 @@ const Forgot_password=({off,turnon})=>{
         .then((data) => {stopLoading()
       if(data.message==='Mã xác nhận đã được gửi đến email của bạn!'){
         SetColor('green')
-        SetA(true)      
+        SetA(true)
       }else{
         SetColor('red')
       }SetError(data.message)
@@ -42,7 +42,7 @@ const Forgot_password=({off,turnon})=>{
         ma:ma
       };
       startLoading()
-      fetch("http://localhost:8080/login/change_password", {
+      fetch(import.meta.env.VITE_API_URL + "/change_password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +66,7 @@ if(data.message==='Success'){off();turnon(email)}else{
         email:email,
       };
       startLoading();
-      fetch("http://localhost:8080/login/forgot_password", {
+      fetch(import.meta.env.VITE_API_URL + "/forgot_password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -77,7 +77,7 @@ if(data.message==='Success'){off();turnon(email)}else{
         .then((data) => {stopLoading()
       if(data.message==='Mã xác nhận đã được gửi đến email của bạn!'){
         SetColor('green')
-        SetA(true)      
+        SetA(true)
       }else{
         SetColor('red')
       }SetError(data.message)
@@ -94,7 +94,7 @@ if(data.message==='Success'){off();turnon(email)}else{
         <h1 style={{fontSize:"30px",  lineHeight: "1.7",  fontWeight: "bold"}}>Reset Password</h1>
         <h2 style={{marginTop:"10px"}}>Điền Email của bạn chúng tôi sẽ gửi mail với mã xác nhận , mã xác nhận chỉ có hiệu lực trong 2 phút</h2>
         </div>
-        <span className="forgot-close-btn" 
+        <span className="forgot-close-btn"
         onClick={()=>{off()}}
         >
           &times;
@@ -107,8 +107,8 @@ if(data.message==='Success'){off();turnon(email)}else{
             type="text"
             placeholder="Email"
             value={email}
-            onChange={(e)=>{SetEmail(e.target.value) ;SetError("");SetA(false)} 
-            } 
+            onChange={(e)=>{SetEmail(e.target.value) ;SetError("");SetA(false)}
+            }
             required
           />
           <button id="login-btn" type="submit">
@@ -116,7 +116,7 @@ if(data.message==='Success'){off();turnon(email)}else{
               </button>
              {a&&(<p className="sentagain" onClick={sentagain}>Gửi lại mã</p>)}
         </div>
-        
+
         <p style={{color:color,padding:"10px 0px"}}>{error}</p></form>
         {a&&(<>
           <form className="forgot-login-form" onSubmit={check}>
@@ -126,8 +126,8 @@ if(data.message==='Success'){off();turnon(email)}else{
             type="text"
             placeholder="điền mã xác nhận ở đây"
             value={ma}
-            onChange={(e)=>{SetMa(e.target.value) ;} 
-            } 
+            onChange={(e)=>{SetMa(e.target.value) ;}
+            }
             required
           />
           <button id="login-btn" type="submit">
@@ -138,7 +138,7 @@ if(data.message==='Success'){off();turnon(email)}else{
               </form>
           </>
           )}
-      
+
     </div>
   </div>)
 }

@@ -22,17 +22,17 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
       startLoading();
       try {
         // Fetch difficulties
-        // const diffResponse = await fetch('http://localhost:8080/problems/difficulties');
+        // const diffResponse = await fetch(import.meta.env.VITE_API_URL + '/problems/difficulties');
         // const diffData = await diffResponse.json();
         // setDifficulties(diffData);
 
         // Fetch tags
-        // const tagsResponse = await fetch('http://localhost:8080/problems/tags');
+        // const tagsResponse = await fetch(import.meta.env.VITE_API_URL + '/problems/tags');
         // const tagsData = await tagsResponse.json();
         // setTags(tagsData);
 
         // Fetch test cases for this problem
-        // const testCasesResponse = await fetch(`http://localhost:8080/problems/${problem.id}/testcases`);
+        // const testCasesResponse = await fetch(import.meta.env.VITE_API_URL + `/problems/${problem.id}/testcases`);
         // const testCasesData = await testCasesResponse.json();
         // setTestCases(testCasesData);
 
@@ -66,9 +66,9 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
   };
 
   const handleTagToggle = (tagId) => {
-    setSelectedTags(prev => 
-      prev.includes(tagId) 
-        ? prev.filter(id => id !== tagId) 
+    setSelectedTags(prev =>
+      prev.includes(tagId)
+        ? prev.filter(id => id !== tagId)
         : [...prev, tagId]
     );
   };
@@ -76,17 +76,17 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
   const handleTestCaseChange = (e, index) => {
     const { name, value, type, checked } = e.target;
     const updatedTestCases = [...testCases];
-    
+
     if (index !== undefined) {
-      updatedTestCases[index] = { 
-        ...updatedTestCases[index], 
-        [name]: type === 'checkbox' ? checked : value 
+      updatedTestCases[index] = {
+        ...updatedTestCases[index],
+        [name]: type === 'checkbox' ? checked : value
       };
       setTestCases(updatedTestCases);
     } else {
-      setNewTestCase(prev => ({ 
-        ...prev, 
-        [name]: type === 'checkbox' ? checked : value 
+      setNewTestCase(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
       }));
     }
   };
@@ -104,7 +104,7 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!editData.title || !editData.description || !editData.difficulty_id) {
       notify(2, "Title, description and difficulty are required", "Error");
       return;
@@ -119,7 +119,7 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
 
     try {
       startLoading();
-      const response = await fetch(`http://localhost:8080/problems/${problem.id}`, {
+      const response = await fetch(import.meta.env.VITE_API_URL + `/problems/${problem.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
     <div className="problem-detail-overlay">
       <div className="problem-detail-container">
         <span className="close-button" onClick={onClose}>&times;</span>
-        
+
         {!isEditing ? (
           <div className="problem-view">
             <div className="problem-header">
@@ -217,7 +217,7 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
                 <label>Tags</label>
                 <div className="tags-container">
                   {tags.map(tag => (
-                    <div 
+                    <div
                       key={tag.id}
                       className={`tag-selector ${selectedTags.includes(tag.id) ? 'selected' : ''}`}
                       onClick={() => handleTagToggle(tag.id)}
@@ -235,8 +235,8 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
                     <div key={index} className="test-case">
                       <div className="test-case-header">
                         <h4>Test Case #{index + 1}</h4>
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           className="remove-test-case"
                           onClick={() => removeTestCase(index)}
                         >
@@ -298,8 +298,8 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
                       />
                       Hidden Test Case
                     </label>
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       className="add-test-case"
                       onClick={addTestCase}
                     >
@@ -323,8 +323,8 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
                 <button type="submit" className="save-button">
                   Save Changes
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="cancel-button"
                   onClick={handleEditToggle}
                 >

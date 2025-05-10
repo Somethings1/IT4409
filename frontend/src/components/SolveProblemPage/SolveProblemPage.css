@@ -1,0 +1,33 @@
+/* Add this to your CSS (e.g., CodeEditor.css or a shared layout CSS) */
+.SplitPane {
+  position: relative !important;
+}
+
+.Pane {
+  overflow: auto;
+}
+
+.Resizer {
+  background: #ddd;
+  box-sizing: border-box;
+  background-clip: padding-box;
+  z-index: 1;
+  transition: all 0.2s ease;
+}
+
+.Resizer:hover {
+  background: #bbb;
+}
+
+.Resizer.vertical {
+  width: 5px;
+  margin: 0 -2px;
+  cursor: col-resize;
+}
+
+.Resizer.horizontal {
+  height: 5px;
+  margin: -2px 0;
+  cursor: row-resize;
+}
+

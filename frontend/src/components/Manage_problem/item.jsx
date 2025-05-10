@@ -16,7 +16,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   const [refreshTrigger, setRefreshTrigger] = useState(0); // Use number for cleaner toggle
   const navigate = useNavigate();
 
-  
+
   // Memoize fetchProblems to ensure stable function reference
   const fetchProblems = useCallback(async () => {
     // Skip if auth is still loading
@@ -30,12 +30,11 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       const token = localStorage.getItem("token");
 
       if (!token) {
-        console.log("No access token found");
         stopLoading();
         return;
       }
 
-      const response = await fetch("http://localhost:8080/api/v1/problems", {
+      const response = await fetch(import.meta.env.VITE_API_URL + "/problems", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +47,6 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       }
 
       const data = await response.json();
-      console.log("API data:", data.data.result);
 
       // Deduplicate problems by id
       const uniqueProblems = Array.from(
@@ -78,7 +76,6 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
       const categories = [...new Set(formattedProblems.map((problem) => problem.category))];
       reload(categories);
       setProblems(formattedProblems);
-      console.log("Formatted problems:", formattedProblems);
       stopLoading();
     } catch (error) {
       console.error("Error fetching problems:", error);
@@ -92,7 +89,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   }, [fetchProblems, user, refreshTrigger]);
 
   const showCodeEditor = useCallback((problem) => {
-    navigate("/home/code-editor", {
+    navigate("/home/solve", {
       state: {
         problem,
         initialCode: {
@@ -162,7 +159,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
   if (sortByA === "Tên") {
     filteredProblems.sort((a, b) => a.title.localeCompare(b.title));
   } else if (sortByA === "Mức độ") {
-    const difficultyOrder = { Easy: 1, Medium: 2, Hard: 3 };
+    const difficultyOrder = { EASY: 1, Medium: 2, HARD: 3 };
     filteredProblems.sort(
       (a, b) => (difficultyOrder[a.difficulty] || 0) - (difficultyOrder[b.difficulty] || 0)
     );
@@ -207,11 +204,19 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
               )}
             </div>
 
-            <p className="problem-description">
+            {/* <p className="problem-description">
               {problem.description.length > 100
                 ? `${problem.description.substring(0, 100)}...`
                 : problem.description}
             </p>
+             */}
+            <p className="problem-description">
+              {problem.description.length > 100
+                ? <span dangerouslySetInnerHTML={{ __html: problem.description.substring(0, 100) + '...' }} />
+                : <span dangerouslySetInnerHTML={{ __html: problem.description }} />}
+            </p>
+
+
 
             <div className="problem-actions">
               <button

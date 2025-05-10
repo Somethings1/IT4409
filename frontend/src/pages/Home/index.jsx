@@ -7,10 +7,15 @@ import './Home.css';
 
 function Home() {
   const { user, loading } = useAuth();
-  const [submissions, setSubmissions] = useState({ totalToday: 0, percentChange: '0%', state: '' });
+  const [submissions, setSubmissions] = useState({totalsubmit:0, totalToday: 0, percentChange: '0%', state: '' });
   const [problems, setProblems] = useState({ total: 0, easy: 0, medium: 0, hard: 0, percentChange: '0%' });
-  const [users, setUsers] = useState({ activeToday: 0, newToday: 0, percentChange: '0%', state: 'notchange' });
-  const [contests, setContests] = useState({ upcoming: 0, percent: '0%' });
+  // const [users, setUsers] = useState({ activeToday: 0, newToday: 0, percentChange: '0%', state: 'notchange' });
+  const [users, setUsers] = useState({
+    activeToday: 0,
+    newToday: 0,
+    percentChange: '0%',
+  });
+  const [contests, setContests] = useState({ upcoming: 3, percent: '80%' });
   const [activity, setActivity] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [difficultyData, setDifficultyData] = useState([]);
@@ -39,9 +44,9 @@ function Home() {
   ];
 
   const sampleDifficultyData = [
-    { name: 'Easy', value: 300 },
-    { name: 'Medium', value: 500 },
-    { name: 'Hard', value: 200 },
+    { name: 'Easy', value: problems.easy },
+    { name: 'Medium', value: problems.medium },
+    { name: 'Hard', value: problems.hard },
   ];
 
   // Sample data for new sections
@@ -60,50 +65,310 @@ function Home() {
     { id: 2, title: 'Longest Substring', difficulty: 'Medium', date: '2025-04-30' },
   ];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (loading || !user) return;
-      setError(null);
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       if (loading || !user) return;
+//       setError(null);
+//    const fetchProblems = async () => {
+//   try {
+        // const token = localStorage.getItem('token');
+//     const response = await fetch('http://localhost:8080/api/v1/problems', {
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: `Bearer ${token}`, // nếu bạn có token
+//       },
+//     });
 
-      const fetchWithErrorHandling = async (url, setState, sampleData, isActivity = false) => {
-        try {
-          const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user, timeFilter }),
-          });
-          if (!response.ok) throw new Error(`Network response was not ok: ${response.status}`);
-          const data = await response.json();
-          console.log(`Fetched ${url}:`, data); // Debug log
-          // For activity, ensure data.events is an array; for others, ensure data is an array or object
-          if (isActivity) {
-            setState(Array.isArray(data.events) ? data.events : []);
-          } else {
-            setState(data && Array.isArray(data) ? data : sampleData);
-          }
-        } catch (error) {
-          console.error(`Error fetching ${url}:`, error);
-          setError(`Failed to load data from ${url}. Using sample data.`);
-          setState(sampleData); // Fallback to sample data
-        }
-      };
+//     if (!response.ok) throw new Error('Failed to fetch problems');
+//     const data = await response.json();
+//     const problems = data.data.result;
 
-      await Promise.all([
-        // fetchWithErrorHandling('http://localhost:8080/admin/total_submissions', setSubmissions, submissions),
-        // fetchWithErrorHandling('http://localhost:8080/admin/total_problems', setProblems, problems),
-        // fetchWithErrorHandling('http://localhost:8080/admin/active_users', setUsers, users),
-        // fetchWithErrorHandling('http://localhost:8080/admin/upcoming_contests', setContests, contests),
-        // fetchWithErrorHandling('http://localhost:8080/admin/submission_trends', setChartData, sampleChartData),
-        // fetchWithErrorHandling('http://localhost:8080/admin/problem_difficulty', setDifficultyData, sampleDifficultyData),
-        // fetchWithErrorHandling('http://localhost:8080/admin/recent_activity', setActivity, [], true),
-        // fetchWithErrorHandling('http://localhost:8080/admin/recent_comments', setComments, sampleComments),
-        // fetchWithErrorHandling('http://localhost:8080/admin/recent_submissions', setRecentSubmissions, sampleRecentSubmissions),
-        // fetchWithErrorHandling('http://localhost:8080/admin/recent_problems', setRecentProblems, sampleRecentProblems),
-      ]);
+//     let easy = 0, medium = 0, hard = 0;
+
+//     problems.forEach(problem => {
+//       if (problem.difficulty === 'EASY') easy++;
+//       else if (problem.difficulty === 'MEDIUM') medium++;
+//       else if (problem.difficulty === 'HARD') hard++;
+//     });
+
+//     const total = easy + medium + hard;
+//     const percentChange = '0%'; // tính sau nếu cần
+
+//     setProblems({ total, easy, medium, hard, percentChange });
+//   } catch (error) {
+//     console.error('Error fetching problems:', error);
+//     setError('Failed to fetch problems');
+//     setProblems({ total: 0, easy: 0, medium: 0, hard: 0, percentChange: '0%' });
+//   }
+// };
+
+//       const fetchWithErrorHandling = async (url, setState, sampleData, isActivity = false) => {
+//         try {
+//           const response = await fetch(url, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ user, timeFilter }),
+//           });
+//           if (!response.ok) throw new Error(`Network response was not ok: ${response.status}`);
+//           const data = await response.json();
+//           // For activity, ensure data.events is an array; for others, ensure data is an array or object
+//           if (isActivity) {
+//             setState(Array.isArray(data.events) ? data.events : []);
+//           } else {
+//             setState(data && Array.isArray(data) ? data : sampleData);
+//           }
+//         } catch (error) {
+//           console.error(`Error fetching ${url}:`, error);
+//           setError(`Failed to load data from ${url}. Using sample data.`);
+//           setState(sampleData); // Fallback to sample data
+//         }
+//       };
+
+//       await Promise.all([
+//         fetchProblems(), 
+        
+//       ]);
+//     };
+
+//     fetchData();
+//   }, [loading, user, timeFilter]);
+
+useEffect(() => {
+  const fetchData = async () => {
+    if (loading || !user ) return;
+    setError(null);
+    
+    
+
+
+  const getRecentSubmissionss = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch('http://localhost:8080/api/v1/submissions', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch submissions');
+    const data = await response.json();
+    const submissions = data.data.result;
+    
+    const currentDate = new Date();
+    const today = currentDate.toISOString().split('T')[0]; // yyyy-mm-dd
+    const yesterdayDate = new Date(currentDate);
+    yesterdayDate.setDate(currentDate.getDate() - 1);
+    const yesterday = yesterdayDate.toISOString().split('T')[0];
+
+    let totalToday = 0;
+    let totalYesterday = 0;
+    const recentList = [];
+    console.log("submit data",submissions)
+    for (const submission of submissions) {
+      const date = submission.createdAt.split(' ')[0]; // "yyyy-mm-dd"
+
+      if (date === today) totalToday++;
+      else if (date === yesterday) totalYesterday++;
+
+      const subDate = new Date(submission.createdAt);
+      const sevenDaysAgo = new Date(currentDate);
+      sevenDaysAgo.setDate(currentDate.getDate() - 7);
+
+      if (subDate >= sevenDaysAgo) {
+        recentList.push({
+          id:submission._id,
+          user:submission.user.name,
+          date,
+          type: submission.status === 'FAILED' ? 'feed-item-error' : 'feed-item-success',
+          problem:submission.problem.title,
+          detail: `Đã nộp bài <a href='#'>${submission.problem.title}</a> (${submission.status})`,
+          status:submission.status,
+        });
+      }
+    }
+
+    const percentChange =
+      totalYesterday === 0
+        ? '100%'
+        : `${(((totalToday - totalYesterday) / totalYesterday) * 100).toFixed(1)}%`;
+
+    const state =
+      totalToday === totalYesterday
+        ? ''
+        : totalToday > totalYesterday
+        ? 'increase'
+        : 'decrease';
+
+    setSubmissions({ totalsubmit:data.data.meta.total,totalToday, percentChange, state });
+    setRecentSubmissions(recentList.slice(0, 10)); // giới hạn 10 item gần nhất
+     console.log("submit hhhhhh",recentList)
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    setComments([]); // Set empty array on error
+  }
+};
+  const getRecentComments = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch('http://localhost:8080/api/v1/comments', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch comments');
+    const data = await response.json();
+    const commentsList = data.data.result;
+     console.log("commentsList",commentsList)
+     console.log("submit",recentSubmissions)
+    const currentDate = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(currentDate.getDate() - 7);
+
+    const filteredComments = commentsList.filter((comment) => {
+      const commentDate = new Date(comment.createdAt);
+      return commentDate >= sevenDaysAgo;
+    });
+    console.log("comment",comments)
+    setComments(filteredComments);
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    setComments([]); // Set empty array on error
+  }
+};
+
+   const getRecentProblems = async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch('http://localhost:8080/api/v1/problems', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // const responsess = await fetch('http://localhost:8080/api/v1/submissions', {
+    //   method: 'GET',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
+    // const datass = await responsess.json();
+    // console.log("datas",datass)
+    if (!response.ok) throw new Error('Failed to fetch problems');
+    const data = await response.json();
+    const problemst = data.data.result;
+
+    const currentDate = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(currentDate.getDate() - 7);
+
+    const filteredProblemsupdate = problemst.filter((problem) => {
+      const problemDate = new Date(problem.updatedAt);
+      return problemDate >= sevenDaysAgo;
+    });
+
+    const filteredProblems = problemst.filter((problem) => {
+      const problemDate = new Date(problem.createdAt);
+      return problemDate >= sevenDaysAgo;
+    });
+    setActivity(filteredProblemsupdate)
+    setRecentProblems(filteredProblems);
+    console.log("rêcntactivity",activity)
+  };
+
+    const fetchDataUser = async () => {
+      try {
+                const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:8080/api/v1/users', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch users');
+        const data = await response.json();
+        const usersData = data.data.result;
+
+        // Lọc người dùng mới trong 2 ngày qua
+        const today = new Date();
+        const twoDaysAgo = new Date(today);
+        twoDaysAgo.setDate(today.getDate() - 4);
+
+        const newUsers = usersData.filter(user => {
+          const createdAt = new Date(user.createdAt);
+          return createdAt >= twoDaysAgo && createdAt <= today;
+        });
+
+        // Cập nhật giá trị vào trạng thái
+        const newToday = newUsers.length;
+        const activeToday = usersData.length;
+        const percentChange = activeToday > 0 ? ((newToday / activeToday) * 100).toFixed(2) + '%' : '0%';
+
+        setUsers({
+          activeToday,
+          newToday,
+          percentChange,
+        });
+
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }};
+    const fetchProblems = async () => {
+      try {
+        const token = localStorage.getItem('token');
+      
+        const response = await fetch('http://localhost:8080/api/v1/problems', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch problems');
+
+        const data = await response.json();
+        const problemst = data.data.result;
+
+        let easy = 0, medium = 0, hard = 0;
+       
+        problemst.forEach(problem => {
+          if (problem.difficulty === 'EASY') easy++;
+          else if (problem.difficulty === 'MEDIUM') medium++;
+          else if (problem.difficulty === 'HARD') hard++;
+        });
+        //  console.log("problems",hard);
+        const total = easy + medium + hard;
+        const percentChange = easy/total * 100; // tính sau nếu cần
+
+        setProblems({ total, easy, medium, hard, percentChange });
+        //  console.log("problems",percentChange);
+      } catch (error) {
+        console.error('Error fetching problems:', error);
+        setError('Failed to fetch problems');
+        setProblems({ total: 0, easy: 0, medium: 0, hard: 0, percentChange: '0%' });
+      }
     };
 
-    fetchData();
-  }, [loading, user, timeFilter]);
+    await Promise.all([
+      fetchProblems(),
+      fetchDataUser(),
+      getRecentProblems(),
+      getRecentComments(),
+      getRecentSubmissionss(),      // Thêm các fetch khác ở đây nếu cần
+    ]);
+  };
+
+  fetchData();
+}, [loading, user, timeFilter]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -166,6 +431,8 @@ function Home() {
 
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h3>Overview</h3>
+            <br>
+            </br>
             <div>
               {/* Commented out as per provided code */}
               {/* <select
@@ -181,7 +448,7 @@ function Home() {
               <a href="#" className="btn btn-secondary ms-2">Manage Contests</a> */}
             </div>
           </div>
-{/* 
+{/*
           {error && <div className="alert alert-danger">{error}</div>} */}
 
           {/* Metrics Cards */}
@@ -192,7 +459,7 @@ function Home() {
               <div className="card mb-3">
                 <div className="card-body">
                   <h6 className="card-title">Total Submissions</h6>
-                  <h4 className="text-primary fw-bold">{submissions.totalToday}</h4>
+                  <h4 className="text-primary fw-bold">{submissions.totalsubmit}</h4>
                   <div className="progress">
                     <div
                       className="progress-bar bg-primary"
@@ -212,16 +479,58 @@ function Home() {
                 <div className="card-body">
                   <h6 className="card-title">Total Problems</h6>
                   <h4 className="text-success fw-bold">{problems.total}</h4>
-                  <div className="progress">
+                <div className="progress" style={{ height: '8px' }}>
+  {/* Màu Xanh (Easy) */}
+  {/* <div
+    className="progress-bar bg-success"
+    role="progressbar"
+    style={{ width: '33.33%',marginLeft: "0",paddingLeft:"0" }} // Màu xanh chiếm 1/3 thanh
+    aria-valuenow={33.33}
+    aria-valuemin="0"
+    aria-valuemax="100"
+  ></div> */}
+
+  {/* Màu Vàng (Medium) */}
+  {/* <div
+    className="progress-bar bg-warning"
+    role="progressbar"
+    style={{
+      width: '33.33%', // Màu vàng chiếm 1/3 thanh
+      marginLeft: '33.33%' // Dịch sang phải bắt đầu từ 33.33%
+    }}
+    aria-valuenow={66.66}
+    aria-valuemin="0"
+    aria-valuemax="100"
+  ></div> */}
+
+  {/* Màu Đỏ (Hard) */}
+  {/* <div
+    className="progress-bar bg-danger"
+    role="progressbar"
+    style={{
+      width: '33.33%', // Màu đỏ chiếm 1/3 thanh
+      marginLeft: '66.66%' // Dịch sang phải bắt đầu từ 66.66%
+    }}
+    aria-valuenow={100}
+    aria-valuemin="0"
+    aria-valuemax="100"
+  ></div> */}
+
+                    {/* <div className="progress"> */}
                     <div
                       className="progress-bar bg-success"
                       role="progressbar"
-                      style={{ width: problems.percentChange }}
+                     style={{ width: `${problems.percentChange}%` }}
+
                       aria-valuenow={parseFloat(problems.percentChange)}
                       aria-valuemin="0"
                       aria-valuemax="100"
                     ></div>
+                  {/* </div>  */}
+                  
                   </div>
+
+
                   <small>Easy: {problems.easy}, Medium: {problems.medium}, Hard: {problems.hard}</small>
                 </div>
               </div>
@@ -337,10 +646,18 @@ function Home() {
                     {Array.isArray(activity) && activity.length ? (
                       activity.map((act, index) => (
                         <li key={index} className={`feed-item ${act.type || ''}`}>
-                          <time className="date">{act.date || 'Unknown'}</time>
-                          <span
+                          <time className="date">
+                            {act.updatedAt 
+                              ? new Date(act.updatedAt).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric'
+                                })
+                              : 'Unknown'}
+                          </time>
+                             <span
                             dangerouslySetInnerHTML={{
-                              __html: DOMPurify.sanitize(act.detail || 'No details'),
+                              __html: DOMPurify.sanitize(act.title || 'No details'),
                             }}
                           />
                         </li>
@@ -387,15 +704,33 @@ function Home() {
                     {Array.isArray(comments) && comments.length ? (
                       comments.map((comment) => (
                         <li key={comment.id} className="feed-item">
-                          <time className="date">{comment.date || 'Unknown'}</time>
+                          <time className="date">
+                            {comment.createdAt 
+                              ? new Date(comment.createdAt).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric'
+                                })
+                              : 'Unknown date'}
+                          </time>
                           <div>
-                            <h6>{comment.user || 'Anonymous'}</h6>
-                            <p className="text-muted">{comment.content || 'No content'}</p>
+                            <h6>{comment.user.name || 'Anonymous'}</h6>
+                               <h6>
+                             
+                              {comment.problem?.title && (
+                                <span className="badge bg-info ms-2">
+                                  {comment.problem.title}
+                                </span>
+                              )}
+                            </h6>
+                            <p className="text-muted">
+                              {comment.content || comment.body || comment.message || 'No content available'}
+                            </p>
                           </div>
                         </li>
                       ))
                     ) : (
-                      <p className="text-muted">No recent comments.</p>
+                      <p className="text-muted">No recent comments found.</p>
                     )}
                   </ol>
                 </div>
@@ -417,7 +752,7 @@ function Home() {
                           <div>
                             <h6>{submission.user || 'Anonymous'} - {submission.problem || 'Unknown'}</h6>
                             <p className="text-muted">
-                              Status: <span className={`badge bg-${submission.status === 'Accepted' ? 'success' : 'danger'}`}>
+                              Status: <span className={`badge bg-${submission.status === 'ACCEPTED' ? 'success' : 'danger'}`}>
                                 {submission.status || 'Unknown'}
                               </span>
                             </p>
@@ -443,11 +778,11 @@ function Home() {
                     {Array.isArray(recentProblems) && recentProblems.length ? (
                       recentProblems.map((problem) => (
                         <li key={problem.id} className={`feed-item ${problem.difficulty?.toLowerCase() || ''}`}>
-                          <time className="date">{problem.date || 'Unknown'}</time>
+                          <time className="date">{problem.createdAt }</time>
                           <div>
                             <h6>{problem.title || 'Untitled'}</h6>
                             <p className="text-muted">
-                              Difficulty: <span className={`badge bg-${problem.difficulty === 'Easy' ? 'success' : problem.difficulty === 'Medium' ? 'warning' : 'danger'}`}>
+                              Difficulty: <span className={`badge bg-${problem.difficulty === 'EASY' ? 'success' : problem.difficulty === 'MEDIUM' ? 'warning' : 'danger'}`}>
                                 {problem.difficulty || 'Unknown'}
                               </span>
                             </p>

@@ -22,6 +22,7 @@ import com.example.leetcode.domain.User;
 import com.example.leetcode.domain.request.ReqLoginDTO;
 import com.example.leetcode.domain.response.ResLoginDTO;
 import com.example.leetcode.domain.response.user.ResCreateUserDTO;
+import com.example.leetcode.service.RoleService;
 import com.example.leetcode.service.UserService;
 import com.example.leetcode.util.SecurityUtil;
 import com.example.leetcode.util.annotation.ApiMessage;
@@ -37,6 +38,7 @@ public class AuthController {
 	private final SecurityUtil securityUtil;
 	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
+	private final RoleService roleService;
 
 	@Value("${hoanglong.jwt.refresh-token-validity-in-seconds}")
 	private long refreshTokenExpiration;
@@ -46,13 +48,15 @@ public class AuthController {
 	 * @param securityUtil
 	 * @param userService
 	 * @param passwordEncoder
+	 * @param roleService
 	 */
 	public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil,
-			UserService userService, PasswordEncoder passwordEncoder) {
+			UserService userService, PasswordEncoder passwordEncoder, RoleService roleService) {
 		this.authenticationManagerBuilder = authenticationManagerBuilder;
 		this.securityUtil = securityUtil;
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
+		this.roleService = roleService;
 	}
 
 	@PostMapping("/register")
@@ -66,6 +70,7 @@ public class AuthController {
 
 		String hashPassword = this.passwordEncoder.encode(postmanUser.getPassword());
 		postmanUser.setPassword(hashPassword);
+		postmanUser.setRole(this.roleService.handleFetchRoleById(2));
 
 		User newUser = this.userService.handleCreateUser(postmanUser);
 

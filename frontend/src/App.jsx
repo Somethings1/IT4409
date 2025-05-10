@@ -1,5 +1,3 @@
-
-
 import './App.css';
 import {Route, Routes} from 'react-router-dom';
 import LayoutDefault from './layouts/LayoutDefault/index.jsx';
@@ -15,7 +13,7 @@ import ProtectedRoute from "./components/introduce/protect.jsx";
 import {Loading} from './components/introduce/Loading.jsx'
 
 import Notification from './components/Notification/notification.jsx';
-import CodeEditor from './components/CodeEditor/CodeEditor.jsx';
+import SolveProblemPage from './components/SolveProblemPage/index.jsx';
 
 function App() {
   return (
@@ -23,12 +21,12 @@ function App() {
     <Loading />
     <Notification />
       <Routes>
-      <Route path="/" element={<Main />} /> 
-      
+      <Route path="/" element={<Main />} />
+
       <Route
           path="/home"
           element={
-            <ProtectedRoute role="Admin">
+            <ProtectedRoute role="ADMIN">
               <LayoutDefault />
             </ProtectedRoute>
           }
@@ -36,13 +34,13 @@ function App() {
           <Route index element={<Home/>}/>
            <Route path='profile' element={<Profile/>}/>
           <Route path="manage-problem" element={<ManageProblem />} />
-          <Route path="code-editor" element={<CodeEditor />} />
+          <Route path="solve" element={<SolveProblemPage />} />
         </Route>
             {/* User */}
         <Route
           path="/code"
           element={
-            <ProtectedRoute role="User">
+            <ProtectedRoute role="USER">
               <LayoutUser/>
             </ProtectedRoute>
           }
@@ -50,11 +48,11 @@ function App() {
               <Route index element={<HomeUser />} />
               <Route path='profile' element={<Profile/>}/>
               <Route path="manage-problem" element={<UserProblem />} />
-              <Route path="code-editor" element={<CodeEditor />} />
+              <Route path="solve" element={<SolveProblemPage />} />
           {/* <Route path="try-on" element={<TryOn />} /> */}
-          
+
            {/* <Route path="import" element={<Import />} /> */}
-   
+
         </Route>
       </Routes>
     </>

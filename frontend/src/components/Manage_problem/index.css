@@ -1,6 +1,6 @@
 /* src/ProductManager.css */
 .product-manager {
-  padding: 0px 20px;
+  padding: 0px 40px;
   /* height:100%; */
   /* margin-top:100px; */
   /* padding-top:100px; */
@@ -10,6 +10,16 @@
   flex-direction: column;
   position: relative;
 }
+
+.x {
+  height: 150px; /* hoặc chiều cao bạn muốn */
+  min-height: 120px;
+  max-height: 200px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+
 
 /* Thanh filter bar với bo góc, nền mờ, và scroll */
 .filter-bar {
@@ -109,6 +119,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 10px; /* Khoảng cách giữa các phần */
+  padding-bottom: 40px;
 }
 
 /* Kiểu cho ô tìm kiếm */

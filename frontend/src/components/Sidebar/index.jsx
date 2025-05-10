@@ -11,10 +11,9 @@ function Sidebar({ change }) {
   const location = useLocation();  // Lấy thông tin đường dẫn hiện tại
   const [selected, setSelected] = useState(1);  // Trạng thái mặc định cho mục được chọn
   const [isExpanded, setIsExpanded] = useState(true);  // Trạng thái cho sidebar có mở rộng hay không
-  const [isAddOpen, setIsAddOpen] = useState(false); 
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   const toggleAddDropdown = () => {
-    console.log(isAddOpen)
     setIsAddOpen(!isAddOpen);
   };
   // Cập nhật trạng thái `selected` dựa trên đường dẫn hiện tại
@@ -42,7 +41,7 @@ function Sidebar({ change }) {
       <div className="logo-header" style={isExpanded ? {} : { display: "flex", justifyContent: "center", alignItems: "center" }}>
         {isExpanded && (
           <a href="/home">
-           
+
           </a>
         )}
         <div className={`sidebar__icon ${!isExpanded ? "add_jus" : ""}`} style={!isExpanded?{marginRight:"0px",cursor:"pointer"}:{cursor:"pointer"}} onClick={toggleSidebar}>
@@ -71,7 +70,7 @@ function Sidebar({ change }) {
           {isExpanded && "Quản lí bài tập"}
         </Link>
       </li>
-   
+
     </ul>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Modal.css'; 
+import './Modal.css';
 import { FaRegUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import {useAuth} from "../introduce/useAuth.jsx"
@@ -7,7 +7,6 @@ import Avatar from '../Avatar/index.jsx';
 const Modal = () => {
   const {user,logout} =useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  console.log(user)
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -41,7 +40,7 @@ const Modal = () => {
             </div>
           </div>
           <div className="menu-items">
-            <Link to="/home/profile">    
+            <Link to="/home/profile">
               <div className="menu-item">
                 <i className="icon fa fa-user"></i> View Profile
               </div>
