@@ -109,7 +109,7 @@ const ProblemDetail = ({ problem, onClose, onUpdate }) => {
                     output: tc.output.replace(/\\n/g, "\n"),
                     active: tc.active,
                 }));
-                console.log("role",user.role);
+                // console.log("role",user.role);
                 setTestCases(allTestCases);
     
             } catch (error) {

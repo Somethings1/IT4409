@@ -40,7 +40,9 @@ const Modal = () => {
             </div>
           </div>
           <div className="menu-items">
-            <Link to="/home/profile">
+            {/* <Link to="/home/profile"> */}
+            <Link to={user.role === "ADMIN" ? "/home/profile" : "/code/profile"}>
+ 
               <div className="menu-item">
                 <i className="icon fa fa-user"></i> View Profile
               </div>

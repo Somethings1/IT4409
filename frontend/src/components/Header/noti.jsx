@@ -1,29 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../introduce/useAuth.jsx";
 import { useLoading } from "../introduce/Loading.jsx";
-import { FaRegBell } from "react-icons/fa"; // Import đúng biểu tượng
+import { FaRegBell } from "react-icons/fa";
 import "./noti.css";
 
 const Notification = () => {
   const { startLoading, stopLoading } = useLoading();
   const { user, loading } = useAuth();
-  const [products, setProducts] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
 
-  // Hàm để lấy sản phẩm
-  const fetchProducts = async () => {
+  // Hàm để lấy các thông báo gần đây trong vòng 2 ngày
+  const fetchNotifications = async () => {
     if (loading || !user) return;
 
     setIsFetching(true);
     startLoading();
 
     try {
-      const response = await fetch(import.meta.env.VITE_API_URL + "/problem/show", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user }),
+      const token = localStorage.getItem('token');
+         
+      const response = await fetch(import.meta.env.VITE_API_URL + "/comments", {
+        method: "GET",
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!response.ok) {
@@ -31,12 +35,19 @@ const Notification = () => {
       }
 
       const data = await response.json();
-      const filteredProducts = data.filter(
-        (product) => product.stock_in_Warehouse < product.reorderLevel
-      );
+      // console.log("data", data.data.result);
+      const datacomment = data.data.result;
 
-      setProducts(filteredProducts);
-      setHasUnreadNotifications(filteredProducts.length > 0);
+      // Lọc các thông báo trong vòng 2 ngày
+      const currentTime = new Date();
+      const filteredNotifications = datacomment.filter((notification) => {
+        const notificationTime = new Date(notification.createdAt);
+        const timeDifference = (currentTime - notificationTime) / (1000 * 60 * 60 * 24); // Thời gian chênh lệch tính theo ngày
+        return timeDifference <= 2; // Chỉ lấy thông báo trong 2 ngày gần đây
+      });
+
+      setNotifications(filteredNotifications);
+      setHasUnreadNotifications(filteredNotifications.length > 0);
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
     } finally {
@@ -45,11 +56,11 @@ const Notification = () => {
     }
   };
 
-  // Cập nhật sản phẩm mỗi khi có thay đổi hoặc theo chu kỳ
+  // Cập nhật thông báo mỗi khi có thay đổi hoặc theo chu kỳ
   useEffect(() => {
     if (user && !loading) {
-      fetchProducts(); // Lần đầu tiên gọi hàm để lấy dữ liệu sản phẩm
-      const interval = setInterval(fetchProducts, 6000000); // Cập nhật mỗi phút
+      fetchNotifications(); // Lần đầu tiên gọi hàm để lấy dữ liệu thông báo
+      const interval = setInterval(fetchNotifications, 600000); // Cập nhật mỗi 10 phút
 
       // Cleanup interval khi component bị unmount
       return () => clearInterval(interval);
@@ -61,11 +72,10 @@ const Notification = () => {
     if (isFetching) return; // Tránh gọi API nếu đang tải dữ liệu
     setIsVisible((prev) => !prev);
     if (!isVisible) {
-      fetchProducts();
+      fetchNotifications();
       setHasUnreadNotifications(false);
     }
   };
-
 
   return (
     <div className="notification-container">
@@ -78,22 +88,34 @@ const Notification = () => {
           fontSize: "24px",
         }}
       />
-
-      {/* Hiển thị hình tròn đỏ nếu có thông báo */}
-      {/* {hasUnreadNotifications && (
-        <div className="notification-badge"></div>
-      )} */}
+      
+      {/* Hiển thị thông báo badge nếu có thông báo chưa đọc */}
+      {hasUnreadNotifications && (
+        <div className="notification-badge">{notifications.length}</div>
+      )}
 
       {/* Hiển thị popup thông báo */}
       <div className={`notification-popup ${isVisible ? "show" : ""}`}>
         <div className="notification-header">
-          <h4>Bạn có tin nhắn mới</h4>
+          <h4>Bạn có thông báo mới</h4>
         </div>
         <div className="notification-content">
           {isFetching ? (
             <p>Đang tải...</p>
-          )  : (
-            <p>Không có thông báo nào</p>
+          ) : notifications.length > 0 ? (
+            notifications.map((notification) => (
+              <div key={notification.id} className="notification-item">
+                <div className="notification-header">
+                  <h5>{notification.problem.title}</h5> {/* Hiển thị tiêu đề */}
+                  <p><small>{new Date(notification.createdAt).toLocaleString()}</small></p> {/* Hiển thị thời gian */}
+                </div>
+                <div className="notification-body">
+                  <p><strong>{notification.user.name}</strong> - {notification.content}</p> {/* Hiển thị tên người dùng và nội dung */}
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>Không có thông báo mới trong 2 ngày gần đây.</p> 
           )}
         </div>
       </div>

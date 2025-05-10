@@ -125,7 +125,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
     if (sortByA === "Tên") {
         filteredProblems.sort((a, b) => a.title.localeCompare(b.title));
     } else if (sortByA === "Mức độ") {
-        const difficultyOrder = { "Easy": 1, "Medium": 2, "Hard": 3 };
+        const difficultyOrder = { "EASY": 1, "Medium": 2, "HARD": 3 };
         filteredProblems.sort((a, b) => difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty]);
     }
 
@@ -196,7 +196,7 @@ const ProblemGrid = ({ selectedCategory, reload, searchTerm, sortByA, sortByB })
                 </Tag>
             ),
             sorter: (a, b) => {
-                const order = { Easy: 1, Medium: 2, Hard: 3, Unknown: 4 };
+                const order = { EASY: 1, Medium: 2, HARD: 3, Unknown: 4 };
                 return order[a.difficulty] - order[b.difficulty];
             }
         }

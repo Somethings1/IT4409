@@ -20,7 +20,7 @@ const Change_password=({email,off})=>{
       })
         .then((response) => response.json())
         .then((data) => {
-            console.log(data.message);
+            // console.log(data.message);
       if(data.message==='Success'){
 off();
       }else{

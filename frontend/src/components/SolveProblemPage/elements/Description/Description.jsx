@@ -75,7 +75,7 @@ const Description = ({
                 }
             );
             const comments = await response.data.data.result || [];
-            console.log("comment",comments);
+            // console.log("comment",comments);
             const formattedComments = comments.slice(0, 10).map(c => ({
                 id: c.id,
                 problemId: c.problem?.id || problem.id,

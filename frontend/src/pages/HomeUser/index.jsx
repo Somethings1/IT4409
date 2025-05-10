@@ -66,19 +66,19 @@ const Home = () => {
        const token = localStorage.getItem('token');
 
         console.log("usser",user)
-      const response = await axios.get(`http://localhost:8080/api/v1/submissions?filter=user.id:${user._id}&page=0&page=1&page=2&pageSize=100`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/submissions?filter=user.id:${user._id}&page=0&page=1&page=2&pageSize=100`, {
         headers: {
           Authorization: `Bearer ${token}`, // nếu không dùng auth thì bỏ dòng này
         },
       });
-         const responsepro = await axios.get(`http://localhost:8080/api/v1/problems`, {
+         const responsepro = await axios.get(`${import.meta.env.VITE_API_URL}/problems`, {
         headers: {
           Authorization: `Bearer ${token}`, // nếu không dùng auth thì bỏ dòng này
         },
       });
     
         const data = response.data;
-        console.log("lastdata",data)
+        // console.log("lastdata",data)
          const allSubmissions = response.data.data.result;
         
       // const submissions = response.data.result;
@@ -90,7 +90,7 @@ const Home = () => {
       }));
 
       setRecentActivity(activities);
-        console.log("recentactive", recentActivity)
+        // console.log("recentactive", recentActivity)
          const allProblem = responsepro.data.data.result;
         // console.log("lastdata 53 ",responsepro.data.data.meta.total)
       const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD

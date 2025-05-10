@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaRegUser } from "react-icons/fa";
-import { FaChild } from "react-icons/fa";
-import { FaCheckSquare } from "react-icons/fa";
+import { FaRegUser, FaChild, FaCheckSquare } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import './Profile.css';
@@ -21,31 +19,35 @@ function Profile() {
   const { startLoading, stopLoading } = useLoading();
   const [newData, setNewData] = useState(null);
   const [refresh, setRefresh] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
 
-const [image,SetImage]=useState(null)
-const [x,SetX]=useState(false);
   useEffect(() => {
     const fetchProfile = async () => {
       if (loading) return;
       startLoading();
-      const response = await fetch(import.meta.env.VITE_API_URL + "/account", {
+      const token = localStorage.getItem('token');
+      const response = await fetch(import.meta.env.VITE_API_URL + "/auth/account", {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!response.ok) {
-        notify(2,"network is not okay!","Thất bại");}
-      const profileData = await response.json();
+        notify(2, "network is not okay!", "Thất bại");
+        stopLoading();
+        return;
+      }
 
+      const result = await response.json();
       stopLoading();
-      setData(profileData);
-      setNewData(profileData);
-
+      setData(result.data);
+      setNewData(result.data);
     };
 
     fetchProfile();
-  }, [loading, x]);
+  }, [loading, refresh]);
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
@@ -54,26 +56,36 @@ const [x,SetX]=useState(false);
 
   const saveChanges = async () => {
     startLoading();
+    const token = localStorage.getItem('token');
+
+    const bodyToSend = {
+      user: {
+        ...newData,
+        ...(newPassword && { password: newPassword }),
+      },
+    };
+
     const response = await fetch(import.meta.env.VITE_API_URL + "/profile/change_profile", {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user: newData }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(bodyToSend),
     });
-    if (!response.ok) throw new Error("Network response was not ok");
 
     const result = await response.json();
     stopLoading();
-    if (result.respond === "success") {
+
+    if (response.ok && result.respond === "success") {
       notify(1, 'Cập nhật thông tin cá nhân thành công', 'Thành công');
       setEdit(false);
-      setRefresh((prev) => !prev);
+      setRefresh(prev => !prev);
+      setNewPassword("");
+    } else {
+      notify(2, "Không thể cập nhật thông tin", "Thất bại");
     }
   };
-
-
-
-
-
 
   return (
     <div className="profile-container">
@@ -89,17 +101,17 @@ const [x,SetX]=useState(false);
               {data ? <Avatar name={data.name} imageUrl={data.avatar} /> : ""}
             </div>
           </div>
-          {editImage && <ProfilePictureOptions image={data.avatar} reload={() => setRefresh((prev) => !prev)} />}
+          {editImage && <ProfilePictureOptions image={data?.avatar} reload={() => setRefresh(prev => !prev)} />}
         </div>
 
         <div className="profile-info">
           {!edit ? (
-            <div className="profile-info__name">{data ? data.name : ""}</div>
+            <div className="profile-info__name">{data?.name}</div>
           ) : (
             <input
               type="text"
               name="name"
-              value={newData ? newData.name : ""}
+              value={newData?.name || ""}
               onChange={handleEditChange}
             />
           )}
@@ -118,24 +130,27 @@ const [x,SetX]=useState(false);
       <div className="connect-section">
         <div>Thông tin cá nhân</div>
         <ul>
-          <li><a href="#"><FaRegUser /> Tài khoản của : {data ? data.id_owner.name : ""}</a></li>
-          <li><a href="#"><FaChild /> vị trí : {data ? data.role : ""}</a></li>
-          <li><a href="#"><FaCheckSquare /> Quyền : {data ? (data.right ? data.right.permissions.map((p) => p).join(", ") : data.role=="Admin"?"tất cả các quyền":"Không có quyền gì") : ""}</a></li>
-          <li><a href="#"><MdEmail /> Email : {data ? data.email : ""}</a></li>
-          <li><a href="#"><RiLockPasswordFill /> Mật khẩu :
-            {!edit ? (data ? data.password : "") :
+          <li><FaRegUser /> Tên người dùng: {data?.name}</li>
+          <li><FaChild /> Vai trò: {data?.role?.name}</li>
+          <li><FaCheckSquare /> Quyền: {
+            data?.role?.permissions
+              ? data.role.permissions.map(p => p.name).join(", ")
+              : "Không có quyền"
+          }</li>
+          <li><MdEmail /> Email: {data?.email}</li>
+          <li>
+            <RiLockPasswordFill /> Mật khẩu:
+            {edit && (
               <input
-                type="text"
-                name="password"
-                value={newData ? newData.password : ""}
-                onChange={handleEditChange}
-              />}
-          </a></li>
+                type="password"
+                placeholder="Nhập mật khẩu mới"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            )}
+          </li>
         </ul>
       </div>
-
-
-
 
       <div className="profile-logout">
         <button className="message-btn logout" onClick={logout}>

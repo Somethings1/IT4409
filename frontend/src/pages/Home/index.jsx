@@ -145,7 +145,7 @@ useEffect(() => {
   const getRecentSubmissionss = async () => {
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch('http://localhost:8080/api/v1/submissions', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/submissions`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ useEffect(() => {
     let totalToday = 0;
     let totalYesterday = 0;
     const recentList = [];
-    console.log("submit data",submissions)
+    // console.log("submit data",submissions)
     for (const submission of submissions) {
       const date = submission.createdAt.split(' ')[0]; // "yyyy-mm-dd"
 
@@ -204,7 +204,7 @@ useEffect(() => {
 
     setSubmissions({ totalsubmit:data.data.meta.total,totalToday, percentChange, state });
     setRecentSubmissions(recentList.slice(0, 10)); // giới hạn 10 item gần nhất
-     console.log("submit hhhhhh",recentList)
+    //  console.log("submit hhhhhh",recentList)
   } catch (error) {
     console.error('Error fetching comments:', error);
     setComments([]); // Set empty array on error
@@ -213,7 +213,7 @@ useEffect(() => {
   const getRecentComments = async () => {
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch('http://localhost:8080/api/v1/comments', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/comments`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -224,8 +224,8 @@ useEffect(() => {
     if (!response.ok) throw new Error('Failed to fetch comments');
     const data = await response.json();
     const commentsList = data.data.result;
-     console.log("commentsList",commentsList)
-     console.log("submit",recentSubmissions)
+    //  console.log("commentsList",commentsList)
+    //  console.log("submit",recentSubmissions)
     const currentDate = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(currentDate.getDate() - 7);
@@ -234,7 +234,7 @@ useEffect(() => {
       const commentDate = new Date(comment.createdAt);
       return commentDate >= sevenDaysAgo;
     });
-    console.log("comment",comments)
+    // console.log("comment",comments)
     setComments(filteredComments);
   } catch (error) {
     console.error('Error fetching comments:', error);
@@ -244,7 +244,7 @@ useEffect(() => {
 
    const getRecentProblems = async () => {
     const token = localStorage.getItem('token');
-    const response = await fetch('http://localhost:8080/api/v1/problems', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/problems`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -279,13 +279,13 @@ useEffect(() => {
     });
     setActivity(filteredProblemsupdate)
     setRecentProblems(filteredProblems);
-    console.log("rêcntactivity",activity)
+    // console.log("rêcntactivity",activity)
   };
 
     const fetchDataUser = async () => {
       try {
                 const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8080/api/v1/users', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -325,7 +325,7 @@ useEffect(() => {
       try {
         const token = localStorage.getItem('token');
       
-        const response = await fetch('http://localhost:8080/api/v1/problems', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/problems`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

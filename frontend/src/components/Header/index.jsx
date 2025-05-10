@@ -15,6 +15,8 @@ function Header({size}) {
 
       <div className="header__right">
         <div className="header__setting"><RiSettings4Line /></div>
+        
+        <div className="header__notify"><Notification /></div>
         <div className="header__user"><Modal /></div>
       </div>
     </div></>
