@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "cv-tblong-20225038"
-  }
+    "default": "cv-tblong-20225038",
+    "production ": "cv-tblong-20225038"
+  },
+  "targets": {},
+  "etags": {}
 }
