@@ -128,6 +128,7 @@ public class SubmissionService {
 		String classPath = filePath.substring(0, filePath.length() - 5);
 		new File(filePath).delete();
 		new File(classPath + ".class").delete();
+		new File("./program.exe").delete();
 	}
 
 	private String getFileName(String language, String code) {
