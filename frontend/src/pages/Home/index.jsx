@@ -179,7 +179,7 @@ useEffect(() => {
 
       if (subDate >= sevenDaysAgo) {
         recentList.push({
-          id:submission._id,
+          id:submission.id,
           user:submission.user.name,
           date,
           type: submission.status === 'FAILED' ? 'feed-item-error' : 'feed-item-success',
@@ -190,21 +190,32 @@ useEffect(() => {
       }
     }
 
-    const percentChange =
-      totalYesterday === 0
-        ? '100%'
-        : `${(((totalToday - totalYesterday) / totalYesterday) * 100).toFixed(1)}%`;
+    // const percentChange =
+    //   totalYesterday === 0
+    //     ? '100%'
+    //     : `${(((totalToday - totalYesterday) / totalYesterday) * 100).toFixed(1)}%`;
 
+      const percentChange =
+      totalYesterday === 0
+        ? `${(((totalToday - totalYesterday) / totalYesterday) * 100).toFixed(1)}%`
+        : '100%';
+    
+    // const state =
+    //   totalToday === totalYesterday
+    //     ? ''
+    //     : totalToday > totalYesterday
+    //     ? 'increase'
+    //     : 'decrease';
     const state =
       totalToday === totalYesterday
         ? ''
         : totalToday > totalYesterday
-        ? 'increase'
-        : 'decrease';
+        ? 'decrease'
+        : 'increase';
 
     setSubmissions({ totalsubmit:data.data.meta.total,totalToday, percentChange, state });
     setRecentSubmissions(recentList.slice(0, 10)); // giới hạn 10 item gần nhất
-    //  console.log("submit hhhhhh",recentList)
+     console.log("submit hhhhhh",recentSubmissions)
   } catch (error) {
     console.error('Error fetching comments:', error);
     setComments([]); // Set empty array on error
@@ -225,7 +236,7 @@ useEffect(() => {
     const data = await response.json();
     const commentsList = data.data.result;
     //  console.log("commentsList",commentsList)
-    //  console.log("submit",recentSubmissions)
+    //  console.log("submit",recentSubmissions[0].id)
     const currentDate = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(currentDate.getDate() - 7);
@@ -236,6 +247,7 @@ useEffect(() => {
     });
     // console.log("comment",comments)
     setComments(filteredComments);
+    console.log("comment  ",comments)
   } catch (error) {
     console.error('Error fetching comments:', error);
     setComments([]); // Set empty array on error
@@ -746,7 +758,7 @@ useEffect(() => {
                 <div className="card-body">
                   <ol className="activity-feed">
                     {Array.isArray(recentSubmissions) && recentSubmissions.length ? (
-                      recentSubmissions.map((submission) => (
+                      recentSubmissions.map((submission,index) => (
                         <li key={submission.id} className={`feed-item ${submission.status?.toLowerCase() || ''}`}>
                           <time className="date">{submission.date || 'Unknown'}</time>
                           <div>

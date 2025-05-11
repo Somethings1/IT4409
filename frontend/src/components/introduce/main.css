@@ -18,3 +18,6 @@ input{
     50% { transform: rotate(10deg); }
     100% { transform: rotate(-10deg); }
 }
+.codezilla-paragraph {
+    color: white;
+}

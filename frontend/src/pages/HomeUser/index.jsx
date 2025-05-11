@@ -31,7 +31,7 @@ const Home = () => {
     state: "increase",
   });
   const [streakData] = useState({ profitToday: 0, profitYesterday: 0, percentChange: "0%", message: "increase" });
-  const [problemData,SetProblemdata] = useState({ problemToday: 0, problemYesterday: 0, percentChange: "0%", state: "increase" });
+  const [problemData,setProblemData] = useState({ problemToday: 0, problemYesterday: 0, percentChange: "0%", state: "increase" });
   const [chartData] = useState([
     { date: "2025-04-01", easy: 45, medium: 135, hard: 30 },
     { date: "2025-04-02", easy: 60, medium: 158, hard: 40 },
@@ -61,62 +61,61 @@ const Home = () => {
   // console.log("user",user)
     
  useEffect(() => {
-    const fetchSubmissionData = async () => {
-      try {
-       const token = localStorage.getItem('token');
+const fetchSubmissionData = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!user || !user._id) return;
 
-        console.log("usser",user)
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/submissions?filter=user.id:${user._id}&page=0&page=1&page=2&pageSize=100`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // nếu không dùng auth thì bỏ dòng này
+    const [submissionRes, problemRes] = await Promise.all([
+      axios.get(`${import.meta.env.VITE_API_URL}/submissions`, {
+        params: {
+          filter: `user.id:${user._id}`,
+          page: 4,
+          pageSize: 100,
         },
-      });
-         const responsepro = await axios.get(`${import.meta.env.VITE_API_URL}/problems`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // nếu không dùng auth thì bỏ dòng này
-        },
-      });
-    
-        const data = response.data;
-        // console.log("lastdata",data)
-         const allSubmissions = response.data.data.result;
-        
-      // const submissions = response.data.result;
-      //  console.log("allSubmissions", allSubmissions)
-      const activities = allSubmissions.map((submission) => ({
-        date: submission.createdAt.slice(0, 10), // "YYYY-MM-DD"
-        type: submission.status === "ACCEPTED" ? "feed-item-success" : "feed-item-danger",
-        detail: `Đã submit bài <a href='#'>${submission.problem?.title || "Không rõ tên bài"}</a> (${submission.status})`,
-      }));
-
-      setRecentActivity(activities);
-        // console.log("recentactive", recentActivity)
-         const allProblem = responsepro.data.data.result;
-        // console.log("lastdata 53 ",responsepro.data.data.meta.total)
-      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-     
-      const todaySubmissions = allSubmissions.filter((sub) =>
-        sub.createdAt.startsWith(today)
-      );
-      const todayproblems=allProblem.filter((sub) =>
-        sub.createdAt.startsWith(today)
-      );
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+      axios.get(`${import.meta.env.VITE_API_URL}/problems`, {
+        headers: { Authorization: `Bearer ${token}` },
       
-      setSubmissionData({
-        totalRevenueToday: todaySubmissions.length ,
-        percentChange: calculatePercentChange(todaySubmissions.length,response.data.data.meta.total),
-        totalRevenue : response.data.data.meta.total,
-      });
-        SetProblemdata({
-        problemToday : responsepro.data.data.meta.total,
-        percentChange: calculatePercentChange(todayproblems.length,responsepro.data.data.meta.total),
+      }),
+    ]);
 
-      })
-       console.log("lastdata",submissionData)
-      } catch (error) {
-        console.error('Error fetching submission data:', error);
-      }
-    };
+    const allSubmissions = submissionRes.data.data.result;
+    const allProblems = problemRes.data.data.result;
+
+    const today = new Date().toISOString().split('T')[0];
+    console.log("today ".today)
+
+    const todaySubmissions = allSubmissions.filter(sub => sub.createdAt.startsWith(today));
+    const todayProblems = allProblems.filter(prob => prob.createdAt.startsWith(today));
+
+    const activities = allSubmissions.map(sub => ({
+      date: sub.createdAt.slice(0, 10),
+      type: sub.status === "ACCEPTED" ? "feed-item-success" : "feed-item-danger",
+      detail: `Đã submit bài <a href='#'>${sub.problem?.title || "Không rõ tên bài"}</a> (${sub.status})`,
+    }));
+
+    console.log("todaysub", activities)
+    setRecentActivity(activities);
+    console.log("todaysub", allSubmissions)
+    setSubmissionData({
+      totalRevenueToday: todaySubmissions.length,
+      percentChange: calculatePercentChange(todaySubmissions.length, submissionRes.data.data.meta.total),
+      totalRevenue: submissionRes.data.data.meta.total,
+    });
+
+    setProblemData({
+      problemToday: todayProblems.length,
+      problemYesterday: problemRes.data.data.meta.total,
+      percentChange: calculatePercentChange(todayProblems.length, problemRes.data.data.meta.total),
+    });
+
+  } catch (error) {
+    console.error('Error fetching submission data:', error);
+  }
+};
+
 
     fetchSubmissionData();
   }, [loading,user]);
@@ -181,7 +180,7 @@ const Home = () => {
               <CardTitle className="card-title">Tổng bài giải</CardTitle>
             </CardHeader>
             <CardContent className="card-content">
-              <div className="card-number">{problemData.problemToday}</div>
+              <div className="card-number">{problemData.problemYesterday}</div>
               <p className="card-description">Tổng bài giải</p>
             </CardContent>
           </Card>
